@@ -1,4 +1,4 @@
-package com.aetherwars.model;
+package com.aetherwars.model.cards;
 
 public interface Card {
     void summon();

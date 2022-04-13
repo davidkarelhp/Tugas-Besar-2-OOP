@@ -1,9 +1,9 @@
-package com.aetherwars.model;
+package com.aetherwars.model.cards;
 
 public class Character implements Card {
   private String name;
   private String description;
-  private Type type;
+  private CharacterType characterType;
   private int level;
   private int exp;
   private double attack;
@@ -15,7 +15,7 @@ public class Character implements Card {
   public Character() {
     this.name = "";
     this.description = "";
-    this.type = Type.OVERWORLD;
+    this.characterType = CharacterType.OVERWORLD;
     this.level = 1;
     this.exp = 0;
     this.attack = 0;
@@ -25,10 +25,10 @@ public class Character implements Card {
     this.healthUp = 0;
   }
 
-  public Character(String name, String description, Type element, double attack, double health, double mana, double attackUp, double healthUp) {
+  public Character(String name, String description, CharacterType element, double attack, double health, double mana, double attackUp, double healthUp) {
     this.name = name;
     this.description = description;
-    this.type = element;
+    this.characterType = element;
     this.level = 1;
     this.exp = 0;
     this.attack = attack;
@@ -38,8 +38,8 @@ public class Character implements Card {
     this.healthUp = healthUp;
   }
 
-  public Type getType() {
-    return type;
+  public CharacterType getType() {
+    return characterType;
   }
 
   public int getLevel() {
@@ -91,7 +91,7 @@ public class Character implements Card {
   }
 
   public boolean isStronger(Character enemy) {
-    return ((getType() == Type.OVERWORLD && enemy.getType() == Type.END) || (getType() == Type.END && enemy.getType() == Type.NETHER) || (getType() == Type.NETHER && enemy.getType() == Type.OVERWORLD));
+    return ((getType() == CharacterType.OVERWORLD && enemy.getType() == CharacterType.END) || (getType() == CharacterType.END && enemy.getType() == CharacterType.NETHER) || (getType() == CharacterType.NETHER && enemy.getType() == CharacterType.OVERWORLD));
   }
 
   public void attackEnemy(Character enemy) {
@@ -131,6 +131,6 @@ public class Character implements Card {
 
   @Override
   public String toString() {
-    return "Name: " + this.name + "\nDescription: " + this.description + "\nType: " + this.type + "\nLevel: " + this.level + "\nExp: " + this.exp;
+    return "Name: " + this.name + "\nDescription: " + this.description + "\nType: " + this.characterType + "\nLevel: " + this.level + "\nExp: " + this.exp;
   }
 }
