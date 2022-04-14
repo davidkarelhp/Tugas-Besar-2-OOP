@@ -12,8 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import com.aetherwars.model.cards.CharacterType;
-import com.aetherwars.model.cards.Character;
+import com.aetherwars.model.cards.character.CharacterType;
+import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.util.CSVReader;
 
 public class AetherWars extends Application {
