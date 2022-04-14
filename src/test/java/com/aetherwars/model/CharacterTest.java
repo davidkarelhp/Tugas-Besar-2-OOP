@@ -1,5 +1,7 @@
 package com.aetherwars.model;
 
+import com.aetherwars.model.Character;
+import com.aetherwars.model.Type;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
