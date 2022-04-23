@@ -40,12 +40,14 @@ public class AetherWars extends Application {
 //    Group root = new Group();
 //    root.getChildren().add(text);
 
-    Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+    Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
 
-    Scene scene = new Scene(root, 1280, 720);
+//    Scene scene = new Scene(root, 1280, 720);
+    Scene scene = new Scene(root);
 
     stage.setTitle("Minecraft: Aether Wars");
     stage.setScene(scene);
+    stage.setMaximized(true);
     stage.show();
 
     try {
