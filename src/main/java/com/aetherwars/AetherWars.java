@@ -48,6 +48,7 @@ public class AetherWars extends Application {
     stage.setTitle("Minecraft: Aether Wars");
     stage.setScene(scene);
     stage.setMaximized(true);
+    stage.setResizable(false);
     stage.show();
 
     try {
