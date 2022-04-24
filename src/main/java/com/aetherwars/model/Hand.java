@@ -14,7 +14,7 @@ public class Hand {
     }
 
     public Hand(List<Card> cards) {
-        // Konstruktor  hand pas wala, pas awal draw 3 kan
+        // Konstruktor  hand pas awal, pas awal draw 3 kan
         if (cards.size() != 3) {
             throw new IllegalArgumentException("List kartu harus berukuran 3.");
         }
@@ -58,7 +58,7 @@ public class Hand {
     }
 
     public void discardAtIndex(int idx) {
-        // Kalau mau discrad kartu pada indeks tertentu
+        // Kalau mau discard kartu pada indeks tertentu
         this.hand.set(idx, null);
     }
 }
