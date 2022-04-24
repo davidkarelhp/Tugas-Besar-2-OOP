@@ -5,7 +5,7 @@ import com.aetherwars.model.cards.spell.Spell;
 
 import java.util.ArrayList;
 
-public class SummonedCharacter {
+public class SummonedCharacter implements IsSummoned {
     private Character character;
     private int level;
     private int exp;
