@@ -42,6 +42,18 @@ public class Character extends Card {
     return healthUp;
   }
 
+  public int getLevel() {
+    return 0;
+  }
+
+  public void levelUp() {
+
+  }
+
+  public void setExp(int x) {
+
+  }
+
   @Override
   public void displayDesc() {
     System.out.println("Name: " + getName());
