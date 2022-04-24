@@ -6,13 +6,14 @@ import com.aetherwars.model.cards.spell.characteristics.LevelModifier;
 import com.aetherwars.model.cards.spell.characteristics.PermanentEffect;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
+import com.aetherwars.model.cards.Card;
 
-public class Level extends Spell implements Card, PermanentEffect, LevelModifier, ExperienceEater {
+public class Level extends Spell implements PermanentEffect, LevelModifier, ExperienceEater {
     public Level(){
         super(SpellType.SWAP, EffectDurationType.PERMANENT);
     }
 
-    @Override
+//    @Override
     public void summon() {
 
     }

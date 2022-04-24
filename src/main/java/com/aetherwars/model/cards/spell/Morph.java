@@ -9,15 +9,15 @@ import com.aetherwars.model.cards.spell.characteristics.TemporaryEffect;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
-public class Morph extends Spell implements Card, PermanentEffect, CharacterChanger {
+public class Morph extends Spell implements PermanentEffect, CharacterChanger {
     public Morph(){
         super(SpellType.MORPH, EffectDurationType.PERMANENT);
     }
 
-    @Override
-    public void summon() {
-
-    }
+//    @Override
+//    public void summon() {
+//
+//    }
 
     @Override
     public void runEffect(Character character) {

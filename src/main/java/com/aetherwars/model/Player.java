@@ -9,6 +9,9 @@ public class Player {
     private int deck;
     private String hand_deck;
     private String board_deck;
+    public Player() {
+
+    }
 
     public void getCard(int deck){
         //ngambil dari deck

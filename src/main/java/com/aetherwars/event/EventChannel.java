@@ -7,7 +7,7 @@ public interface EventChannel {
     // add subscriber to topic
     void addSubscriber(Publisher publisher, Subscriber subscriber);
 
-    void addPublisher(Subscriber subscriber);
+    void addPublisher(Publisher publisher);
 
 //    Kalau perlu di-uncomment yang bawah
 //    void removeSubsriber(Subscriber subscriber);

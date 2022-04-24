@@ -8,7 +8,7 @@ import com.aetherwars.model.cards.spell.characteristics.TemporaryEffect;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
-public class Potion extends Spell implements Card, TemporaryEffect, AttackModifier, HealthModifier {
+public class Potion extends Spell implements TemporaryEffect, AttackModifier, HealthModifier {
     private double attack;
     private double health;
 
@@ -30,10 +30,10 @@ public class Potion extends Spell implements Card, TemporaryEffect, AttackModifi
     public double getDefaultHealth() {
         return  health;
     }
-    @Override
-    public void summon() {
-
-    }
+//    @Override
+//    public void summon() {
+//
+//    }
 
     @Override
     public void runEffect(Character character) {
@@ -48,12 +48,12 @@ public class Potion extends Spell implements Card, TemporaryEffect, AttackModifi
 
     @Override
     public void modifyAttack(Character character) {
-        character.setAttack(character.getAttackUp() + attack); // should be attackUp
+//        character.setAttack(character.getAttackUp() + attack); // should be attackUp
     }
 
     @Override
     public void modifyHealth(Character character) {
-        character.setHealth(character.getHealthUp() + health); // should be healthUp
+//        character.setHealth(character.getHealthUp() + health); // should be healthUp
     }
 
 
