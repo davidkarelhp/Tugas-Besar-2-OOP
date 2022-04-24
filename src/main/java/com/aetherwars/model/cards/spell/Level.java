@@ -1,6 +1,5 @@
 package com.aetherwars.model.cards.spell;
 
-import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.spell.characteristics.ExperienceEater;
 import com.aetherwars.model.cards.spell.characteristics.LevelModifier;

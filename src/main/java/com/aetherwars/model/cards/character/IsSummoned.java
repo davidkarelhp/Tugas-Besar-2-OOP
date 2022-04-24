@@ -1,4 +1,4 @@
-package com.aetherwars.model;
+package com.aetherwars.model.cards.character;
 
 public interface IsSummoned {
     // getter
