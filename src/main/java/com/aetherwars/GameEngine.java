@@ -1,19 +1,26 @@
 package com.aetherwars;
 
-import com.aetherwars.event.Event;
-import com.aetherwars.event.EventChannel;
-import com.aetherwars.event.Publisher;
-import com.aetherwars.event.Subscriber;
+import com.aetherwars.event.*;
 import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 
 public class GameEngine implements Publisher, Subscriber {
-    private EventChannel eventChannel;
+    private GameChannel eventChannel = new GameChannel();
     private Player[] players;
     private int currentPlayer;
     private int currentRound;
 
-    public GameEngine(Player p1, Player p2, EventChannel eventChannel) {
+    public GameEngine() {
+
+    }
+
+    public GameEngine(Player player1, Player player2) {
+        this.players[0] = player1;
+        this.players[1] = player2;
+        this.currentPlayer = 0;
+        this.currentRound = 1;
+    }
+    public GameEngine(Player p1, Player p2, GameChannel eventChannel) {
         this.players[0] = p1;
         this.players[1] = p2;
         this.eventChannel = eventChannel;

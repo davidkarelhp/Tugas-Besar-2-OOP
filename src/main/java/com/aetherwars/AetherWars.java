@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import com.aetherwars.controller.MainController;
+import com.aetherwars.event.GameChannel;
+import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.character.CharacterType;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -43,25 +46,34 @@ public class AetherWars extends Application {
 
   @Override
   public void start(Stage stage) throws IOException {
-    Text text = new Text();
-    text.setText("Loading...");
-    text.setX(50);
-    text.setY(50);
-//
-//    Group root = new Group();
-//    root.getChildren().add(text);
+      Text text = new Text();
+//    try {
 
-    Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+      GameChannel channel = new GameChannel();
+      FXMLLoader gameLoader = new FXMLLoader(getClass().getResource("Main.fxml"));
+      gameLoader.setControllerFactory(c -> new MainController(channel));
 
-//    Scene scene = new Scene(root, 1280, 720);
-    Scene scene = new Scene(root);
+      Parent root = gameLoader.load();
+      MainController controller = gameLoader.getController();
+      channel.setController(controller);
 
-    stage.setTitle("Minecraft: Aether Wars");
-    stage.setScene(scene);
-    stage.setMaximized(true);
-    stage.setResizable(false);
-    stage.show();
+      Player player1 = new Player();
+      Player player2 = new Player();
+//      GameEngine gameEngine = new GameEngine(player1, player2);
+      GameEngine gameEngine = new GameEngine();
 
+      Scene scene = new Scene(root);
+
+      stage.setTitle("Minecraft: Aether Wars");
+      stage.setScene(scene);
+      stage.setMaximized(true);
+      stage.setResizable(false);
+      stage.show();
+//    } catch (Exception e) {
+//      System.out.println(e);
+//    }
+
+//    controller.startGame(gameEngine);
     try {
       this.loadCards();
       text.setText("Minecraft: Aether Wars!");
