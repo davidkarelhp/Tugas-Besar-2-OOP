@@ -13,6 +13,15 @@ public class Character extends Card {
 
   public static ArrayList<Character> characterList;
 
+  public Character() {
+    super(0, "", "", 0, "");
+    this.characterType = CharacterType.OVERWORLD;
+    this.baseAttack = 0;
+    this.baseHealth = 0;
+    this.attackUp = 0;
+    this.healthUp = 0;
+  }
+
   public Character(int id, String name, String description, int mana, String imagePath, CharacterType characterType, double baseAttack, double baseHealth, double attackUp, double healthUp) {
     super(id, name, description, mana, imagePath);
     this.characterType = characterType;

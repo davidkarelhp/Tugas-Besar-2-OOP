@@ -40,7 +40,7 @@ public class AetherWars extends Application {
       int healthUp = Integer.parseInt(row[9]);
 
       Character c = new Character(id, name, description, mana, imagePath, characterType, attack, health, attackUp, healthUp);
-      System.out.println(c);
+      Character.characterList.add(c);
     }
   }
 

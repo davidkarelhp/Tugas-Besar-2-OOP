@@ -15,6 +15,7 @@ public class SummonedCharacter implements IsSummoned {
     private boolean playable;
 
     public SummonedCharacter(Character character) {
+        this.character = character;
         this.level = 1;
         this.exp = 0;
         this.attack = 0;
@@ -130,13 +131,13 @@ public class SummonedCharacter implements IsSummoned {
         this.tempSpell.add(spell);
     }
 
-    public void useSpell(Spell spell) {
-        spell.runEffect(this);
-    }
+    // public void useSpell(Spell spell) {
+    //    spell.runEffect(this);
+    // }
 
-    public void processSpellList() {
-        tempSpell.forEach((spell -> spell.runEffect(this)));
-    }
+    // public void processSpellList() {
+    //    tempSpell.forEach((spell -> spell.runEffect(this)));
+    // }
 
     public void levelUp() {
         setAttack(getAttack() + getAttackUp());
