@@ -3,6 +3,7 @@ package com.aetherwars.event;
 import com.aetherwars.controller.MainController;
 import com.aetherwars.model.Phase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,16 +25,19 @@ public class GameChannel implements EventChannel {
 
     @Override
     public void sendEvent(Publisher publisher, Event event) {
-
+        for (Subscriber sub: this.channel.get(publisher)) {
+            sub.onEvent(event);
+        }
     }
 
     @Override
     public void addSubscriber(Publisher publisher, Subscriber subscriber) {
-
+        this.addPublisher(publisher);
+        this.channel.get(publisher).add(subscriber);
     }
 
     @Override
     public void addPublisher(Publisher publisher) {
-
+        this.channel.putIfAbsent(publisher, new ArrayList<>());
     }
 }

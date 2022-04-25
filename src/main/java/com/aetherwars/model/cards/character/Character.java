@@ -11,7 +11,7 @@ public class Character extends Card {
   private double attackUp;
   private double healthUp;
 
-  public static ArrayList<Character> characterList;
+  public static ArrayList<Character> characterList = new ArrayList<>();
 
   public Character() {
     super(0, "", "", 0, "");

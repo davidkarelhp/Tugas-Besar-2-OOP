@@ -3,29 +3,36 @@ package com.aetherwars;
 import com.aetherwars.event.*;
 import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class GameEngine implements Publisher, Subscriber {
     private GameChannel eventChannel = new GameChannel();
     private Player[] players;
     private int currentPlayer;
-    private int currentRound;
+//    private int currentRound;
 
-    public GameEngine() {
+    private IntegerProperty currentRound;
 
-    }
-
-    public GameEngine(Player player1, Player player2) {
-        this.players[0] = player1;
-        this.players[1] = player2;
-        this.currentPlayer = 0;
-        this.currentRound = 1;
-    }
     public GameEngine(Player p1, Player p2, GameChannel eventChannel) {
+        this.players = new Player[2];
         this.players[0] = p1;
         this.players[1] = p2;
         this.eventChannel = eventChannel;
         this.currentPlayer = 0;
-        this.currentRound = 1;
+        this.currentRound = new SimpleIntegerProperty(1);
+    }
+
+    public int getCurrentRound() {
+        return currentRound.get();
+    }
+
+    public IntegerProperty currentRoundProperty() {
+        return currentRound;
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 
     public void setupGame() {
@@ -48,7 +55,7 @@ public class GameEngine implements Publisher, Subscriber {
 //            this.players[this.currentPlayer].
 
             if (this.currentPlayer == 1) {
-                this.currentRound++;
+                this.currentRound.set(this.getCurrentRound() + 1);
             }
 
             if (this.currentPlayer == 1) {

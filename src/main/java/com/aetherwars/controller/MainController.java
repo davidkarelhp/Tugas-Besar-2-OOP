@@ -4,6 +4,9 @@ import com.aetherwars.GameEngine;
 import com.aetherwars.event.EventChannel;
 import com.aetherwars.event.GameChannel;
 import com.aetherwars.model.Phase;
+import com.aetherwars.event.*;
+import com.aetherwars.model.Player;
+import javafx.beans.binding.Bindings;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,6 +16,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -21,7 +26,7 @@ import javafx.scene.paint.Paint;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
+public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     StackPane backPane;
 
@@ -37,6 +42,23 @@ public class MainController implements Initializable {
 
     int phase_id = 0;
 
+    @FXML
+    Label labelPlayer1;
+
+    @FXML
+    Label labelPlayer2;
+
+    @FXML
+    Label labelRound;
+
+    @FXML
+    ProgressBar healthPlayer1;
+
+    @FXML
+    ProgressBar healthPlayer2;
+
+    private final int MAX_HEALTH = 80;
+
     private EventChannel channel;
     private GridPane drawPane;
 
@@ -48,11 +70,29 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         this.phases_bar = new Label[]{draw_p, plan_p, attack_p, end_p};
+        this.healthPlayer1.setStyle("-fx-accent: green;");
+        this.healthPlayer2.setStyle("-fx-accent: green;");
+
         this.buttonSkip.setOnAction(e -> {
             // Aturan ini buat skip phase, tapi ini  contoh aja
             switch(this.channel.getPhase())
         });
 
+    }
+
+    public void startGame(GameEngine gameEngine) {
+        this.channel.addSubscriber(this, gameEngine);
+        this.channel.addSubscriber(gameEngine, this);
+
+        Player[] players = gameEngine.getPlayers();
+
+        this.labelPlayer1.setText(players[0].getPlayerName());
+        this.labelPlayer2.setText(players[1].getPlayerName());
+
+        this.labelRound.textProperty().bind(Bindings.concat("Round ", gameEngine.currentRoundProperty()));
+
+        this.healthPlayer1.progressProperty().bind(players[0].healthPointsProperty().divide(this.MAX_HEALTH));
+        this.healthPlayer2.progressProperty().bind(players[1].healthPointsProperty().divide(this.MAX_HEALTH));
     }
 
     public void displayDraw() {
@@ -87,7 +127,14 @@ public class MainController implements Initializable {
         backPane.getChildren().remove(drawPane);
     }
 
-    public void startGame(GameEngine gameEngine) {
-        System.out.println("halo");
+
+    @Override
+    public void publish(Event event) {
+
+    }
+
+    @Override
+    public void onEvent(Event event) {
+
     }
 }

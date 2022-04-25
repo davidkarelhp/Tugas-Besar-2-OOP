@@ -1,7 +1,8 @@
 package com.aetherwars.model.cards.spell.characteristics;
 
-//import com.aetherwars.model.cards.character.Character;
-//
-//public interface CharacterChanger {
-//    void changeCharacter(Character character);
-//}
+import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.character.SummonedCharacter;
+
+public interface CharacterChanger {
+    void changeCharacter(SummonedCharacter character);
+}
