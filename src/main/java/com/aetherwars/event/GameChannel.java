@@ -23,6 +23,18 @@ public class GameChannel implements EventChannel {
         this.mainController = controller;
     }
 
+    public Phase getPhase(){
+        return  this.phase;
+    }
+
+    public void setPlayerById(int id){
+        this.currentPlayer = id;
+    }
+
+    public void setPhase(Phase phase){
+        this.phase = phase;
+    }
+
     @Override
     public void sendEvent(Publisher publisher, Event event) {
         for (Subscriber sub: this.channel.get(publisher)) {

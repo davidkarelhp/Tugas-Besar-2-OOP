@@ -7,6 +7,7 @@ import com.aetherwars.model.Phase;
 import com.aetherwars.event.*;
 import com.aetherwars.model.Player;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +22,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+
 
 
 import java.net.URL;
@@ -59,8 +61,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     private final int MAX_HEALTH = 80;
 
-    private EventChannel channel;
+    private GameChannel channel;
     private GridPane drawPane;
+
+    GameEngine engine;
 
     public MainController(GameChannel channel) {
         this.channel = channel;
@@ -75,7 +79,14 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.buttonSkip.setOnAction(e -> {
             // Aturan ini buat skip phase, tapi ini  contoh aja
-            switch(this.channel.getPhase())
+            switch(this.channel.getPhase()){
+                case SKILLPICK:
+                    break;
+
+                default:
+                    this.currentPhase(e);
+                    break;
+            }
         });
 
     }
@@ -83,6 +94,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     public void startGame(GameEngine gameEngine) {
         this.channel.addSubscriber(this, gameEngine);
         this.channel.addSubscriber(gameEngine, this);
+        this.engine = gameEngine;
 
         Player[] players = gameEngine.getPlayers();
 
@@ -136,5 +148,64 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @Override
     public void onEvent(Event event) {
 
+    }
+
+    public void currentPhase(ActionEvent event){
+        phases_bar[phase_id].setStyle("-fx-background-color : darkgray;" + "-fx-color: dimgray");
+        phase_id++;
+        switch(phase_id){
+            case 1:
+                System.out.println("phase 1");
+                break;
+
+            case 2:
+                System.out.println("phase 2");
+                break;
+
+            case 3:
+                if (!this.targeting.isEmpty()) {
+                    this.targeting.get(0).toggleSelected();
+                    for (SummonedCharacterController summonedchara_controller : this.player_controllers[this.channel
+                            .getPlayerID() % 2 + 1].getSummonedCharaController()) {
+                        summonedchara_controller.setHinting(false);
+                    }
+                    this.player_controllers[this.channel.getPlayerID() % 2 + 1].setHinting(false);
+                    this.targeting.clear();
+                }
+
+                int cur_player = game_engine.getCurPlayer();
+                if (this.game_engine.getPlayer(cur_player).getHand().size() > Player.MAX_HAND) {
+                    this.channel.setPhase(Phase.DISCARD);
+                }
+                break;
+            case 4:
+                int prev_player = game_engine.getCurPlayer() % 2 + 1;
+                if (this.game_engine.getPlayer(prev_player).getHand().size() > Player.MAX_HAND) {
+                    phase_id--;
+                    phase_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
+                    AlertBox.display(1280 / 1.5, 720 / 1.5, "Hand card limit exceeded", "Discard one card to continue.\nDouble Click to Discard.");
+                    return;
+                }
+
+                for (int i = 1; i <= 2; i++) {
+                    this.player_controllers[i].flipHand();
+                }
+                break;
+            default:
+                break;
+
+        }
+
+        phase_id %= 4;
+        this.engine.stageController(phases[phase_id]);
+        if (phase_id == 0) {
+            this.channel.setPlayerById(this.engine.getCurrentPlayer());
+        }
+        if (this.channel.getPhase() != Phase.DISCARD) {
+            this.channel.setPhase(phases[phase_id]);
+        }
+
+        //phases_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
+//        if (phase_id==0) {sleep(500, true);}
     }
 }

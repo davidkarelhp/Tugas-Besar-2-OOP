@@ -27,6 +27,10 @@ public class GameEngine implements Publisher, Subscriber {
         return currentRound.get();
     }
 
+    public int getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
     public IntegerProperty currentRoundProperty() {
         return currentRound;
     }
