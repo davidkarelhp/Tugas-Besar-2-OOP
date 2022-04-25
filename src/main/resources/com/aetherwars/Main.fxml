@@ -135,17 +135,17 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;">
+                  <StackPane fx:id="drawPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;">
                      <children>
                         <Label text="DRAW" />
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="1">
+                  <StackPane fx:id="planPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="1">
                      <children>
                         <Label text="PLAN" />
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="2">
+                  <StackPane fx:id="attackPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="2">
                      <children>
                         <Label text="ATTACK" />
                      </children>
@@ -155,7 +155,7 @@
                         <Font name="Arial Bold" size="12.0" />
                      </font>
                   </Button>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="3">
+                  <StackPane fx:id="endPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="3">
                      <children>
                         <Label text="END" />
                      </children>
