@@ -3,9 +3,12 @@ package com.aetherwars.controller;
 import com.aetherwars.GameEngine;
 import com.aetherwars.event.*;
 import com.aetherwars.model.Player;
+import com.aetherwars.model.cards.Card;
+import com.aetherwars.model.cards.character.Character;
 import javafx.beans.binding.Bindings;
-import javafx.event.EventType;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -14,12 +17,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable, Publisher, Subscriber {
@@ -44,6 +53,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     ProgressBar healthPlayer2;
 
+    @FXML
+    GridPane handGrid;
+
     private final int MAX_HEALTH = 80;
 
     private EventChannel channel;
@@ -65,9 +77,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     }
 
-    public void startGame(GameEngine gameEngine) {
-        this.channel.addSubscriber(this, gameEngine);
-        this.channel.addSubscriber(gameEngine, this);
+    public void startGame(GameEngine gameEngine) throws IOException {
 
         Player[] players = gameEngine.getPlayers();
 
@@ -78,6 +88,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.healthPlayer1.progressProperty().bind(players[0].healthPointsProperty().divide(this.MAX_HEALTH));
         this.healthPlayer2.progressProperty().bind(players[1].healthPointsProperty().divide(this.MAX_HEALTH));
+
+        this.channel.addSubscriber(this, gameEngine);
+        this.channel.addSubscriber(gameEngine, this);
+        gameEngine.setupGame();
     }
 
     public void displayDraw() {
@@ -112,6 +126,22 @@ public class MainController implements Initializable, Publisher, Subscriber {
         backPane.getChildren().remove(drawPane);
     }
 
+    public void refreshHand(Player player) throws IOException {
+        handGrid.getChildren().clear();
+        List<Card> hand = player.getHand().getHand();
+        int i = 0;
+        for (Card card: hand) {
+            Character charcard = (Character)card;
+            FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
+            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth()));
+            StackPane cardPane = cardFXML.load();
+
+            StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
+            this.handGrid.add(cardPane, i, 0);
+            i++;
+        }
+
+    }
 
     @Override
     public void publish(Event event) {
@@ -120,6 +150,12 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     @Override
     public void onEvent(Event event) {
-
+        try {
+            if (event instanceof ChangePlayerEvent) {
+                    this.refreshHand((Player)event.getEvent());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

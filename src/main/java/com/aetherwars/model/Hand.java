@@ -10,9 +10,6 @@ public class Hand {
 
     public Hand() {
         this.hand = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            this.hand.add(null);
-        }
     }
 
     public Hand(List<Card> cards) {
@@ -22,45 +19,40 @@ public class Hand {
         }
 
         this.hand = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            this.hand.add(null);
-        }
+
         for (int i = 0; i < 3; i++) {
-            this.hand.set(i, cards.get(i));
+            this.hand.add(cards.get(i));
         }
     }
 
     public Card getCardAtIndex(int idx) {
         // Kalau null berarti kosong
-        return this.hand.get(idx);
+        return idx <= this.hand.size() - 1 ? this.hand.get(idx) : null;
     }
 
-    public void putCardAtIndex(int idx, Card card) {
-        // Kalau mau masukin di indeks tertentu, indeks itu harus kosong
-        if (!this.getCardAtIndex(idx).equals(null)) {
-            throw new IllegalArgumentException("Ada kartu lain pada indeks ini.");
-        }
-        this.hand.set(idx, card);
-    }
 
     public void putCard(Card card) {
-        // Kalau mau masukkin di indeks terawal yang masih kosong
-        boolean found = false;
-        for (int i = 0; i < 5; i++) {
-            if (this.getCardAtIndex(i).equals(null)) {
-                this.putCardAtIndex(i, card);
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
+        if (this.hand.size() >= 5) {
             throw new IllegalArgumentException("Tidak ada tempat untuk memasukkan kartu.");
         }
+
+        this.hand.add(card);
+    }
+
+    public void putCard(List<Card> cards) {
+//        if (this.hand.size() + cards.size() > 5) {
+//            throw new IllegalArgumentException("Tidak ada tempat untuk memasukkan kartu.");
+//        }
+
+        this.hand.addAll(cards);
     }
 
     public void discardAtIndex(int idx) {
         // Kalau mau discard kartu pada indeks tertentu
-        this.hand.set(idx, null);
+        this.hand.remove(idx);
+    }
+
+    public List<Card> getHand() {
+        return hand;
     }
 }

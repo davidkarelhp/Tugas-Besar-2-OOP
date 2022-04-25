@@ -25,9 +25,14 @@ public class GameChannel implements EventChannel {
 
     @Override
     public void sendEvent(Publisher publisher, Event event) {
-        for (Subscriber sub: this.channel.get(publisher)) {
-            sub.onEvent(event);
+        if (this.channel.get(publisher) == null) {
+            System.out.println("null");
+        } else {
+            for (Subscriber subscriber: this.channel.get(publisher)) {
+                subscriber.onEvent(event);
+            }
         }
+
     }
 
     @Override
