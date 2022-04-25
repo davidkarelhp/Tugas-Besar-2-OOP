@@ -135,17 +135,17 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;">
+                  <StackPane fx:id="drawPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;">
                      <children>
                         <Label text="DRAW" />
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="1">
+                  <StackPane fx:id="planPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="1">
                      <children>
                         <Label text="PLAN" />
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="2">
+                  <StackPane fx:id="attackPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="2">
                      <children>
                         <Label text="ATTACK" />
                      </children>
@@ -155,7 +155,7 @@
                         <Font name="Arial Bold" size="12.0" />
                      </font>
                   </Button>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="3">
+                  <StackPane fx:id="endPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="3">
                      <children>
                         <Label text="END" />
                      </children>
@@ -191,10 +191,65 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </StackPane>
-                  <StackPane prefHeight="100.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" HBox.hgrow="ALWAYS">
+                  <StackPane prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                                 </HBox.margin>
+                              </StackPane>
+                              <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                                 </HBox.margin>
+                              </StackPane>
+                              <VBox minWidth="150.0" prefHeight="200.0" prefWidth="100.0">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                                 </HBox.margin>
+                                 <children>
+                                    <GridPane style="-fx-border-color: &quot;black&quot;;" VBox.vgrow="ALWAYS">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <Label text="Deck" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+                                          <Label fx:id="labelDeck" text="Label" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                       </children>
+                                    </GridPane>
+                                    <GridPane style="-fx-border-color: &quot;black&quot;;" VBox.vgrow="ALWAYS">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <Label text="Mana" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+                                          <Label fx:id="labelMana" text="Label" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
                   </StackPane>
                </children>
             </HBox>

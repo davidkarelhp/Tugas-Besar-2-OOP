@@ -5,6 +5,9 @@ import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Spell {
     private final SpellType type;
     private final EffectDurationType effectDurationType;

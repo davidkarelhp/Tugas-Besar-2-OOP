@@ -17,8 +17,8 @@ public class Board {
         }
     }
 
-    public Character[] getBoard(){
-        return this.Board;
+    public com.aetherwars.model.cards.character.Character getCharacter(int i){
+        return Board[i];
     }
 
     public void attackFromSlot(int slot, Board enemyBoard, int enemySlot){

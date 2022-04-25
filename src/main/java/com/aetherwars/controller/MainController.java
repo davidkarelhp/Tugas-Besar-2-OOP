@@ -2,6 +2,7 @@ package com.aetherwars.controller;
 
 import com.aetherwars.GameEngine;
 import com.aetherwars.event.*;
+import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
@@ -56,6 +57,24 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     GridPane handGrid;
 
+    @FXML
+    Label labelDeck;
+
+    @FXML
+    Label labelMana;
+
+    @FXML
+    StackPane drawPhase;
+
+    @FXML
+    StackPane attackPhase;
+
+    @FXML
+    StackPane endPhase;
+
+    @FXML
+    StackPane planPhase;
+
     private final int MAX_HEALTH = 80;
 
     private EventChannel channel;
@@ -71,10 +90,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
         this.healthPlayer2.setStyle("-fx-accent: green;");
 
         this.buttonSkip.setOnAction(e -> {
-            // Aturan ini buat skip phase, tapi ini  contoh aja
-            this.displayDraw();
+            publish(new NextPhaseEvent());
         });
-
     }
 
     public void startGame(GameEngine gameEngine) throws IOException {
@@ -91,6 +108,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.channel.addSubscriber(this, gameEngine);
         this.channel.addSubscriber(gameEngine, this);
+
         gameEngine.setupGame();
     }
 
@@ -140,20 +158,65 @@ public class MainController implements Initializable, Publisher, Subscriber {
             this.handGrid.add(cardPane, i, 0);
             i++;
         }
+    }
 
+    public void rebindDeckAndMana(Player player) throws IOException {
+        labelDeck.textProperty().unbind();
+        labelMana.textProperty().unbind();
+
+        labelDeck.textProperty().bind(Bindings.concat(player.getDeck().deckFillProperty(), "/", player.getDeck().getDeckSize()));
+        labelMana.textProperty().bind(Bindings.concat(player.manaProperty(), "/" + player.getManaLimit()));
+    }
+
+    public void phaseColoring(Phase phase) {
+        switch (phase) {
+            case DRAW:
+                drawPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+
+            case PLAN:
+                drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                planPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+
+            case ATTACK:
+                drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                attackPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+
+            case END:
+                drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                endPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                break;
+        }
     }
 
     @Override
     public void publish(Event event) {
-
+        this.channel.sendEvent(this, event);
     }
 
     @Override
     public void onEvent(Event event) {
         try {
+
             if (event instanceof ChangePlayerEvent) {
-                    this.refreshHand((Player)event.getEvent());
+                this.refreshHand((Player) event.getEvent());
+                this.rebindDeckAndMana((Player) event.getEvent());
+
+            } else if (event instanceof CurrentPhaseEvent) {
+                this.phaseColoring((Phase) event.getEvent());
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

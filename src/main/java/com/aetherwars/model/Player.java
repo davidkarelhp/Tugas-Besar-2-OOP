@@ -2,17 +2,20 @@ package com.aetherwars.model;
 
 import com.aetherwars.event.GameChannel;
 import com.aetherwars.model.cards.Card;
+import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.Board;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.List;
 
 public class Player {
     private String playerName;
     private DoubleProperty healthPoints;
-//    private double healthPoints;
-    private int mana;
+    private IntegerProperty mana;
+    private int manaLimit;
     private Deck deck;
     private Hand hand;
     private Board board;
@@ -25,7 +28,8 @@ public class Player {
         this.deck = deck;
         this.channel = channel;
         this.healthPoints = new SimpleDoubleProperty(80);
-        this.mana = 1;
+        this.mana = new SimpleIntegerProperty(1);
+        this.manaLimit = 1;
         this.hand = new Hand();
         this.board = new Board();
     }
@@ -43,7 +47,15 @@ public class Player {
     }
 
     public int getMana() {
+        return mana.get();
+    }
+
+    public IntegerProperty manaProperty() {
         return mana;
+    }
+
+    public int getManaLimit() {
+        return manaLimit;
     }
 
     public Deck getDeck() {
@@ -58,9 +70,22 @@ public class Player {
         
     }
 
-    public void seeCardBoard (){
-        Character [] CurrentBoard = this.board.getBoard();
-        for(){
+    public void seeSpecificBoard(String CharacterName){
+        Board CurrentBoard = this.board;
+        for(int i = 0; i < 5; i++){
+            Character currentCard = CurrentBoard.getCharacter(i);
+            if(currentCard.getName() == CharacterName){
+                currentCard.displayDesc();
+            }
+        }
+    }
+
+    public void seeAllCardBoard (){
+        //menampilkan seluruh card yang ada di board
+        Board CurrentBoard = this.board;
+        for(int i = 0; i < 5; i++){
+            Character currentCard = CurrentBoard.getCharacter(i);
+            currentCard.displayDesc();
             
         }
     }
