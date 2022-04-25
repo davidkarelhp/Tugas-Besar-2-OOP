@@ -16,9 +16,29 @@ public class Player {
         this.playerName = playerName;
         this.deck = deck;
         this.channel = channel;
-        this.healthPoints = 40;
+        this.healthPoints = 80;
         this.mana = 1;
         this.hand = new Hand();
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public double getHealthPoints() {
+        return healthPoints;
+    }
+
+    public int getMana() {
+        return mana;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public Hand getHand() {
+        return hand;
     }
 
     public void getCard(int deck){

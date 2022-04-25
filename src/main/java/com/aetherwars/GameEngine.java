@@ -10,16 +10,6 @@ public class GameEngine implements Publisher, Subscriber {
     private int currentPlayer;
     private int currentRound;
 
-    public GameEngine() {
-
-    }
-
-    public GameEngine(Player player1, Player player2) {
-//        this.players[0] = player1;
-//        this.players[1] = player2;
-//        this.currentPlayer = 0;
-//        this.currentRound = 1;
-    }
     public GameEngine(Player p1, Player p2, GameChannel eventChannel) {
         this.players = new Player[2];
         this.players[0] = p1;
@@ -27,6 +17,14 @@ public class GameEngine implements Publisher, Subscriber {
         this.eventChannel = eventChannel;
         this.currentPlayer = 0;
         this.currentRound = 1;
+    }
+
+    public int getCurrentRound() {
+        return this.currentRound;
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 
     public void setupGame() {
