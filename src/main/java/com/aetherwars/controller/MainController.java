@@ -3,6 +3,7 @@ package com.aetherwars.controller;
 import com.aetherwars.GameEngine;
 import com.aetherwars.event.EventChannel;
 import com.aetherwars.event.GameChannel;
+import com.aetherwars.model.Phase;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -26,6 +28,15 @@ public class MainController implements Initializable {
     @FXML
     Button buttonSkip;
 
+    @FXML
+    Label attack_p, draw_p, end_p, plan_p;
+
+    Phase[] phases = new Phase[] { Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END };
+
+    Label[] phases_bar;
+
+    int phase_id = 0;
+
     private EventChannel channel;
     private GridPane drawPane;
 
@@ -35,9 +46,11 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        this.phases_bar = new Label[]{draw_p, plan_p, attack_p, end_p};
         this.buttonSkip.setOnAction(e -> {
             // Aturan ini buat skip phase, tapi ini  contoh aja
-            this.displayDraw();
+            switch(this.channel.getPhase())
         });
 
     }
