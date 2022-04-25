@@ -1,8 +1,11 @@
 package com.aetherwars.model;
 
 import com.aetherwars.event.GameChannel;
+import com.aetherwars.model.cards.Card;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+
+import java.util.List;
 
 public class Player {
     private String playerName;
@@ -62,5 +65,9 @@ public class Player {
 
     public void turnPhase(){
         //pindah ke fase(?) ini sama kayak game state apa gimana?
+    }
+
+    public void drawOnly() {
+        this.hand.putCard(this.deck.draw());
     }
 }

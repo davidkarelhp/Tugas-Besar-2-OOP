@@ -7,9 +7,10 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class GameEngine implements Publisher, Subscriber {
-    private GameChannel eventChannel = new GameChannel();
+    private GameChannel eventChannel;
     private Player[] players;
     private int currentPlayer;
+
 //    private int currentRound;
 
     private IntegerProperty currentRound;
@@ -41,12 +42,13 @@ public class GameEngine implements Publisher, Subscriber {
 
     public void setupGame() {
         this.drawBoth();
+        this.publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
     }
 
     public void drawBoth() {
         // di sini draw-nya gak dikembaliin
-//        this.players[1].draw();
-//        this.players[0].draw();
+        this.players[1].drawOnly();
+        this.players[0].drawOnly();
     }
 
 
@@ -70,7 +72,7 @@ public class GameEngine implements Publisher, Subscriber {
 
     @Override
     public void publish(Event event) {
-
+        this.eventChannel.sendEvent(this, event);
     }
 
     @Override
