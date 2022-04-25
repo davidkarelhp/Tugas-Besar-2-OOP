@@ -1,5 +1,7 @@
 package com.aetherwars.model;
 
+import com.aetherwars.model.cards.Card;
+
 import java.util.ArrayList;
 import java.util.List;
 
