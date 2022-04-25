@@ -56,6 +56,12 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     GridPane handGrid;
 
+    @FXML
+    Label labelDeck;
+
+    @FXML
+    Label labelMana;
+
     private final int MAX_HEALTH = 80;
 
     private EventChannel channel;
@@ -91,6 +97,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.channel.addSubscriber(this, gameEngine);
         this.channel.addSubscriber(gameEngine, this);
+
         gameEngine.setupGame();
     }
 
@@ -140,7 +147,14 @@ public class MainController implements Initializable, Publisher, Subscriber {
             this.handGrid.add(cardPane, i, 0);
             i++;
         }
+    }
 
+    public void rebindDeckAndMana(Player player) throws IOException {
+        labelDeck.textProperty().unbind();
+        labelMana.textProperty().unbind();
+
+        labelDeck.textProperty().bind(Bindings.concat(player.getDeck().deckFillProperty(), "/", player.getDeck().getDeckSize()));
+        labelMana.textProperty().bind(Bindings.concat(player.manaProperty(), "/" + player.getManaLimit()));
     }
 
     @Override
@@ -152,7 +166,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
     public void onEvent(Event event) {
         try {
             if (event instanceof ChangePlayerEvent) {
-                    this.refreshHand((Player)event.getEvent());
+                    this.refreshHand((Player) event.getEvent());
+                    this.rebindDeckAndMana((Player) event.getEvent());
             }
         } catch (IOException e) {
             e.printStackTrace();

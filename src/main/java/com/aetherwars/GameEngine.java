@@ -38,7 +38,7 @@ public class GameEngine implements Publisher, Subscriber {
 
     public void setupGame() {
         this.drawBoth();
-        this.publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+        publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
     }
 
     public void drawBoth() {
@@ -54,15 +54,16 @@ public class GameEngine implements Publisher, Subscriber {
 //            this.players[this.currentPlayer].draw();
         } else if (phase == Phase.END) {
 //            Jalanin prosedur END phase disini, semua kartu currentplayer statusnya dijadiin belum dipakai dan sebagainya
-//            this.players[this.currentPlayer].
 
             if (this.currentPlayer == 1) {
                 this.currentRound.set(this.getCurrentRound() + 1);
             }
 
-            if (this.currentPlayer == 1) {
-                this.currentPlayer = (this.currentPlayer == 0) ? 1 : 0;
-            }
+            this.currentPlayer = (this.currentPlayer == 0) ? 1 : 0;
+
+            this.players[this.currentPlayer].increaseManaLimit();
+            this.players[this.currentPlayer].resetMana();
+            publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
         }
     }
 
