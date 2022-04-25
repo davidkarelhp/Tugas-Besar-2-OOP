@@ -1,10 +1,13 @@
 package com.aetherwars.model;
 
 import com.aetherwars.event.GameChannel;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 public class Player {
     private String playerName;
-    private double healthPoints;
+    private DoubleProperty healthPoints;
+//    private double healthPoints;
     private int mana;
     private Deck deck;
     private Hand hand;
@@ -16,7 +19,7 @@ public class Player {
         this.playerName = playerName;
         this.deck = deck;
         this.channel = channel;
-        this.healthPoints = 80;
+        this.healthPoints = new SimpleDoubleProperty(80);
         this.mana = 1;
         this.hand = new Hand();
     }
@@ -26,6 +29,10 @@ public class Player {
     }
 
     public double getHealthPoints() {
+        return healthPoints.get();
+    }
+
+    public DoubleProperty healthPointsProperty() {
         return healthPoints;
     }
 

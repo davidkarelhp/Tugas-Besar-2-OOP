@@ -3,6 +3,7 @@ package com.aetherwars.controller;
 import com.aetherwars.GameEngine;
 import com.aetherwars.event.*;
 import com.aetherwars.model.Player;
+import javafx.beans.binding.Bindings;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -73,10 +74,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
         this.labelPlayer1.setText(players[0].getPlayerName());
         this.labelPlayer2.setText(players[1].getPlayerName());
 
-        this.labelRound.setText("Round " + gameEngine.getCurrentRound());
+        this.labelRound.textProperty().bind(Bindings.concat("Round ", gameEngine.currentRoundProperty()));
 
-        this.healthPlayer1.setProgress(players[0].getHealthPoints() / this.MAX_HEALTH);
-        this.healthPlayer2.setProgress(players[1].getHealthPoints() / this.MAX_HEALTH);
+        this.healthPlayer1.progressProperty().bind(players[0].healthPointsProperty().divide(this.MAX_HEALTH));
+        this.healthPlayer2.progressProperty().bind(players[1].healthPointsProperty().divide(this.MAX_HEALTH));
     }
 
     public void displayDraw() {
