@@ -2,6 +2,7 @@ package com.aetherwars.model;
 
 import com.aetherwars.event.GameChannel;
 import com.aetherwars.model.cards.Card;
+import com.aetherwars.Board;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
@@ -14,6 +15,7 @@ public class Player {
     private int mana;
     private Deck deck;
     private Hand hand;
+    private Board board;
 //    private String hand_deck;
 //    private String board_deck;
     private GameChannel channel;
@@ -25,6 +27,7 @@ public class Player {
         this.healthPoints = new SimpleDoubleProperty(80);
         this.mana = 1;
         this.hand = new Hand();
+        this.board = new Board();
     }
 
     public String getPlayerName() {
@@ -51,15 +54,18 @@ public class Player {
         return hand;
     }
 
-    public void getCard(int deck){
-        //ngambil dari deck
+    public void getCard(Deck deck){
+        
     }
 
-    public void seeCard (String board_deck, String hand_deck){
-        //ngelihat dulu deskripsinya
+    public void seeCardBoard (){
+        Character [] CurrentBoard = this.board.getBoard();
+        for(){
+            
+        }
     }
 
-    public void moveCard (String hand_deck, String board_deck){
+    public void moveCard (){
         //pindahin dari list ini ke list yang satu lagi
     }
 
