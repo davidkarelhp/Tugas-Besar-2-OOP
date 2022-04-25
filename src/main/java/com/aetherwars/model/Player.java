@@ -1,16 +1,28 @@
 package com.aetherwars.model;
 
+import com.aetherwars.event.GameChannel;
+
 public class Player {
     private String playerName;
-    private double HealthPoints;
-    private int Mana;
+    private double healthPoints;
+    private int mana;
+    private Deck deck;
+    private Hand hand;
+//    private String hand_deck;
+//    private String board_deck;
+    private GameChannel channel;
 
-    //ini nanti diganti sama list deck
-    private int deck;
-    private String hand_deck;
-    private String board_deck;
     public Player() {
 
+    }
+
+    public Player(String playerName, Deck deck, GameChannel channel) {
+//        this.playerName = playerName;
+////        this.deck = deck;
+//        this.channel = channel;
+//        this.healthPoints = 40;
+//        this.mana = 1;
+//        this.hand = new Hand();
     }
 
     public void getCard(int deck){

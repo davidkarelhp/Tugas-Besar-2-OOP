@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.aetherwars.controller.MainController;
 import com.aetherwars.event.GameChannel;
+import com.aetherwars.model.Dealer;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.character.CharacterType;
 import javafx.application.Application;
@@ -38,16 +40,15 @@ public class AetherWars extends Application {
       int mana = Integer.parseInt(row[7]);
       int attackUp = Integer.parseInt(row[8]);
       int healthUp = Integer.parseInt(row[9]);
-
+//
       Character c = new Character(id, name, description, mana, imagePath, characterType, attack, health, attackUp, healthUp);
       Character.characterList.add(c);
     }
   }
 
   @Override
-  public void start(Stage stage) throws IOException {
-      Text text = new Text();
-//    try {
+  public void start(Stage stage) throws IOException, URISyntaxException {
+      this.loadCards();
 
       GameChannel channel = new GameChannel();
       FXMLLoader gameLoader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -57,10 +58,12 @@ public class AetherWars extends Application {
       MainController controller = gameLoader.getController();
       channel.setController(controller);
 
-      Player player1 = new Player();
-      Player player2 = new Player();
-//      GameEngine gameEngine = new GameEngine(player1, player2);
-      GameEngine gameEngine = new GameEngine();
+      int deckSize = ThreadLocalRandom.current().nextInt(40, 60 + 1);
+
+      Player player1 = new Player("Steve", Dealer.getRandomDeck(deckSize), channel);
+      Player player2 = new Player("Alex", Dealer.getRandomDeck(deckSize), channel);
+
+      GameEngine gameEngine = new GameEngine(player1, player2, channel);
 
       Scene scene = new Scene(root);
 
@@ -69,17 +72,9 @@ public class AetherWars extends Application {
       stage.setMaximized(true);
       stage.setResizable(false);
       stage.show();
-//    } catch (Exception e) {
-//      System.out.println(e);
-//    }
 
-//    controller.startGame(gameEngine);
-    try {
-      this.loadCards();
-      text.setText("Minecraft: Aether Wars!");
-    } catch (Exception e) {
-      text.setText("Failed to load cards: " + e);
-    }
+      controller.startGame(gameEngine);
+
   }
 
   public int add(int x, int y) {

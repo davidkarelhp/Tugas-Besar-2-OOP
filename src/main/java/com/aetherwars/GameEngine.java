@@ -15,12 +15,13 @@ public class GameEngine implements Publisher, Subscriber {
     }
 
     public GameEngine(Player player1, Player player2) {
-        this.players[0] = player1;
-        this.players[1] = player2;
-        this.currentPlayer = 0;
-        this.currentRound = 1;
+//        this.players[0] = player1;
+//        this.players[1] = player2;
+//        this.currentPlayer = 0;
+//        this.currentRound = 1;
     }
     public GameEngine(Player p1, Player p2, GameChannel eventChannel) {
+        this.players = new Player[2];
         this.players[0] = p1;
         this.players[1] = p2;
         this.eventChannel = eventChannel;
