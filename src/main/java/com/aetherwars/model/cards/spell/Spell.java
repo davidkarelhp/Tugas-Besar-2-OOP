@@ -1,6 +1,6 @@
 package com.aetherwars.model.cards.spell;
 
-import com.aetherwars.model.cards.character.Character;
+//import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
