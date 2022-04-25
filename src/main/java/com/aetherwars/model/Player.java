@@ -66,8 +66,9 @@ public class Player {
         return hand;
     }
 
-    public void getCard(Deck deck){
-        
+    public void seeCardinHand(int index){
+        Card card = this.hand.getCardAtIndex(index);
+        card.displayDesc();
     }
 
     public void seeSpecificBoard(String CharacterName){
@@ -90,12 +91,8 @@ public class Player {
         }
     }
 
-    public void moveCardToBoard (String CharacterName){
-        
-    }
-
-    public void turnPhase(){
-        //pindah ke fase(?) ini sama kayak game state apa gimana?
+    public void moveCardToBoard (Character CharacterName, int ChooseSlot){
+        this.board.putCardInSlot(ChooseSlot, CharacterName);
     }
 
     public void drawOnly() {
