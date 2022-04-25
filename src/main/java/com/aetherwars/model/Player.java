@@ -90,8 +90,8 @@ public class Player {
         }
     }
 
-    public void moveCard (){
-        //pindahin dari list ini ke list yang satu lagi
+    public void moveCardToBoard (String CharacterName){
+        
     }
 
     public void turnPhase(){
