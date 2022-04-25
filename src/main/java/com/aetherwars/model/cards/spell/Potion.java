@@ -2,6 +2,7 @@ package com.aetherwars.model.cards.spell;
 
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.characteristics.AttackModifier;
 import com.aetherwars.model.cards.spell.characteristics.HealthModifier;
 import com.aetherwars.model.cards.spell.characteristics.TemporaryEffect;
@@ -9,8 +10,8 @@ import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
 public class Potion extends Spell implements TemporaryEffect, AttackModifier, HealthModifier {
-    private double attack;
-    private double health;
+    private final double attack;
+    private final double health;
 
     private double healthUsed;
     public Potion(double attack, double health){
@@ -36,23 +37,23 @@ public class Potion extends Spell implements TemporaryEffect, AttackModifier, He
 //    }
 
     @Override
-    public void runEffect(Character character) {
+    public void runEffect(SummonedCharacter character) {
         modifyHealth(character);
         modifyAttack(character);
     }
 
     @Override
-    public void removeEffect(Character character) {
+    public void removeEffect(SummonedCharacter character) {
 
     }
 
     @Override
-    public void modifyAttack(Character character) {
+    public void modifyAttack(SummonedCharacter character) {
 //        character.setAttack(character.getAttackUp() + attack); // should be attackUp
     }
 
     @Override
-    public void modifyHealth(Character character) {
+    public void modifyHealth(SummonedCharacter character) {
 //        character.setHealth(character.getHealthUp() + health); // should be healthUp
     }
 

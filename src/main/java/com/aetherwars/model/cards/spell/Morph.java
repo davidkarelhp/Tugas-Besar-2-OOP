@@ -2,6 +2,7 @@ package com.aetherwars.model.cards.spell;
 
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.characteristics.CharacterChanger;
 import com.aetherwars.model.cards.spell.characteristics.PermanentEffect;
 import com.aetherwars.model.cards.spell.characteristics.Swapper;
@@ -20,13 +21,13 @@ public class Morph extends Spell implements PermanentEffect, CharacterChanger {
 //    }
 
     @Override
-    public void runEffect(Character character) {
+    public void runEffect(SummonedCharacter character) {
 
     }
 
 
     @Override
-    public void changeCharacter(Character character) {
+    public void changeCharacter(SummonedCharacter character) {
         character = character; //supposedly other character
     }
 }

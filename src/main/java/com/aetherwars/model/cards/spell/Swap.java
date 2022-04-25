@@ -2,6 +2,7 @@ package com.aetherwars.model.cards.spell;
 
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.characteristics.Swapper;
 import com.aetherwars.model.cards.spell.characteristics.TemporaryEffect;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
@@ -18,17 +19,17 @@ public class Swap extends Spell implements TemporaryEffect, Swapper {
 //    }
 
     @Override
-    public void runEffect(Character character) {
+    public void runEffect(SummonedCharacter character) {
         swap(character);
     }
 
     @Override
-    public void removeEffect(Character character) {
+    public void removeEffect(SummonedCharacter character) {
 
     }
 
     @Override
-    public void swap(Character character) {
+    public void swap(SummonedCharacter character) {
 //        double tmp = character.getHealth();
 //        character.setHealth(character.getAttack());
 //        character.setAttack(tmp);

@@ -1,6 +1,7 @@
 package com.aetherwars.model.cards.spell;
 
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.characteristics.ExperienceEater;
 import com.aetherwars.model.cards.spell.characteristics.LevelModifier;
 import com.aetherwars.model.cards.spell.characteristics.PermanentEffect;
@@ -19,12 +20,12 @@ public class Level extends Spell implements PermanentEffect, LevelModifier, Expe
     }
 
     @Override
-    public void runEffect(Character character) {
+    public void runEffect(SummonedCharacter character) {
         modifyLevel(character);
     }
 
     @Override
-    public void modifyLevel(Character character) {
+    public void modifyLevel(SummonedCharacter character) {
         if (character.getLevel() - 1 >= 1){
             character.levelUp(); // supposedly levelDown
             eatExperience(character);
@@ -35,7 +36,7 @@ public class Level extends Spell implements PermanentEffect, LevelModifier, Expe
     }
 
     @Override
-    public void eatExperience(Character character) {
+    public void eatExperience(SummonedCharacter character) {
         character.setExp(0);
         System.out.println("Experience has been set to 0");
     }
