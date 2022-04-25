@@ -12,17 +12,13 @@ public class Player {
 //    private String board_deck;
     private GameChannel channel;
 
-    public Player() {
-
-    }
-
     public Player(String playerName, Deck deck, GameChannel channel) {
-//        this.playerName = playerName;
-////        this.deck = deck;
-//        this.channel = channel;
-//        this.healthPoints = 40;
-//        this.mana = 1;
-//        this.hand = new Hand();
+        this.playerName = playerName;
+        this.deck = deck;
+        this.channel = channel;
+        this.healthPoints = 40;
+        this.mana = 1;
+        this.hand = new Hand();
     }
 
     public void getCard(int deck){
