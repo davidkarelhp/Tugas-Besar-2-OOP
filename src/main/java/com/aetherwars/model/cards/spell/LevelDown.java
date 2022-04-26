@@ -1,22 +1,13 @@
 package com.aetherwars.model.cards.spell;
 
-import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.character.SummonedCharacter;
+import com.aetherwars.model.cards.spell.characteristics.EffectRunner;
 import com.aetherwars.model.cards.spell.characteristics.ExperienceEater;
 import com.aetherwars.model.cards.spell.characteristics.LevelModifier;
 import com.aetherwars.model.cards.spell.characteristics.PermanentEffect;
-import com.aetherwars.model.cards.spell.enums.EffectDurationType;
-import com.aetherwars.model.cards.spell.enums.SpellType;
-import com.aetherwars.model.cards.Card;
 
-public class Level extends Spell implements PermanentEffect, LevelModifier, ExperienceEater {
-    public Level(){
-        super(SpellType.SWAP, EffectDurationType.PERMANENT);
-    }
-
-//    @Override
-    public void summon() {
-
+public class LevelDown implements PermanentEffect, LevelModifier, ExperienceEater, EffectRunner {
+    public LevelDown() {
     }
 
     @Override
@@ -26,10 +17,10 @@ public class Level extends Spell implements PermanentEffect, LevelModifier, Expe
 
     @Override
     public void modifyLevel(SummonedCharacter character) {
-        if (character.getLevel() - 1 >= 1){
-            character.levelUp(); // supposedly levelDown
+        if (character.getLevel() - 1 >= 1) {
+            character.setLevel(character.getLevel() - 1);
             eatExperience(character);
-            System.out.println("Level modified from "+(character.getLevel() + 1)+ " to "+ character.getLevel());
+            System.out.println("Level modified from " + (character.getLevel() + 1) + " to " + character.getLevel());
         } else {
             System.out.println("Can't modify level, level constraints will be violated");
         }

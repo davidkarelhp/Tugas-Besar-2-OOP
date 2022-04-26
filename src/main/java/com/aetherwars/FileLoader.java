@@ -3,7 +3,12 @@ package com.aetherwars;
 import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.character.CharacterType;
 import com.aetherwars.model.cards.character.SummonedCharacter;
+import com.aetherwars.model.cards.spell.Morph;
+import com.aetherwars.model.cards.spell.Potion;
 import com.aetherwars.model.cards.spell.Spell;
+import com.aetherwars.model.cards.spell.Swap;
+import com.aetherwars.model.cards.spell.enums.EffectDurationType;
+import com.aetherwars.model.cards.spell.enums.SpellType;
 import com.aetherwars.util.CSVReader;
 
 import java.io.File;
@@ -59,6 +64,10 @@ public class FileLoader {
             int targetId = Integer.parseInt(row[4]);
             int mana = Integer.parseInt(row[5]);
 
+            Spell s = new Spell(id, name, description, mana, imagePath, SpellType.MORPH);
+            ((Morph)s.getSpellWorker()).setTargetId(targetId);
+
+            Spell.SpellList.add(s);
         }
     }
 
@@ -77,6 +86,13 @@ public class FileLoader {
             int mana = Integer.parseInt(row[6]);
             int duration = Integer.parseInt(row[7]);
 
+            Spell s = new Spell(id, name, description, mana, imagePath, SpellType.POTION);
+            Potion sw = ((Potion) s.getSpellWorker());
+            sw.setDuration(duration);
+            sw.setAttack(attack);
+            sw.setHealth(hp);
+
+            Spell.SpellList.add(s);
         }
     }
 
@@ -93,6 +109,11 @@ public class FileLoader {
             int duration = Integer.parseInt(row[4]);
             int mana = Integer.parseInt(row[5]);
 
+            Spell s = new Spell(id, name, description, mana, imagePath, SpellType.SWAP);
+            Swap sw = ((Swap) s.getSpellWorker());
+            sw.setDuration(duration);
+
+            Spell.SpellList.add(s);
         }
     }
 }
