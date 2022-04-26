@@ -13,9 +13,11 @@ import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.character.CharacterType;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import com.aetherwars.model.cards.character.Character;
@@ -41,11 +43,18 @@ public class AetherWars extends Application {
 
       GameEngine gameEngine = new GameEngine(player1, player2, channel);
 
-      Scene scene = new Scene(root);
+      Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+      Scene scene = null;
 
-      stage.setTitle("Minecraft: Aether Wars");
+      if (screenBounds.getHeight() > 1280 || screenBounds.getHeight() > 720) {
+          scene = new Scene(root, 1280, 720);
+      } else {
+          scene = new Scene(root);
+          stage.setMaximized(true);
+      }
+
       stage.setScene(scene);
-      stage.setMaximized(true);
+      stage.setTitle("Minecraft: Aether Wars");
       stage.setResizable(false);
       stage.show();
 

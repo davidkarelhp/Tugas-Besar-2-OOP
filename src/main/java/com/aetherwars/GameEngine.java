@@ -18,6 +18,8 @@ public class GameEngine implements Publisher, Subscriber {
     private IntegerProperty currentRound;
     private int currentPhase;
     private static Phase[] phases = {Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END};
+    private List<Card> backToDeck;
+    private Card toHand;
 
     public GameEngine(Player p1, Player p2, GameChannel eventChannel) {
         this.players = new Player[2];
@@ -79,6 +81,7 @@ public class GameEngine implements Publisher, Subscriber {
 
         } else if (currentPhase() == Phase.PLAN){
 
+
         } else if (currentPhase() == Phase.ATTACK) {
 
         } else if (currentPhase()  == Phase.END) {
@@ -101,8 +104,8 @@ public class GameEngine implements Publisher, Subscriber {
     }
 
     public void drawnCardClicked(List<Card> cards, int idxCard) {
-        Card toHand = null;
-        List<Card> backToDeck = new ArrayList<>();
+        toHand = null;
+        backToDeck = new ArrayList<>();
 
         int i = 0;
         for (Card card: cards) {
@@ -117,13 +120,23 @@ public class GameEngine implements Publisher, Subscriber {
 
         cards.clear();
 
+        if (this.players[this.currentPlayer].getHand().getHand().size() < 5) {
+            this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
+            this.players[this.currentPlayer].addToHand(toHand);
+            publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+            nextPhaseProcess();
+
+        } else {
+            publish(new HandFullEvent());
+        }
+
+    }
+
+    public void discardAndDraw(int idxDiscarded) {
+        this.players[this.currentPlayer].getHand().discardAtIndex(idxDiscarded);
         this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
         this.players[this.currentPlayer].addToHand(toHand);
-
         publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
-
-        // belum handle kalau hand penuh
-        // setelah draw langsung plan phase
         nextPhaseProcess();
     }
 
@@ -142,8 +155,8 @@ public class GameEngine implements Publisher, Subscriber {
             } else if (event instanceof DrawnCardClicked) {
                 Pair<List<Card>, Integer> pair =  (Pair<List<Card>, Integer>) event.getEvent();
                 drawnCardClicked(pair.getKey(), pair.getValue());
-            } else if (event instanceof  HoverEvent){
-                System.out.println("masuk");
+            } else if (event instanceof DiscardToDrawEvent) {
+                discardAndDraw((int)event.getEvent());
             }
 
         } catch (Exception e) {

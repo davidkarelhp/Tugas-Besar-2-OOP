@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -102,6 +103,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     private GameChannel channel;
     private GridPane drawPane;
+    private List<StackPane> handList;
 
     GameEngine engine;
 
@@ -228,6 +230,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
     }
 
     public void refreshHand(Player player) throws IOException {
+        labelHand.setText("");
+        buttonSkip.setDisable(false);
+        handList = new ArrayList<>();
         handGrid.getChildren().clear();
         List<Card> hand = player.getHand().getHand();
         int i = 0;
@@ -238,6 +243,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             StackPane cardPane = cardFXML.load();
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
+            handList.add(cardPane);
             this.handGrid.add(cardPane, i, 0);
             i++;
         }
@@ -275,6 +281,18 @@ public class MainController implements Initializable, Publisher, Subscriber {
         }
     }
 
+    public void discardToDraw() {
+        buttonSkip.setDisable(true);
+        labelHand.setText("Discard salah satu kartu!");
+
+        int i = 0;
+        for (StackPane cardPane: handList) {
+            int idxDiscard = i;
+            cardPane.setOnMouseClicked(e -> publish(new DiscardToDrawEvent(idxDiscard)));
+            i++;
+        }
+    }
+
     @Override
     public void publish(Event event) {
         this.channel.sendEvent(this, event);
@@ -293,6 +311,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof DrawPhaseEvent) {
                 this.displayDraw((List<Card>) event.getEvent());
+
+            } else if (event instanceof HandFullEvent) {
+                this.discardToDraw();
             }
 
         } catch (IOException e) {
