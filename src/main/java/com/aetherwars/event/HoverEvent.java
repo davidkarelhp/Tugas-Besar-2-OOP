@@ -8,6 +8,7 @@ public class HoverEvent implements Event {
     Card card;
 
     public HoverEvent(Card card){
+
         this.card = card;
     }
 

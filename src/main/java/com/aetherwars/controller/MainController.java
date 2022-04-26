@@ -91,6 +91,12 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     StackPane planPhase;
 
+    @FXML
+    Label dataCardLabel, titleCardLabel, descCardLabel;
+
+    @FXML
+    ImageView imageCardHover;
+
     private final int MAX_HEALTH = 80;
     private final Color CURRENT_PHASE_COLOR = Color.AQUAMARINE;
 
@@ -155,7 +161,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         for (Card card: cards) {
             Character charcard = (Character)card;
             FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
-            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth()));
+            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth(), charcard.getDescription(), charcard, this));
             StackPane cardPane = cardFXML.load();
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
@@ -180,7 +186,45 @@ public class MainController implements Initializable, Publisher, Subscriber {
     public void onDrawnCardClicked(List<Card> cards, int i) {
         // Method kalau salah satu kartu yang di-draw diklik, untuk sekarang kembali ke main panel aja
         backPane.getChildren().remove(drawPane);
+
         publish(new DrawnCardClicked(cards, i));
+    }
+
+    public void onHoverCard(Character card){
+
+        File file = null;
+        try {
+            file = new File(getClass().getResource("../" + card.getImagePath()).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        titleCardLabel.textProperty().unbind();
+        titleCardLabel.textProperty().set(card.getName());
+
+        dataCardLabel.textProperty().unbind();
+        dataCardLabel.textProperty().bind(Bindings.concat("ATK: ", card.getBaseAttack(),"\nHP: ", card.getBaseHealth(),"\nLevel: ", card.getLevel(), "\nType: ", card.getCharacterType()));
+
+
+        descCardLabel.textProperty().unbind();
+        descCardLabel.textProperty().bind(Bindings.concat("\"", card.getDescription(),"\""));
+
+        imageCardHover.setImage(new Image(file.toURI().toString(), 60, 80, true, true));
+
+    }
+
+    public void onUnHoverCard(Character card){
+
+        titleCardLabel.textProperty().unbind();
+        titleCardLabel.textProperty().set("");
+
+        dataCardLabel.textProperty().unbind();
+        dataCardLabel.textProperty().set("");
+
+        descCardLabel.textProperty().unbind();
+        descCardLabel.textProperty().set("");
+
+        imageCardHover.setImage(null);
     }
 
     public void refreshHand(Player player) throws IOException {
@@ -190,7 +234,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         for (Card card: hand) {
             Character charcard = (Character)card;
             FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
-            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth()));
+            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth(), charcard.getDescription(), charcard, this));
             StackPane cardPane = cardFXML.load();
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));

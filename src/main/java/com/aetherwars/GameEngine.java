@@ -142,6 +142,8 @@ public class GameEngine implements Publisher, Subscriber {
             } else if (event instanceof DrawnCardClicked) {
                 Pair<List<Card>, Integer> pair =  (Pair<List<Card>, Integer>) event.getEvent();
                 drawnCardClicked(pair.getKey(), pair.getValue());
+            } else if (event instanceof  HoverEvent){
+                System.out.println("masuk");
             }
 
         } catch (Exception e) {
