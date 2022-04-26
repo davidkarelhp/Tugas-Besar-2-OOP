@@ -23,7 +23,7 @@ public class Swap implements TemporaryEffect, Swapper, EffectRunner {
 
     @Override
     public void removeEffect(SummonedCharacter character) {
-        character.getTempSpell().remove(this);
+        character.getSwapSpells().remove(this);
     }
 
     public int getDuration() {

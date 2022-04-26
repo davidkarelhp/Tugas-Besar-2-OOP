@@ -59,7 +59,7 @@ public class Potion implements TemporaryEffect, AttackModifier, HealthModifier, 
 
     @Override
     public void removeEffect(SummonedCharacter character) {
-        character.getTempSpell().remove(this);
+        character.getPotionSpells().remove(this);
     }
 
     @Override

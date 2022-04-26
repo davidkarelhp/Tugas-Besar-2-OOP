@@ -1,6 +1,7 @@
 package com.aetherwars.model.cards.character;
 
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.spell.Potion;
 import com.aetherwars.model.cards.spell.Spell;
 
 import java.util.ArrayList;
@@ -11,7 +12,10 @@ public class SummonedCharacter implements IsSummoned {
     private int exp;
     private double attack;
     private double health;
-    private ArrayList<Spell> tempSpell;
+    private ArrayList<Spell> potionSpells;
+    private ArrayList<Spell> swapSpells;
+    private double attackTemp;
+    private double healthTemp;
     private boolean playable;
 
     public SummonedCharacter(Character character) {
@@ -20,17 +24,23 @@ public class SummonedCharacter implements IsSummoned {
         this.exp = 0;
         this.attack = 0;
         this.health = 0;
-        this.tempSpell = new ArrayList<Spell>();
+        this.potionSpells = new ArrayList<Spell>();
+        this.swapSpells = new ArrayList<Spell>();
+        this.attackTemp = 0;
+        this.healthTemp = 0;
         this.playable = true;
     }
 
-    public SummonedCharacter(Character character, int level, int exp, double attack, double health, double mana, ArrayList<Spell> tempSpell, boolean playable) {
+    public SummonedCharacter(Character character, int level, int exp, double attack, double health, double mana, ArrayList<Spell> potionSpells, ArrayList<Spell> swapSpells, boolean playable) {
         this.character = character;
         this.level = level;
         this.exp = exp;
         this.attack = attack;
         this.health = health;
-        this.tempSpell = tempSpell;
+        this.potionSpells = potionSpells;
+        this.swapSpells = swapSpells;
+        this.attackTemp = 0;
+        this.healthTemp = 0;
         this.playable = playable;
     }
 
@@ -90,12 +100,36 @@ public class SummonedCharacter implements IsSummoned {
         this.health = health;
     }
 
-    public ArrayList<Spell> getTempSpell() {
-        return tempSpell;
+    public ArrayList<Spell> getPotionSpells() {
+        return potionSpells;
     }
 
-    public void setTempSpell(ArrayList<Spell> tempSpell) {
-        this.tempSpell = tempSpell;
+    public void setPotionSpells(ArrayList<Spell> potionSpells) {
+        this.potionSpells = potionSpells;
+    }
+
+    public ArrayList<Spell> getSwapSpells() {
+        return swapSpells;
+    }
+
+    public void setSwapSpells(ArrayList<Spell> swapSpells) {
+        this.swapSpells = swapSpells;
+    }
+
+    public double getAttackTemp() {
+        return attackTemp;
+    }
+
+    public void setAttackTemp(double attackTemp) {
+        this.attackTemp = attackTemp;
+    }
+
+    public double getHealthTemp() {
+        return healthTemp;
+    }
+
+    public void setHealthTemp(double healthTemp) {
+        this.healthTemp = healthTemp;
     }
 
     public boolean isPlayable() {
@@ -110,34 +144,86 @@ public class SummonedCharacter implements IsSummoned {
         return ((getType() == CharacterType.OVERWORLD && enemy.getType() == CharacterType.END) || (getType() == CharacterType.END && enemy.getType() == CharacterType.NETHER) || (getType() == CharacterType.NETHER && enemy.getType() == CharacterType.OVERWORLD));
     }
 
+    public void usePotionHealth(Potion potion, Double damage) {
+        double potionHealth = potion.getHealth();
+        potion.setHealth(potionHealth - damage);
+        damage -= potionHealth;
+        if (potion.getHealth() <= 0) {
+            potion.setHealth(0);
+            potion.removeEffect(this);
+        }
+    }
+
+    public void attackPotion(Double damage) {
+        int n = potionSpells.size() - 1;
+        while (damage != 0 || potionSpells.size() != 0) {
+            Potion potion = ((Potion)potionSpells.get(n).getSpellWorker());
+            usePotionHealth(potion, damage);
+            n = potionSpells.size() - 1;
+        }
+    }
+
+//    public void checkPotion() {
+//        this.potionSpells.forEach(spell -> attackTemp += spell.getSpellWorker());
+//    }
+//
+//    public double generateDamage() {
+//
+//    }
+
+    public void attacked(SummonedCharacter attacker, double baseDamage) {
+        if (isStronger(attacker)) {
+            Double damage = new Double(0.5 * baseDamage);
+            attackPotion(damage);
+            setHealth(getHealth() - damage);
+            // add condition if attacker dies
+        }
+        else if (attacker.isStronger(this)) {
+            Double damage = new Double(2 * baseDamage);
+            attackPotion(damage);
+            setHealth(getHealth() - damage);
+            // add condition if attacker dies
+        }
+        else if (getType() == attacker.getType()) {
+            Double damage = new Double(getAttack());
+            attackPotion(damage);
+            setHealth(getHealth() - getAttack());
+            // add condition if attacker dies
+        }
+    }
+    
     public void attackEnemy(SummonedCharacter enemy) {
         if (isStronger(enemy)) {
-            double damage = 2 * getAttack();
-            enemy.setHealth(enemy.getHealth() - damage);
-            // add condition if enemy dies
+            Double damage = new Double(2 * getAttack());
         }
         else if (enemy.isStronger(this)) {
-            double damage = 0.5 * getAttack();
-            enemy.setHealth(enemy.getHealth() - damage);
-            // add condition if enemy dies
+
         }
         else if (getType() == enemy.getType()) {
-            enemy.setHealth(enemy.getHealth() - getAttack());
-            // add condition if enemy dies
+
         }
+        // enemy.attacked(this);
     }
 
-    public void addTempSpell(Spell spell) {
-        this.tempSpell.add(spell);
+    public void useSpell(Spell spell) {
+       spell.runEffect(this);
     }
 
-    // public void useSpell(Spell spell) {
-    //    spell.runEffect(this);
-    // }
+    public void addPotionSpells(Spell spell) {
+        this.potionSpells.add(spell);
+    }
+ 
+    public void processPotionSpellsList() {
+       potionSpells.forEach((spell -> spell.runEffect(this)));
+    }
 
-    // public void processSpellList() {
-    //    tempSpell.forEach((spell -> spell.runEffect(this)));
-    // }
+    public void addSwapSpells(Spell spell) {
+        this.swapSpells.add(spell);
+    }
+
+    public void processSwapSpellsList() {
+       swapSpells.forEach((spell -> spell.runEffect(this)));
+    }
 
     public void levelUp() {
         setAttack(getAttack() + getAttackUp());
