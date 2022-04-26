@@ -137,17 +137,17 @@
                <children>
                   <StackPane fx:id="drawPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;">
                      <children>
-                        <Label fx:id="draw_p" alignment="CENTER" prefHeight="36.0" prefWidth="257.0" text="DRAW" textAlignment="JUSTIFY" />
+                        <Label fx:id="draw_p" alignment="CENTER" prefHeight="18.0" prefWidth="189.0" text="DRAW" textAlignment="JUSTIFY" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="planPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="1">
                      <children>
-                        <Label fx:id="plan_p" alignment="CENTER" prefHeight="55.0" prefWidth="261.0" text="PLAN" />
+                        <Label fx:id="plan_p" alignment="CENTER" prefHeight="14.0" prefWidth="199.0" text="PLAN" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="attackPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="2">
                      <children>
-                        <Label fx:id="atack_p" alignment="CENTER" prefHeight="27.0" prefWidth="259.0" text="ATTACK" />
+                        <Label fx:id="atack_p" alignment="CENTER" prefHeight="15.0" prefWidth="219.0" text="ATTACK" />
                      </children>
                   </StackPane>
                   <Button fx:id="buttonSkip" minWidth="150.0" mnemonicParsing="false" onAction="#currentPhase" prefWidth="150.0" style="-fx-background-color: &quot;black&quot;;" text="&gt;&gt;" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
@@ -157,7 +157,7 @@
                   </Button>
                   <StackPane fx:id="endPhase" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="3">
                      <children>
-                        <Label fx:id="end_p" alignment="CENTER" prefHeight="43.0" prefWidth="262.0" text="END" />
+                        <Label fx:id="end_p" alignment="CENTER" prefHeight="15.0" prefWidth="224.0" text="END" />
                      </children>
                   </StackPane>
                </children>

@@ -250,7 +250,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof CurrentPhaseEvent) {
                 this.phaseColoring((Phase) event.getEvent());
-            }
+            } else if (event instanceof HoverEvent)
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -17,10 +17,14 @@
 //    private GameChannel channel;
 //    private boolean is_selected;
 //    private int pos;
-//    private int owner;
+//    private int playerID;
 //
-//    public SummonedCharacterController(GameChannel channel){
+//    public SummonedCharacterController(GameChannel channel, int pos, int Id){
 //        this.channel = channel;
+//        this.is_selected = false;
+//        this.pos = pos;
+//        this.playerID = Id;
+//
 //    }
 //
 //
