@@ -1,12 +1,17 @@
 package com.aetherwars.controller;
 
 import com.aetherwars.GameEngine;
+import com.aetherwars.event.EventChannel;
+import com.aetherwars.event.GameChannel;
+import com.aetherwars.model.Phase;
 import com.aetherwars.event.*;
 import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.EventType;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +21,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
@@ -28,7 +34,9 @@ import javafx.scene.paint.Paint;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,6 +46,15 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     @FXML
     Button buttonSkip;
+
+    @FXML
+    Label atack_p, draw_p, end_p, plan_p;
+
+    Phase[] phases = new Phase[] { Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END };
+
+    Label[] phases_bar;
+
+    int phase_id = 0;
 
     @FXML
     Label labelPlayer1;
@@ -75,10 +92,17 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     StackPane planPhase;
 
-    private final int MAX_HEALTH = 80;
+    @FXML
+    Label labelHand;
 
-    private EventChannel channel;
+    private final int MAX_HEALTH = 80;
+    private final Color CURRENT_PHASE_COLOR = Color.AQUAMARINE;
+
+    private GameChannel channel;
     private GridPane drawPane;
+    private List<StackPane> handList;
+
+    GameEngine engine;
 
     public MainController(GameChannel channel) {
         this.channel = channel;
@@ -86,15 +110,21 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        this.phases_bar = new Label[]{draw_p, plan_p, atack_p, end_p};
         this.healthPlayer1.setStyle("-fx-accent: green;");
         this.healthPlayer2.setStyle("-fx-accent: green;");
 
         this.buttonSkip.setOnAction(e -> {
+            // Aturan ini buat skip phase, tapi ini  contoh aja
             publish(new NextPhaseEvent());
         });
+
     }
 
     public void startGame(GameEngine gameEngine) throws IOException {
+
+        this.engine = gameEngine;
 
         Player[] players = gameEngine.getPlayers();
 
@@ -112,39 +142,56 @@ public class MainController implements Initializable, Publisher, Subscriber {
         gameEngine.setupGame();
     }
 
-    public void displayDraw() {
+    public void displayDraw(List<Card> cards) throws IOException {
+        if (backPane.getChildren().contains(drawPane)) {
+            backPane.getChildren().remove(drawPane);
+        }
+
         // Contoh kalau mau nampilin sesuatu pakai button, di sini yang ditampilin tuh 3 kartu yang dipilih pas nge-draw
         drawPane = new GridPane();
-//        drawPane.setGridLinesVisible(true);
+        // drawPane.setGridLinesVisible(true);
 
-        RowConstraints constraintsR = new RowConstraints();
-        constraintsR.setVgrow(Priority.ALWAYS);
-        drawPane.getRowConstraints().add(constraintsR);
+        RowConstraints constraintsRow = new RowConstraints();
+        constraintsRow.setVgrow(Priority.ALWAYS);
+        drawPane.getRowConstraints().add(constraintsRow);
 
-        for (int i = 0 ; i < 3; i++) {
+        int i = 0;
+
+        for (Card card: cards) {
+            Character charcard = (Character)card;
+            FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
+            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth()));
+            StackPane cardPane = cardFXML.load();
+
+            StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
+
             ColumnConstraints constraints = new ColumnConstraints();
             constraints.setHgrow(Priority.ALWAYS);
             drawPane.getColumnConstraints().add(constraints);
 
-            StackPane temp = new StackPane();
-            temp.setMaxSize(150, 300);
-            GridPane.setHalignment(temp, HPos.CENTER);
+            cardPane.setMaxSize(150, 300);
+            GridPane.setHalignment(cardPane, HPos.CENTER);
 
-            temp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-            drawPane.add(temp, i, 0);
-            temp.setOnMouseClicked(e -> this.onDrawnCardClicked());
+            drawPane.add(cardPane, i, 0);
+            int idxCard = i;
+            cardPane.setOnMouseClicked(e -> this.onDrawnCardClicked(cards, idxCard));
+            i++;
 
         }
         drawPane.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
         backPane.getChildren().add(drawPane);
     }
 
-    public void onDrawnCardClicked() {
+    public void onDrawnCardClicked(List<Card> cards, int i) {
         // Method kalau salah satu kartu yang di-draw diklik, untuk sekarang kembali ke main panel aja
         backPane.getChildren().remove(drawPane);
+        publish(new DrawnCardClicked(cards, i));
     }
 
     public void refreshHand(Player player) throws IOException {
+        labelHand.setText("");
+        buttonSkip.setDisable(false);
+        handList = new ArrayList<>();
         handGrid.getChildren().clear();
         List<Card> hand = player.getHand().getHand();
         int i = 0;
@@ -155,6 +202,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             StackPane cardPane = cardFXML.load();
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
+            handList.add(cardPane);
             this.handGrid.add(cardPane, i, 0);
             i++;
         }
@@ -171,32 +219,36 @@ public class MainController implements Initializable, Publisher, Subscriber {
     public void phaseColoring(Phase phase) {
         switch (phase) {
             case DRAW:
-                drawPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
-                planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                drawPhase.setBackground(new Background(new BackgroundFill(this.CURRENT_PHASE_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                 endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 break;
 
             case PLAN:
                 drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                planPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
-                attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                planPhase.setBackground(new Background(new BackgroundFill(this.CURRENT_PHASE_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                 break;
 
             case ATTACK:
-                drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                attackPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
-                endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                attackPhase.setBackground(new Background(new BackgroundFill(this.CURRENT_PHASE_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                 break;
 
             case END:
-                drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                endPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                endPhase.setBackground(new Background(new BackgroundFill(this.CURRENT_PHASE_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
                 break;
+        }
+    }
+
+    public void discardToDraw() {
+        buttonSkip.setDisable(true);
+        labelHand.setText("Discard salah satu kartu!");
+
+        int i = 0;
+        for (StackPane cardPane: handList) {
+            int idxDiscard = i;
+            cardPane.setOnMouseClicked(e -> publish(new DiscardToDrawEvent(idxDiscard)));
+            i++;
         }
     }
 
@@ -215,10 +267,86 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof CurrentPhaseEvent) {
                 this.phaseColoring((Phase) event.getEvent());
+
+            } else if (event instanceof DrawPhaseEvent) {
+                this.displayDraw((List<Card>) event.getEvent());
+
+            } else if (event instanceof HandFullEvent) {
+                this.discardToDraw();
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+
+
         }
+
+    }
+
+
+
+    public void currentPhase(ActionEvent event){
+        phases_bar[phase_id].setStyle("-fx-background-color : darkgray;" + "-fx-color: dimgray");
+        phase_id++;
+        switch(phase_id){
+            case 1:
+                System.out.println("phase 1");
+                break;
+
+            case 2:
+                System.out.println("phase 2");
+                break;
+
+            case 3:
+                System.out.println(phase_id);
+                break;
+
+            case 4:
+                System.out.println(phase_id);
+                break;
+//                if (!this.targeting.isEmpty()) {
+//                    this.targeting.get(0).toggleSelected();
+//                    for (SummonedCharacterController summonedchara_controller : this.player_controllers[this.channel
+//                            .getPlayerID() % 2 + 1].getSummonedCharaController()) {
+//                        summonedchara_controller.setHinting(false);
+//                    }
+//                    this.player_controllers[this.channel.getPlayerID() % 2 + 1].setHinting(false);
+//                    this.targeting.clear();
+//                }
+//
+//                int cur_player = this.engine.getCurrentPlayer()
+//                if (this.game_engine.getPlayer(cur_player).getHand().size() > Player.MAX_HAND) {
+//                    this.channel.setPhase(Phase.DISCARD);
+//                }
+//                break;
+//            case 4:
+//                int prev_player = game_engine.getCurPlayer() % 2 + 1;
+//                if (this.game_engine.getPlayer(prev_player).getHand().size() > Player.MAX_HAND) {
+//                    phase_id--;
+//                    phase_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
+//                    AlertBox.display(1280 / 1.5, 720 / 1.5, "Hand card limit exceeded", "Discard one card to continue.\nDouble Click to Discard.");
+//                    return;
+//                }
+//
+//                for (int i = 1; i <= 2; i++) {
+//                    this.player_controllers[i].flipHand();
+//                }
+//                break;
+            default:
+                break;
+
+        }
+
+        phase_id %= 4;
+//        this.engine.stageController(phases[phase_id]);
+//        if (phase_id == 0) {
+//            this.channel.setPlayerById(this.engine.getCurrentPlayer());
+//        }
+//        if (this.channel.getPhase() != Phase.DISCARD) {
+//            this.channel.setPhase(phases[phase_id]);
+//        }
+
+        phases_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
+//        if (phase_id==0) {sleep(500, true);}
     }
 }

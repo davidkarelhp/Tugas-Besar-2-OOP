@@ -3,8 +3,13 @@ package com.aetherwars;
 import com.aetherwars.event.*;
 import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
+import com.aetherwars.model.cards.Card;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameEngine implements Publisher, Subscriber {
     private GameChannel eventChannel;
@@ -13,6 +18,8 @@ public class GameEngine implements Publisher, Subscriber {
     private IntegerProperty currentRound;
     private int currentPhase;
     private static Phase[] phases = {Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END};
+    private List<Card> backToDeck;
+    private Card toHand;
 
     public GameEngine(Player p1, Player p2, GameChannel eventChannel) {
         this.players = new Player[2];
@@ -28,6 +35,10 @@ public class GameEngine implements Publisher, Subscriber {
         return currentRound.get();
     }
 
+    public int getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
     public IntegerProperty currentRoundProperty() {
         return currentRound;
     }
@@ -38,8 +49,9 @@ public class GameEngine implements Publisher, Subscriber {
 
     public void setupGame() {
         this.drawBoth();
-        publish(new CurrentPhaseEvent(currentPhase()));
         publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+        publish(new CurrentPhaseEvent(currentPhase()));
+        phaseController();
     }
 
     public void drawBoth() {
@@ -50,7 +62,6 @@ public class GameEngine implements Publisher, Subscriber {
 
     public void nextPhase() {
         this.currentPhase = this.currentPhase == 3 ? 0 : this.currentPhase + 1;
-        System.out.println(this.currentPhase);
         publish(new CurrentPhaseEvent(currentPhase()));
     }
 
@@ -66,6 +77,7 @@ public class GameEngine implements Publisher, Subscriber {
     public void phaseController() {
         if (currentPhase() == Phase.DRAW) {
             // ini draw yang dikembaliin
+            publish(new DrawPhaseEvent(this.players[this.currentPlayer].draw()));
 
         } else if (currentPhase() == Phase.PLAN){
 
@@ -90,6 +102,46 @@ public class GameEngine implements Publisher, Subscriber {
         }
     }
 
+    public void drawnCardClicked(List<Card> cards, int idxCard) {
+        toHand = null;
+        backToDeck = new ArrayList<>();
+
+        int i = 0;
+        for (Card card: cards) {
+            System.out.println(card.getName());
+            if (i == idxCard) {
+                toHand = cards.get(i);
+            } else {
+                backToDeck.add(cards.get(i));
+            }
+            i++;
+        }
+
+        cards.clear();
+
+        if (this.players[this.currentPlayer].getHand().getHand().size() < 5) {
+            this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
+            this.players[this.currentPlayer].addToHand(toHand);
+            publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+
+            // belum handle kalau hand penuh
+            // setelah draw langsung plan phase
+            nextPhaseProcess();
+
+        } else {
+            publish(new HandFullEvent());
+        }
+
+    }
+
+    public void discardAndDraw(int idxDiscarded) {
+        this.players[this.currentPlayer].getHand().discardAtIndex(idxDiscarded);
+        this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
+        this.players[this.currentPlayer].addToHand(toHand);
+        publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+        nextPhaseProcess();
+    }
+
     @Override
     public void publish(Event event) {
         this.eventChannel.sendEvent(this, event);
@@ -101,6 +153,12 @@ public class GameEngine implements Publisher, Subscriber {
 
             if (event instanceof NextPhaseEvent) {
                 nextPhaseProcess();
+
+            } else if (event instanceof DrawnCardClicked) {
+                Pair<List<Card>, Integer> pair =  (Pair<List<Card>, Integer>) event.getEvent();
+                drawnCardClicked(pair.getKey(), pair.getValue());
+            } else if (event instanceof DiscardToDrawEvent) {
+                discardAndDraw((int)event.getEvent());
             }
 
         } catch (Exception e) {
