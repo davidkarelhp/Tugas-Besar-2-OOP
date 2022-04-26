@@ -66,6 +66,14 @@ public class Player {
         return hand;
     }
 
+    public void increaseManaLimit() {
+        this.manaLimit = this.manaLimit < 10 ? this.manaLimit + 1 : this.manaLimit;
+    }
+
+    public void resetMana() {
+        this.mana.set(this.manaLimit);
+    }
+
     public void seeCardinHand(int index){
         Card card = this.hand.getCardAtIndex(index);
         card.displayDesc();
