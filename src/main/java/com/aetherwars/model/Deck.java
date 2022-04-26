@@ -1,11 +1,15 @@
 package com.aetherwars.model;
 
 import com.aetherwars.model.cards.Card;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.*;
 
 public class Deck {
     private Stack<Card> deck;
+    private int deckSize;
+    private IntegerProperty deckFill;
 
     public Deck() {
         this.deck = new Stack<>();
@@ -32,10 +36,25 @@ public class Deck {
 
     public Deck(List<? extends Card> cards) {
         this.deck = new Stack<>();
+
         for (Card card: cards) {
             this.deck.push(card);
         }
 
+        this.deckFill = new SimpleIntegerProperty(cards.size());
+        this.deckSize = cards.size();
+    }
+
+    public int getDeckSize() {
+        return deckSize;
+    }
+
+    public int getDeckFill() {
+        return deckFill.get();
+    }
+
+    public IntegerProperty deckFillProperty() {
+        return deckFill;
     }
 
     public List<Card> draw() {
@@ -45,6 +64,7 @@ public class Deck {
             ret.add(this.deck.pop());
             i++;
         }
+        this.deckFill.set(this.deckFill.get() - ret.size());
         return ret;
     }
 
@@ -52,6 +72,7 @@ public class Deck {
         for (Card card: cards) {
             this.deck.push(card);
         }
+        this.deckFill.set(this.deckFill.get() + cards.size());
     }
 
     public void shuffle() {

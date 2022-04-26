@@ -35,5 +35,9 @@ public abstract class Card {
         return imagePath;
     }
 
-    public abstract void displayDesc();
+    public void displayDesc(){
+        System.out.println("Name: " + getName());
+        System.out.println("Type: " + getDescription());
+        System.out.println("Description: " + getImagePath());
+    }
 }

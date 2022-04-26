@@ -22,33 +22,9 @@ import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.util.CSVReader;
 
 public class AetherWars extends Application {
-  private static final String CHARACTER_CSV_FILE_PATH = "card/data/character.csv";
-
-  public void loadCards() throws IOException, URISyntaxException {
-    File characterCSVFile = new File(getClass().getResource(CHARACTER_CSV_FILE_PATH).toURI());
-    CSVReader characterReader = new CSVReader(characterCSVFile, "\t");
-    characterReader.setSkipHeader(true);
-    List<String[]> characterRows = characterReader.read();
-    for (String[] row : characterRows) {
-      int id = Integer.parseInt(row[0]);
-      String name = row[1];
-      CharacterType characterType = CharacterType.valueOf(row[2]);
-      String description = row[3];
-      String imagePath = row[4];
-      int attack = Integer.parseInt(row[5]);
-      int health = Integer.parseInt(row[6]);
-      int mana = Integer.parseInt(row[7]);
-      int attackUp = Integer.parseInt(row[8]);
-      int healthUp = Integer.parseInt(row[9]);
-//
-      Character c = new Character(id, name, description, mana, imagePath, characterType, attack, health, attackUp, healthUp);
-      Character.characterList.add(c);
-    }
-  }
-
   @Override
   public void start(Stage stage) throws IOException, URISyntaxException {
-      this.loadCards();
+      FileLoader.loadFiles();
 
       GameChannel channel = new GameChannel();
       FXMLLoader gameLoader = new FXMLLoader(getClass().getResource("Main.fxml"));
