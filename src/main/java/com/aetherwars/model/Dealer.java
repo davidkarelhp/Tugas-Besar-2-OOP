@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Dealer {
     public static Deck getRandomDeck(int deckSize) {
-        List<Object> listDeck = new ArrayList<>();
+        List<Card> listDeck = new ArrayList<>();
 
         for (int i = 0; i < deckSize; i++) {
             int cardType = ThreadLocalRandom.current().nextInt(0, 2);
