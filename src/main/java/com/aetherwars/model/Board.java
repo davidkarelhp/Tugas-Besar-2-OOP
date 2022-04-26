@@ -30,28 +30,23 @@ public class Board {
         this.board.set(idx, null);
     }
 
-    public List<SummonedCharacter> getCharacterList(){
+    public List<SummonedCharacter> getListCharacter(){
         return this.board;
-    }
-
-    public void attackCharacter(SummonedCharacter enemyChar){
-        double EnemyHealth = enemyChar.getHealth();
-        //nadia bantuin kerjain ya sebentar
-
     }
 
     public void attackFromSlot(int slot, Board enemyBoard, int enemySlot){
         if (slot <5 && slot > -1 && enemySlot < 5 && enemySlot > -1){
-            this.board.get(slot).attackEnemy(enemyBoard.Board[enemySlot]);
-            this.board.get(slot).receiveExperience();
+            this.board.get(slot).attackEnemy(enemyBoard.board.get(enemySlot));
+            //this.Board[slot].receiveExperience();
         }
     }
 
-    public void attackFromSlot(int slot, Player enemy){
-//        if (slot <5 && slot > -1){
-//            this.Board[slot].attackPlayer(enemy);
-//            this.Board[slot].receiveExperience();
-//        }
+    //attack direcltly Player Health
+    public void attackEnemyHealth(int slot, Player enemy){
+        int enemy_size = ((enemy.getBoard()).getListCharacter()).size();
+        if (slot <5 && slot > -1 && enemy_size == 0){
+            //attack with spell
+        }   
     }
 
 
