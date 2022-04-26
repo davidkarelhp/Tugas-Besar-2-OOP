@@ -66,6 +66,14 @@ public class Player {
         return hand;
     }
 
+    public void increaseManaLimit() {
+        this.manaLimit = this.manaLimit < 10 ? this.manaLimit + 1 : this.manaLimit;
+    }
+
+    public void resetMana() {
+        this.mana.set(this.manaLimit);
+    }
+
     public void seeCardinHand(int index){
         Card card = this.hand.getCardAtIndex(index);
         card.displayDesc();
@@ -95,7 +103,20 @@ public class Player {
         this.board.putCardInSlot(ChooseSlot, CharacterName);
     }
 
+    public List<Card> draw() {
+        return this.deck.draw();
+    }
+
     public void drawOnly() {
         this.hand.putCard(this.deck.draw());
+    }
+
+    public void putCardToDeckAndShuffle(List<Card> cards) {
+        this.deck.putCard(cards);
+        this.deck.shuffle();
+    }
+
+    public void addToHand(Card card) {
+        this.hand.putCard(card);
     }
 }
