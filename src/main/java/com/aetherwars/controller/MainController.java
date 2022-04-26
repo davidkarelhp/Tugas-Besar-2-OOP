@@ -228,7 +228,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         titleCardLabel.setText(card.getName());
         dataCardLabel.setText("ATK: " +  card.getBaseAttack() + "\nHP: " + card.getBaseHealth() + "\nLevel: " + card.getLevel() + "\nType: " + card.getCharacterType());
-        descCardLabel.setText(card.getDescription());
+        descCardLabel.setText("\"" +  card.getDescription() + "\"");
 
         imageCardHover.setImage(new Image(file.toURI().toString(), 60, 80, true, true));
 
