@@ -81,6 +81,7 @@ public class GameEngine implements Publisher, Subscriber {
 
         } else if (currentPhase() == Phase.PLAN){
 
+
         } else if (currentPhase() == Phase.ATTACK) {
 
         } else if (currentPhase()  == Phase.END) {
