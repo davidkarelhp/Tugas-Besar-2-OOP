@@ -8,9 +8,7 @@ import java.util.List;
 
 public class Board {
 
-    private com.aetherwars.model.cards.character.Character[] Board;
-
-    private List<SummonedCharacter> board; // Pake list aja kayaknya, lebih bagus kan?, terus Summoned character kan?
+    private List<SummonedCharacter> board;
 
     // Konstruktor
     public Board(){
@@ -18,24 +16,12 @@ public class Board {
         for (int i = 0; i < 5; i++) {
             this.board.add(null);
         }
-
-        this.Board = new com.aetherwars.model.cards.character.Character[5];
-    }
-
-    public void putCardInSlot(int slot, com.aetherwars.model.cards.character.Character card){
-        if (slot < 5 && slot > -1){
-            this.Board[slot] = card;
-        }
     }
 
     public void putInSlot(int slot, SummonedCharacter c) {
         this.board.set(slot, c);
     }
-
-    public com.aetherwars.model.cards.character.Character getCharacter(int i){
-        return Board[i];
-    }
-
+    
     public SummonedCharacter getAtSlot(int idx) {
         return this.board.get(idx);
     }
