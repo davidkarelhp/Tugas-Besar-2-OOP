@@ -254,13 +254,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         } catch (IOException e) {
             e.printStackTrace();
-            try {
-                if (event instanceof ChangePlayerEvent) {
-                    this.refreshHand((Player)event.getEvent());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+
+        }
 
     }
 
@@ -317,13 +313,13 @@ public class MainController implements Initializable, Publisher, Subscriber {
         }
 
         phase_id %= 4;
-        this.engine.stageController(phases[phase_id]);
-        if (phase_id == 0) {
-            this.channel.setPlayerById(this.engine.getCurrentPlayer());
-        }
-        if (this.channel.getPhase() != Phase.DISCARD) {
-            this.channel.setPhase(phases[phase_id]);
-        }
+//        this.engine.stageController(phases[phase_id]);
+//        if (phase_id == 0) {
+//            this.channel.setPlayerById(this.engine.getCurrentPlayer());
+//        }
+//        if (this.channel.getPhase() != Phase.DISCARD) {
+//            this.channel.setPhase(phases[phase_id]);
+//        }
 
         phases_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
 //        if (phase_id==0) {sleep(500, true);}
