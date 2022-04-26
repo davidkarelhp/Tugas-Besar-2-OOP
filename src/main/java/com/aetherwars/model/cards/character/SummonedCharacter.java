@@ -1,6 +1,5 @@
 package com.aetherwars.model.cards.character;
 
-import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.spell.Potion;
 import com.aetherwars.model.cards.spell.Spell;
 
@@ -14,8 +13,8 @@ public class SummonedCharacter implements IsSummoned {
     private double health;
     private ArrayList<Spell> potionSpells;
     private ArrayList<Spell> swapSpells;
-    private double attackTemp;
-    private double healthTemp;
+    private double attackSent;
+    private double healthHad;
     private boolean playable;
 
     public SummonedCharacter(Character character) {
@@ -26,8 +25,8 @@ public class SummonedCharacter implements IsSummoned {
         this.health = 0;
         this.potionSpells = new ArrayList<Spell>();
         this.swapSpells = new ArrayList<Spell>();
-        this.attackTemp = 0;
-        this.healthTemp = 0;
+        this.attackSent = 0;
+        this.healthHad = 0;
         this.playable = true;
     }
 
@@ -39,8 +38,8 @@ public class SummonedCharacter implements IsSummoned {
         this.health = health;
         this.potionSpells = potionSpells;
         this.swapSpells = swapSpells;
-        this.attackTemp = 0;
-        this.healthTemp = 0;
+        this.attackSent = 0;
+        this.healthHad = 0;
         this.playable = playable;
     }
 
@@ -116,20 +115,20 @@ public class SummonedCharacter implements IsSummoned {
         this.swapSpells = swapSpells;
     }
 
-    public double getAttackTemp() {
-        return attackTemp;
+    public double getAttackSent() {
+        return attackSent;
     }
 
-    public void setAttackTemp(double attackTemp) {
-        this.attackTemp = attackTemp;
+    public void setAttackSent(double attackSent) {
+        this.attackSent = attackSent;
     }
 
-    public double getHealthTemp() {
-        return healthTemp;
+    public double getHealthHad() {
+        return healthHad;
     }
 
-    public void setHealthTemp(double healthTemp) {
-        this.healthTemp = healthTemp;
+    public void setHealthHad(double healthHad) {
+        this.healthHad = healthHad;
     }
 
     public boolean isPlayable() {
@@ -144,65 +143,37 @@ public class SummonedCharacter implements IsSummoned {
         return ((getType() == CharacterType.OVERWORLD && enemy.getType() == CharacterType.END) || (getType() == CharacterType.END && enemy.getType() == CharacterType.NETHER) || (getType() == CharacterType.NETHER && enemy.getType() == CharacterType.OVERWORLD));
     }
 
-    public void usePotionHealth(Potion potion, Double damage) {
-        double potionHealth = potion.getHealth();
-        potion.setHealth(potionHealth - damage);
-        damage -= potionHealth;
-        if (potion.getHealth() <= 0) {
-            potion.setHealth(0);
-            potion.removeEffect(this);
-        }
+    // SKEMA
+    // Skema attack
+    // 1. Panggil processSpell
+    // 2. Panggil enemy.attacked(attacker)
+    // 3.
+
+    public void processSpell() {
+
     }
 
-    public void attackPotion(Double damage) {
-        int n = potionSpells.size() - 1;
-        while (damage != 0 || potionSpells.size() != 0) {
-            Potion potion = ((Potion)potionSpells.get(n).getSpellWorker());
-            usePotionHealth(potion, damage);
-            n = potionSpells.size() - 1;
-        }
-    }
-
-//    public void checkPotion() {
-//        this.potionSpells.forEach(spell -> attackTemp += spell.getSpellWorker());
-//    }
-//
-//    public double generateDamage() {
-//
-//    }
-
-    public void attacked(SummonedCharacter attacker, double baseDamage) {
+    public void attacked(SummonedCharacter attacker) {
+        processSpell();
+        Double damage = 0.0;
         if (isStronger(attacker)) {
-            Double damage = new Double(0.5 * baseDamage);
-            attackPotion(damage);
-            setHealth(getHealth() - damage);
+            damage = new Double(0.5 * attacker.getAttackSent());
             // add condition if attacker dies
         }
         else if (attacker.isStronger(this)) {
-            Double damage = new Double(2 * baseDamage);
-            attackPotion(damage);
-            setHealth(getHealth() - damage);
+            damage = new Double(2 * attacker.getAttackSent());
             // add condition if attacker dies
         }
         else if (getType() == attacker.getType()) {
-            Double damage = new Double(getAttack());
-            attackPotion(damage);
-            setHealth(getHealth() - getAttack());
+            damage = new Double(attacker.getAttackSent());
             // add condition if attacker dies
         }
+        setHealth(getHealthHad() - damage);
     }
     
     public void attackEnemy(SummonedCharacter enemy) {
-        if (isStronger(enemy)) {
-            Double damage = new Double(2 * getAttack());
-        }
-        else if (enemy.isStronger(this)) {
-
-        }
-        else if (getType() == enemy.getType()) {
-
-        }
-        // enemy.attacked(this);
+        processSpell();
+        enemy.attacked(this);
     }
 
     public void useSpell(Spell spell) {
