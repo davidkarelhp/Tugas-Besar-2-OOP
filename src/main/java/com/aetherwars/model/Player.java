@@ -103,7 +103,20 @@ public class Player {
         this.board.putCardInSlot(ChooseSlot, CharacterName);
     }
 
+    public List<Card> draw() {
+        return this.deck.draw();
+    }
+
     public void drawOnly() {
         this.hand.putCard(this.deck.draw());
+    }
+
+    public void putCardToDeckAndShuffle(List<Card> cards) {
+        this.deck.putCard(cards);
+        this.deck.shuffle();
+    }
+
+    public void addToHand(Card card) {
+        this.hand.putCard(card);
     }
 }

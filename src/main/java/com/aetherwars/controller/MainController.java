@@ -137,36 +137,50 @@ public class MainController implements Initializable, Publisher, Subscriber {
         gameEngine.setupGame();
     }
 
-    public void displayDraw() {
+    public void displayDraw(List<Card> cards) throws IOException {
+        if (backPane.getChildren().contains(drawPane)) {
+            backPane.getChildren().remove(drawPane);
+        }
+
         // Contoh kalau mau nampilin sesuatu pakai button, di sini yang ditampilin tuh 3 kartu yang dipilih pas nge-draw
         drawPane = new GridPane();
-//        drawPane.setGridLinesVisible(true);
+        // drawPane.setGridLinesVisible(true);
 
-        RowConstraints constraintsR = new RowConstraints();
-        constraintsR.setVgrow(Priority.ALWAYS);
-        drawPane.getRowConstraints().add(constraintsR);
+        RowConstraints constraintsRow = new RowConstraints();
+        constraintsRow.setVgrow(Priority.ALWAYS);
+        drawPane.getRowConstraints().add(constraintsRow);
 
-        for (int i = 0 ; i < 3; i++) {
+        int i = 0;
+
+        for (Card card: cards) {
+            Character charcard = (Character)card;
+            FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
+            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth()));
+            StackPane cardPane = cardFXML.load();
+
+            StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
+
             ColumnConstraints constraints = new ColumnConstraints();
             constraints.setHgrow(Priority.ALWAYS);
             drawPane.getColumnConstraints().add(constraints);
 
-            StackPane temp = new StackPane();
-            temp.setMaxSize(150, 300);
-            GridPane.setHalignment(temp, HPos.CENTER);
+            cardPane.setMaxSize(150, 300);
+            GridPane.setHalignment(cardPane, HPos.CENTER);
 
-            temp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-            drawPane.add(temp, i, 0);
-            temp.setOnMouseClicked(e -> this.onDrawnCardClicked());
+            drawPane.add(cardPane, i, 0);
+            int idxCard = i;
+            cardPane.setOnMouseClicked(e -> this.onDrawnCardClicked(cards, idxCard));
+            i++;
 
         }
         drawPane.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
         backPane.getChildren().add(drawPane);
     }
 
-    public void onDrawnCardClicked() {
+    public void onDrawnCardClicked(List<Card> cards, int i) {
         // Method kalau salah satu kartu yang di-draw diklik, untuk sekarang kembali ke main panel aja
         backPane.getChildren().remove(drawPane);
+        publish(new DrawnCardClicked(cards, i));
     }
 
     public void refreshHand(Player player) throws IOException {
@@ -232,6 +246,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof CurrentPhaseEvent) {
                 this.phaseColoring((Phase) event.getEvent());
+
+            } else if (event instanceof DrawPhaseEvent) {
+                this.displayDraw((List<Card>) event.getEvent());
             }
 
         } catch (IOException e) {
