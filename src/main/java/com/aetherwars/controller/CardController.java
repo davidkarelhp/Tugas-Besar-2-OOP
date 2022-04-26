@@ -4,6 +4,8 @@ package com.aetherwars.controller;
 import com.aetherwars.event.*;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.spell.Spell;
+import com.aetherwars.model.cards.spell.enums.SpellType;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,23 +39,10 @@ public class CardController implements Initializable {
     @FXML
     StackPane stackpane;
 
-    private String cardName;
-    private int mana;
-    private String image_path;
-    private double atk;
-    private double hp;
-    private String desc;
-    private GameChannel channel;
-    private Character card;
+    private Card card;
     private MainController controller;
 
-    public CardController(String cardName, int mana, String image_path, double atk, double hp, String desc, Character card, MainController controller) {
-        this.cardName = cardName;
-        this.mana = mana;
-        this.image_path = image_path;
-        this.atk = atk;
-        this.hp = hp;
-        this.desc = desc;
+    public CardController(Card card, MainController controller) {
         this.card = card;
         this.controller = controller;
     }
@@ -62,14 +51,32 @@ public class CardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         File file = null;
         try {
-            file = new File(getClass().getResource("../" + this.image_path).toURI());
+            file = new File(getClass().getResource("../" + card.getImagePath()).toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
-        labelName.setText(this.cardName);
-        labelMana.setText("MANA " + this.mana);
-        labelAtkHp.setText("ATK " + atk + "/HP " + hp);
+        labelName.setText(card.getName());
+        labelMana.setText("MANA " + card.getMana());
+
+        if (this.card instanceof Character) {
+            Character character = (Character) this.card;
+            labelAtkHp.setText("ATK " + character.getBaseAttack() + "/HP " + character.getBaseHealth());
+
+        } else if (this.card instanceof Spell) {
+            Spell spell = (Spell) this.card;
+            if (spell.getType() == SpellType.POTION) {
+                labelAtkHp.setText("SPELL PTN");
+            } else if (spell.getType() == SpellType.LEVELUP) {
+                labelAtkHp.setText("SPELL LEVEL UP");
+            } else if (spell.getType() == SpellType.LEVELDOWN) {
+                labelAtkHp.setText("SPELL LEVEL DOWN");
+            } else if (spell.getType() == SpellType.SWAP) {
+                labelAtkHp.setText("SPELL SWAP");
+            } else if (spell.getType() == SpellType.MORPH) {
+                labelAtkHp.setText("SPELL MORPH");
+            }
+        }
         cardImage.setImage(new Image(file.toURI().toString(), 90, 120, true, true));
 
     }

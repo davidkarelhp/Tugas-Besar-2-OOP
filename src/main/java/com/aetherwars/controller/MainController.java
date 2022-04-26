@@ -9,6 +9,8 @@ import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.spell.Spell;
+import com.aetherwars.model.cards.spell.enums.SpellType;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventType;
@@ -182,9 +184,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
         int i = 0;
 
         for (Card card: cards) {
-            Character charcard = (Character)card;
             FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
-            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth(), charcard.getDescription(), charcard, this));
+            cardFXML.setControllerFactory(c -> new CardController(card, this));
             StackPane cardPane = cardFXML.load();
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
@@ -213,7 +214,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         publish(new DrawnCardClicked(cards, i));
     }
 
-    public void onHoverCard(Character card){
+    public void onHoverCard(Card card){
 
         File file = null;
         try {
@@ -227,14 +228,31 @@ public class MainController implements Initializable, Publisher, Subscriber {
         descCardLabel.setStyle("-fx-text-fill: black; -fx-font-style: italic;");
 
         titleCardLabel.setText(card.getName());
-        dataCardLabel.setText("ATK: " +  card.getBaseAttack() + "\nHP: " + card.getBaseHealth() + "\nLevel: " + card.getLevel() + "\nType: " + card.getCharacterType());
+        if (card instanceof Character) {
+            Character character = (Character) card;
+            dataCardLabel.setText("ATK: " +  character.getBaseAttack() + "\nHP: " + character.getBaseHealth() + "\nLevel: " + character.getLevel() + "\nType: " + character.getCharacterType());
+
+        } else if (card instanceof Spell) {
+            Spell spell = (Spell) card;
+            if (spell.getType() == SpellType.POTION) {
+                dataCardLabel.setText("SPELL PTN");
+            } else if (spell.getType() == SpellType.LEVELUP) {
+                dataCardLabel.setText("SPELL LEVEL UP");
+            } else if (spell.getType() == SpellType.LEVELDOWN) {
+                dataCardLabel.setText("SPELL LEVEL DOWN");
+            } else if (spell.getType() == SpellType.SWAP) {
+                dataCardLabel.setText("SPELL SWAP");
+            } else if (spell.getType() == SpellType.MORPH) {
+                dataCardLabel.setText("SPELL MORPH");
+            }
+        }
         descCardLabel.setText("\"" +  card.getDescription() + "\"");
 
         imageCardHover.setImage(new Image(file.toURI().toString(), 60, 80, true, true));
 
     }
 
-    public void onUnHoverCard(Character card){
+    public void onUnHoverCard(Card card){
         titleCardLabel.setStyle("-fx-text-fill: white;");
         dataCardLabel.setStyle("-fx-text-fill: white;");
         descCardLabel.setStyle("-fx-text-fill: white;");
@@ -250,9 +268,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
         List<Card> hand = player.getHand().getHand();
         int i = 0;
         for (Card card: hand) {
-            Character charcard = (Character)card;
             FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
-            cardFXML.setControllerFactory(c -> new CardController(charcard.getName(),charcard.getMana() , charcard.getImagePath(), charcard.getBaseAttack(), charcard.getBaseHealth(), charcard.getDescription(), charcard, this));
+            cardFXML.setControllerFactory(c -> new CardController(card, this));
             StackPane cardPane = cardFXML.load();
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
