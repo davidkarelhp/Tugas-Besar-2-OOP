@@ -34,15 +34,13 @@ public class Board {
         return this.board;
     }
 
+    public SummonedCharacter selectedChar (int slot){
+        return this.board.get(slot);
+    }
     public void attackFromSlot(int slot, Board enemyBoard, int enemySlot){
         if (slot <5 && slot > -1 && enemySlot < 5 && enemySlot > -1){
-<<<<<<< HEAD
-            this.board.get(slot).attackEnemy(enemyBoard.board.get(enemySlot));
+            this.board.get(slot).attackEnemy(enemyBoard.selectedChar(enemySlot));
             //this.Board[slot].receiveExperience();
-=======
-//            this.board.get(slot).attackEnemy(enemyBoard.Board[enemySlot]);
-//            this.board.get(slot).receiveExperience();
->>>>>>> 3db98d2226fd9a964998b65e37ea14a92d638c7f
         }
     }
 
@@ -51,6 +49,9 @@ public class Board {
         int enemy_size = ((enemy.getBoard()).getListCharacter()).size();
         if (slot <5 && slot > -1 && enemy_size == 0){
             //attack with spell
+            this.board.get(slot).processSpell();
+            double enemyHealth = enemy.getHealthPoints();
+            enemyHealth = enemyHealth - this.selectedChar(slot).getAttack();
         }   
     }
 

@@ -111,7 +111,7 @@ public class Player {
     }
 
     public void attackEnemyPlayer(int slot, Player enemy){
-        this.board.attackFromSlot(slot, enemy);
+        this.board.attackEnemyHealth(slot, enemy);
     }
 
     public void moveCardToBoard (SummonedCharacter CharacterName, int ChooseSlot){
