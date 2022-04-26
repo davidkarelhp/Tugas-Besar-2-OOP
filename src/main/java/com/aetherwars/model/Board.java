@@ -30,11 +30,21 @@ public class Board {
         this.board.set(idx, null);
     }
 
+    public List<SummonedCharacter> getCharacterList(){
+        return this.board;
+    }
+
+    public void attackCharacter(SummonedCharacter enemyChar){
+        double EnemyHealth = enemyChar.getHealth();
+        //nadia bantuin kerjain ya sebentar
+
+    }
+
     public void attackFromSlot(int slot, Board enemyBoard, int enemySlot){
-//        if (slot <5 && slot > -1 && enemySlot < 5 && enemySlot > -1){
-//            this.Board[slot].attackEnemy(enemyBoard.Board[enemySlot]);
-//            this.Board[slot].receiveExperience();
-//        }
+        if (slot <5 && slot > -1 && enemySlot < 5 && enemySlot > -1){
+            this.board.get(slot).attackEnemy(enemyBoard.Board[enemySlot]);
+            this.board.get(slot).receiveExperience();
+        }
     }
 
     public void attackFromSlot(int slot, Player enemy){
