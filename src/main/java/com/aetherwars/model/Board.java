@@ -42,8 +42,8 @@ public class Board {
 
     public void attackFromSlot(int slot, Board enemyBoard, int enemySlot){
         if (slot <5 && slot > -1 && enemySlot < 5 && enemySlot > -1){
-            this.board.get(slot).attackEnemy(enemyBoard.Board[enemySlot]);
-            this.board.get(slot).receiveExperience();
+//            this.board.get(slot).attackEnemy(enemyBoard.Board[enemySlot]);
+//            this.board.get(slot).receiveExperience();
         }
     }
 
