@@ -66,10 +66,6 @@ public class Player {
         return hand;
     }
 
-<<<<<<< HEAD
-    //untuk melihat kartu di tangan
-    public Card seeCardinHand(int index){
-=======
     public void increaseManaLimit() {
         this.manaLimit = this.manaLimit < 10 ? this.manaLimit + 1 : this.manaLimit;
     }
@@ -78,8 +74,7 @@ public class Player {
         this.mana.set(this.manaLimit);
     }
 
-    public void seeCardinHand(int index){
->>>>>>> d1444cbe3932a213c3add11068e74f26a51d7092
+    public Card seeCardinHand(int index){
         Card card = this.hand.getCardAtIndex(index);
         return card;
     }
@@ -105,13 +100,8 @@ public class Player {
         this.board.putCardInSlot(ChooseSlot, CharacterName);
     }
 
-<<<<<<< HEAD
-    public void attackEnemy(Player enemy){
-
-=======
     public List<Card> draw() {
         return this.deck.draw();
->>>>>>> d1444cbe3932a213c3add11068e74f26a51d7092
     }
 
     public void drawOnly() {
