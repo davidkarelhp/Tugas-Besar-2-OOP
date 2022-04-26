@@ -98,6 +98,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     ImageView imageCardHover;
 
+    @FXML
+    Label labelHand;
+
     private final int MAX_HEALTH = 80;
     private final Color CURRENT_PHASE_COLOR = Color.AQUAMARINE;
 
