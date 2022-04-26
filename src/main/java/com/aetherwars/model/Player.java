@@ -67,6 +67,10 @@ public class Player {
         return hand;
     }
 
+    public Board getBoard(){
+        return board;
+    }
+
     public void increaseManaLimit() {
         this.manaLimit = this.manaLimit < 10 ? this.manaLimit + 1 : this.manaLimit;
     }
@@ -85,6 +89,15 @@ public class Player {
         SummonedCharacter currentCharacter = this.board.getAtSlot(index);
         return currentCharacter;
 
+    }
+
+    public void attackEnemyCharacter(Player Enemy, int slot, int enemySlot){
+        Board enemyBoard = Enemy.getBoard();
+        this.board.attackFromSlot(slot, enemyBoard, enemySlot);
+    }
+
+    public void attackEnemyPlayer(int slot, Player enemy){
+        this.board.attackFromSlot(slot, enemy);
     }
 
     public void moveCardToBoard (SummonedCharacter CharacterName, int ChooseSlot){
