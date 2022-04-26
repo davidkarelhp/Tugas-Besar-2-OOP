@@ -136,6 +136,14 @@ public class MainController implements Initializable, Publisher, Subscriber {
             this.buttonSkip.getScene().setCursor(Cursor.DEFAULT);
         });
 
+        titleCardLabel.setStyle("-fx-text-fill: white;");
+        dataCardLabel.setStyle("-fx-text-fill: white;");
+        descCardLabel.setStyle("-fx-text-fill: white;");
+
+        titleCardLabel.setText("-------");
+        dataCardLabel.setText("------------------------------------");
+        descCardLabel.setText("------------------------------------");
+
     }
 
     public void startGame(GameEngine gameEngine) throws IOException {
@@ -214,6 +222,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
             e.printStackTrace();
         }
 
+        titleCardLabel.setStyle("-fx-text-fill: black;");
+        dataCardLabel.setStyle("-fx-text-fill: black;");
+        descCardLabel.setStyle("-fx-text-fill: black;");
+
         titleCardLabel.setText(card.getName());
         dataCardLabel.setText("ATK: " +  card.getBaseAttack() + "\nHP: " + card.getBaseHealth() + "\nLevel: " + card.getLevel() + "\nType: " + card.getCharacterType());
         descCardLabel.setText(card.getDescription());
@@ -223,9 +235,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
     }
 
     public void onUnHoverCard(Character card){
-        titleCardLabel.setText("");
-        dataCardLabel.setText("");
-        descCardLabel.setText("");
+        titleCardLabel.setStyle("-fx-text-fill: white;");
+        dataCardLabel.setStyle("-fx-text-fill: white;");
+        descCardLabel.setStyle("-fx-text-fill: white;");
 
         imageCardHover.setImage(null);
     }
