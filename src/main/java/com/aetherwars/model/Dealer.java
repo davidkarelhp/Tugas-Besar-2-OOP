@@ -2,6 +2,7 @@ package com.aetherwars.model;
 
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.spell.Spell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +10,28 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Dealer {
     public static Deck getRandomDeck(int deckSize) {
-        List<Character> listDeck = new ArrayList<>();
+        List<Object> listDeck = new ArrayList<>();
+
         for (int i = 0; i < deckSize; i++) {
-            int randomCardId = ThreadLocalRandom.current().nextInt(0, Character.characterList.size());
-            Character cardData = Character.characterList.get(randomCardId);
-            listDeck.add(new Character(cardData.getId(), cardData.getName(), cardData.getDescription(), cardData.getMana(), cardData.getImagePath(), cardData.getCharacterType(), cardData.getBaseAttack(), cardData.getBaseHealth(), cardData.getAttackUp(), cardData.getHealthUp()));
+            int cardType = ThreadLocalRandom.current().nextInt(0, 2);
+
+            if (cardType == 0) {    // character card
+                int randomCharCardId = ThreadLocalRandom.current().nextInt(0, Character.characterList.size());
+                Character charCardData = Character.characterList.get(randomCharCardId);
+
+                listDeck.add(new Character(charCardData.getId(), charCardData.getName(), charCardData.getDescription(), 
+                charCardData.getMana(), charCardData.getImagePath(), charCardData.getCharacterType(), charCardData.getBaseAttack(), 
+                charCardData.getBaseHealth(), charCardData.getAttackUp(), charCardData.getHealthUp()));
+            } 
+            else if (cardType == 1) {   // spell card
+                int randomSpellCardId = ThreadLocalRandom.current().nextInt(0, Spell.SpellList.size());
+                Spell spellCardData = Spell.SpellList.get(randomSpellCardId);
+
+                listDeck.add(new Spell(spellCardData.getId(), spellCardData.getName(), spellCardData.getDescription(), 
+                spellCardData.getMana(), spellCardData.getImagePath(), spellCardData.getType()));
+            }
         }
+
         return new Deck(listDeck);
     }
 }
