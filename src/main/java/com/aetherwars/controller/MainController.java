@@ -224,7 +224,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         titleCardLabel.setStyle("-fx-text-fill: black;");
         dataCardLabel.setStyle("-fx-text-fill: black;");
-        descCardLabel.setStyle("-fx-text-fill: black;");
+        descCardLabel.setStyle("-fx-text-fill: black; -fx-font-style: italic;");
 
         titleCardLabel.setText(card.getName());
         dataCardLabel.setText("ATK: " +  card.getBaseAttack() + "\nHP: " + card.getBaseHealth() + "\nLevel: " + card.getLevel() + "\nType: " + card.getCharacterType());
