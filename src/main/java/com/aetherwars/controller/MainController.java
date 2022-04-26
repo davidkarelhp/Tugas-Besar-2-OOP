@@ -46,7 +46,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     Button buttonSkip;
 
     @FXML
-    Label attack_p, draw_p, end_p, plan_p;
+    Label atack_p, draw_p, end_p, plan_p;
 
     Phase[] phases = new Phase[] { Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END };
 
@@ -86,7 +86,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        this.phases_bar = new Label[]{draw_p, plan_p, attack_p, end_p};
+        this.phases_bar = new Label[]{draw_p, plan_p, atack_p, end_p};
         this.healthPlayer1.setStyle("-fx-accent: green;");
         this.healthPlayer2.setStyle("-fx-accent: green;");
 
@@ -104,11 +104,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     }
 
-    public void startGame(GameEngine gameEngine) {
-        this.channel.addSubscriber(this, gameEngine);
-        this.channel.addSubscriber(gameEngine, this);
-        this.engine = gameEngine;
     public void startGame(GameEngine gameEngine) throws IOException {
+
+        this.engine = gameEngine;
 
         Player[] players = gameEngine.getPlayers();
 
@@ -122,6 +120,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.channel.addSubscriber(this, gameEngine);
         this.channel.addSubscriber(gameEngine, this);
+
+
+
         gameEngine.setupGame();
     }
 
@@ -188,7 +189,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
     public void currentPhase(ActionEvent event){
@@ -204,34 +205,40 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 break;
 
             case 3:
-                if (!this.targeting.isEmpty()) {
-                    this.targeting.get(0).toggleSelected();
-                    for (SummonedCharacterController summonedchara_controller : this.player_controllers[this.channel
-                            .getPlayerID() % 2 + 1].getSummonedCharaController()) {
-                        summonedchara_controller.setHinting(false);
-                    }
-                    this.player_controllers[this.channel.getPlayerID() % 2 + 1].setHinting(false);
-                    this.targeting.clear();
-                }
-
-                int cur_player = game_engine.getCurPlayer();
-                if (this.game_engine.getPlayer(cur_player).getHand().size() > Player.MAX_HAND) {
-                    this.channel.setPhase(Phase.DISCARD);
-                }
+                System.out.println(phase_id);
                 break;
+
             case 4:
-                int prev_player = game_engine.getCurPlayer() % 2 + 1;
-                if (this.game_engine.getPlayer(prev_player).getHand().size() > Player.MAX_HAND) {
-                    phase_id--;
-                    phase_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
-                    AlertBox.display(1280 / 1.5, 720 / 1.5, "Hand card limit exceeded", "Discard one card to continue.\nDouble Click to Discard.");
-                    return;
-                }
-
-                for (int i = 1; i <= 2; i++) {
-                    this.player_controllers[i].flipHand();
-                }
+                System.out.println(phase_id);
                 break;
+//                if (!this.targeting.isEmpty()) {
+//                    this.targeting.get(0).toggleSelected();
+//                    for (SummonedCharacterController summonedchara_controller : this.player_controllers[this.channel
+//                            .getPlayerID() % 2 + 1].getSummonedCharaController()) {
+//                        summonedchara_controller.setHinting(false);
+//                    }
+//                    this.player_controllers[this.channel.getPlayerID() % 2 + 1].setHinting(false);
+//                    this.targeting.clear();
+//                }
+//
+//                int cur_player = this.engine.getCurrentPlayer()
+//                if (this.game_engine.getPlayer(cur_player).getHand().size() > Player.MAX_HAND) {
+//                    this.channel.setPhase(Phase.DISCARD);
+//                }
+//                break;
+//            case 4:
+//                int prev_player = game_engine.getCurPlayer() % 2 + 1;
+//                if (this.game_engine.getPlayer(prev_player).getHand().size() > Player.MAX_HAND) {
+//                    phase_id--;
+//                    phase_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
+//                    AlertBox.display(1280 / 1.5, 720 / 1.5, "Hand card limit exceeded", "Discard one card to continue.\nDouble Click to Discard.");
+//                    return;
+//                }
+//
+//                for (int i = 1; i <= 2; i++) {
+//                    this.player_controllers[i].flipHand();
+//                }
+//                break;
             default:
                 break;
 
@@ -246,7 +253,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             this.channel.setPhase(phases[phase_id]);
         }
 
-        //phases_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
+        phases_bar[phase_id].setStyle("-fx-background-color: aquamarine;" + "-fx-color: black");
 //        if (phase_id==0) {sleep(500, true);}
     }
 }

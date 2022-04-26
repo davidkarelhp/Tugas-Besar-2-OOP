@@ -137,27 +137,27 @@
                <children>
                   <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;">
                      <children>
-                        <Label fx:id="draw_p" text="DRAW" />
+                        <Label fx:id="draw_p" alignment="CENTER" prefHeight="36.0" prefWidth="257.0" text="DRAW" textAlignment="JUSTIFY" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="1">
                      <children>
-                        <Label fx:id="plan_p" text="PLAN" />
+                        <Label fx:id="plan_p" alignment="CENTER" prefHeight="55.0" prefWidth="261.0" text="PLAN" />
                      </children>
                   </StackPane>
                   <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="2">
                      <children>
-                        <Label fx:id="atack_p" text="ATTACK" />
+                        <Label fx:id="atack_p" alignment="CENTER" prefHeight="27.0" prefWidth="259.0" text="ATTACK" />
                      </children>
                   </StackPane>
-                  <Button fx:id="buttonSkip" minWidth="150.0" mnemonicParsing="false" prefWidth="150.0" style="-fx-background-color: &quot;black&quot;;" text="&gt;&gt;" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                  <Button fx:id="buttonSkip" minWidth="150.0" mnemonicParsing="false" onAction="#currentPhase" prefWidth="150.0" style="-fx-background-color: &quot;black&quot;;" text="&gt;&gt;" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
                   </Button>
                   <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: &quot;black&quot;;" GridPane.columnIndex="3">
                      <children>
-                        <Label fx:id="end_p" text="END" />
+                        <Label fx:id="end_p" alignment="CENTER" prefHeight="43.0" prefWidth="262.0" text="END" />
                      </children>
                   </StackPane>
                </children>
