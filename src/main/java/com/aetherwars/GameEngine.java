@@ -84,8 +84,8 @@ public class GameEngine implements Publisher, Subscriber {
 
             this.currentPlayer = (this.currentPlayer == 0) ? 1 : 0;
 
-            //this.players[this.currentPlayer].increaseManaLimit();
-            //this.players[this.currentPlayer].resetMana();
+            this.players[this.currentPlayer].increaseManaLimit();
+            this.players[this.currentPlayer].resetMana();
 
             publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
 

@@ -111,14 +111,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.buttonSkip.setOnAction(e -> {
             // Aturan ini buat skip phase, tapi ini  contoh aja
-            switch(this.channel.getPhase()){
-                case SKILLPICK:
-                    break;
-
-                default:
-                    this.currentPhase(e);
-                    break;
-            }
             publish(new NextPhaseEvent());
         });
 
@@ -206,7 +198,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     public void phaseColoring(Phase phase) {
         switch (phase) {
             case DRAW:
-                drawPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                drawPhase.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
                 planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -214,7 +206,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             case PLAN:
                 drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                planPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                planPhase.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
                 attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 break;
@@ -222,7 +214,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             case ATTACK:
                 drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                attackPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                attackPhase.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
                 endPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 break;
 
@@ -230,7 +222,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 drawPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 planPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                 attackPhase.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                endPhase.setBackground(new Background(new BackgroundFill(Color.ORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+                endPhase.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
                 break;
         }
     }
@@ -259,6 +251,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
         }
 
     }
+
+
 
     public void currentPhase(ActionEvent event){
         phases_bar[phase_id].setStyle("-fx-background-color : darkgray;" + "-fx-color: dimgray");
