@@ -74,23 +74,20 @@ public class Player {
         this.mana.set(this.manaLimit);
     }
 
-    public void seeCardinHand(int index){
+    public Card seeCardinHand(int index){
         Card card = this.hand.getCardAtIndex(index);
-        card.displayDesc();
+        return card;
     }
 
-    public void seeSpecificBoard(String CharacterName){
-        Board CurrentBoard = this.board;
-        for(int i = 0; i < 5; i++){
-            Character currentCard = CurrentBoard.getCharacter(i);
-            if(currentCard.getName() == CharacterName){
-                currentCard.displayDesc();
-            }
-        }
+    //untuk melihat kartu pada Board
+    public Character seeSpecificBoard(int index){
+        Character currentCharacter = this.board.getCharacter(index);
+        return currentCharacter;
+
     }
 
     public void seeAllCardBoard (){
-        //menampilkan seluruh card yang ada di board
+        //menampilkan deskripsi seluruh card yang ada di board
         Board CurrentBoard = this.board;
         for(int i = 0; i < 5; i++){
             Character currentCard = CurrentBoard.getCharacter(i);
