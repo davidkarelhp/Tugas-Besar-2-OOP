@@ -1,6 +1,4 @@
-package com.aetherwars;
-
-import com.aetherwars.model.Player;
+package com.aetherwars.model;
 
 public class Board {
 

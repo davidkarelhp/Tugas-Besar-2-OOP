@@ -3,7 +3,6 @@ package com.aetherwars.model;
 import com.aetherwars.event.GameChannel;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
-import com.aetherwars.Board;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;

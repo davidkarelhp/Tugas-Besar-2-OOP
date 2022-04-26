@@ -123,9 +123,6 @@ public class GameEngine implements Publisher, Subscriber {
             this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
             this.players[this.currentPlayer].addToHand(toHand);
             publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
-
-            // belum handle kalau hand penuh
-            // setelah draw langsung plan phase
             nextPhaseProcess();
 
         } else {
