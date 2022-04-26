@@ -214,30 +214,18 @@ public class MainController implements Initializable, Publisher, Subscriber {
             e.printStackTrace();
         }
 
-        titleCardLabel.textProperty().unbind();
-        titleCardLabel.textProperty().set(card.getName());
-
-        dataCardLabel.textProperty().unbind();
-        dataCardLabel.textProperty().bind(Bindings.concat("ATK: ", card.getBaseAttack(),"\nHP: ", card.getBaseHealth(),"\nLevel: ", card.getLevel(), "\nType: ", card.getCharacterType()));
-
-
-        descCardLabel.textProperty().unbind();
-        descCardLabel.textProperty().bind(Bindings.concat("\"", card.getDescription(),"\""));
+        titleCardLabel.setText(card.getName());
+        dataCardLabel.setText("ATK: " +  card.getBaseAttack() + "\nHP: " + card.getBaseHealth() + "\nLevel: " + card.getLevel() + "\nType: " + card.getCharacterType());
+        descCardLabel.setText(card.getDescription());
 
         imageCardHover.setImage(new Image(file.toURI().toString(), 60, 80, true, true));
 
     }
 
     public void onUnHoverCard(Character card){
-
-        titleCardLabel.textProperty().unbind();
-        titleCardLabel.textProperty().set("");
-
-        dataCardLabel.textProperty().unbind();
-        dataCardLabel.textProperty().set("");
-
-        descCardLabel.textProperty().unbind();
-        descCardLabel.textProperty().set("");
+        titleCardLabel.setText("");
+        dataCardLabel.setText("");
+        descCardLabel.setText("");
 
         imageCardHover.setImage(null);
     }
