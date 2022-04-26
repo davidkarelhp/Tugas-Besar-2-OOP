@@ -5,7 +5,7 @@ import com.aetherwars.model.cards.Card;
 
 import java.util.List;
 
-import com.aetherwars.Board;
+import com.aetherwars.model.Board;
 
 public class PlanPhaseEvent implements Event {
     private Hand hand;
