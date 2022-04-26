@@ -122,7 +122,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
         this.healthPlayer2.setStyle("-fx-accent: green;");
 
         this.buttonSkip.setOnAction(e -> {
-            // Aturan ini buat skip phase, tapi ini  contoh aja
             publish(new NextPhaseEvent());
         });
 

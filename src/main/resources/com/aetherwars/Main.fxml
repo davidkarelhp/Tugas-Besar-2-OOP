@@ -273,7 +273,6 @@
                                     </GridPane>
                                  </children>
                               </VBox>
-                              <Label text="Label" />
                            </children>
                         </HBox>
                      </children>

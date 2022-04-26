@@ -8,6 +8,7 @@ import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,6 +78,7 @@ public class CardController implements Initializable {
 
         stackpane.setStyle("-fx-background-color: gold;" + "-fx-border-color: seagreen;" + "-fx-border-width: 4;");
 
+        stackpane.setCursor(Cursor.HAND);
         this.controller.onHoverCard(this.card);
     }
 
@@ -85,6 +87,7 @@ public class CardController implements Initializable {
         stackpane.setStyle("-fx-background-color: gold;" + "-fx-border-color: brown;" + "-fx-border-width: 4;");
         this.controller.onUnHoverCard(this.card);
 
+        stackpane.setCursor(Cursor.HAND);
         //publish(new HoverEvent(this.card));
     }
 
