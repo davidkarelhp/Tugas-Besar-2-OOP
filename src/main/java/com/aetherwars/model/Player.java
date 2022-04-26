@@ -79,24 +79,24 @@ public class Player {
     }
 
     //untuk melihat kartu pada Board
-    public Character seeSpecificBoard(int index){
-        Character currentCharacter = this.board.getCharacter(index);
-        return currentCharacter;
+//    public Character seeSpecificBoard(int index){
+//        Character currentCharacter = this.board.getCharacter(index);
+//        return currentCharacter;
 
-    }
+//    }
 
     public void seeAllCardBoard (){
         //menampilkan deskripsi seluruh card yang ada di board
-        Board CurrentBoard = this.board;
-        for(int i = 0; i < 5; i++){
-            Character currentCard = CurrentBoard.getCharacter(i);
-            currentCard.displayDesc();
-            
-        }
+//        Board CurrentBoard = this.board;
+//        for(int i = 0; i < 5; i++){
+//            Character currentCard = CurrentBoard.getCharacter(i);
+//            currentCard.displayDesc();
+//
+//        }
     }
 
     public void moveCardToBoard (Character CharacterName, int ChooseSlot){
-        this.board.putCardInSlot(ChooseSlot, CharacterName);
+//        this.board.putCardInSlot(ChooseSlot, CharacterName);
     }
 
     public List<Card> draw() {

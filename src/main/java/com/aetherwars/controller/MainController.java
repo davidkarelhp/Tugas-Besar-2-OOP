@@ -104,6 +104,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     Label labelHand;
 
+    @FXML
+    GridPane gridBoard;
+
     private final int MAX_HEALTH = 80;
     private final Color CURRENT_PHASE_COLOR = Color.AQUAMARINE;
 
@@ -145,6 +148,28 @@ public class MainController implements Initializable, Publisher, Subscriber {
         titleCardLabel.setText("-------");
         dataCardLabel.setText("------------------------------------");
         descCardLabel.setText("------------------------------------");
+
+        FXMLLoader leftGridFXML = new FXMLLoader(getClass().getResource("../leftBoard.fxml"));
+        FXMLLoader rightGridFXML = new FXMLLoader(getClass().getResource("../rightBoard.fxml"));
+
+        leftGridFXML.setControllerFactory(c -> new BoardController(this.channel));
+        rightGridFXML.setControllerFactory(c -> new BoardController(this.channel));
+
+        GridPane leftGrid = null;
+        GridPane rightGrid = null;
+
+        try {
+            leftGrid = leftGridFXML.load();
+            rightGrid = rightGridFXML.load();
+
+        } catch (IOException e) {
+        }
+
+        GridPane.setHalignment(leftGrid, HPos.LEFT);
+        GridPane.setHalignment(rightGrid, HPos.RIGHT);
+
+        gridBoard.add(leftGrid, 0, 0);
+        gridBoard.add(rightGrid, 1, 0);
 
     }
 

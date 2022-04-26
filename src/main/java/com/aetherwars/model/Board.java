@@ -21,7 +21,7 @@ public class Board {
     public void putInSlot(int slot, SummonedCharacter c) {
         this.board.set(slot, c);
     }
-    
+
     public SummonedCharacter getAtSlot(int idx) {
         return this.board.get(idx);
     }
