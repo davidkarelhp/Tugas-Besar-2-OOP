@@ -7,6 +7,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Player {
 //    private String hand_deck;
 //    private String board_deck;
     private GameChannel channel;
+    
 
     public Player(String playerName, Deck deck, GameChannel channel) {
         this.playerName = playerName;
@@ -65,6 +67,10 @@ public class Player {
         return hand;
     }
 
+    public Board getBoard(){
+        return board;
+    }
+
     public void increaseManaLimit() {
         this.manaLimit = this.manaLimit < 10 ? this.manaLimit + 1 : this.manaLimit;
     }
@@ -79,12 +85,19 @@ public class Player {
     }
 
     //untuk melihat kartu pada Board
+<<<<<<< HEAD
 //    public Character seeSpecificBoard(int index){
 //        Character currentCharacter = this.board.getCharacter(index);
 //        return currentCharacter;
+=======
+    public SummonedCharacter seeSpecificBoard(int index){
+        SummonedCharacter currentCharacter = this.board.getAtSlot(index);
+        return currentCharacter;
+>>>>>>> 3b0c36a77893d8a9e4f07aa4e993883c4dd37949
 
 //    }
 
+<<<<<<< HEAD
     public void seeAllCardBoard (){
         //menampilkan deskripsi seluruh card yang ada di board
 //        Board CurrentBoard = this.board;
@@ -97,6 +110,19 @@ public class Player {
 
     public void moveCardToBoard (Character CharacterName, int ChooseSlot){
 //        this.board.putCardInSlot(ChooseSlot, CharacterName);
+=======
+    public void attackEnemyCharacter(Player Enemy, int slot, int enemySlot){
+        Board enemyBoard = Enemy.getBoard();
+        this.board.attackFromSlot(slot, enemyBoard, enemySlot);
+    }
+
+    public void attackEnemyPlayer(int slot, Player enemy){
+        this.board.attackFromSlot(slot, enemy);
+    }
+
+    public void moveCardToBoard (SummonedCharacter CharacterName, int ChooseSlot){
+        this.board.putInSlot(ChooseSlot, CharacterName);
+>>>>>>> 3b0c36a77893d8a9e4f07aa4e993883c4dd37949
     }
 
     public List<Card> draw() {
