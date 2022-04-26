@@ -7,6 +7,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Player {
 //    private String hand_deck;
 //    private String board_deck;
     private GameChannel channel;
+    
 
     public Player(String playerName, Deck deck, GameChannel channel) {
         this.playerName = playerName;
@@ -79,24 +81,14 @@ public class Player {
     }
 
     //untuk melihat kartu pada Board
-    public Character seeSpecificBoard(int index){
-        Character currentCharacter = this.board.getCharacter(index);
+    public SummonedCharacter seeSpecificBoard(int index){
+        SummonedCharacter currentCharacter = this.board.getAtSlot(index);
         return currentCharacter;
 
     }
 
-    public void seeAllCardBoard (){
-        //menampilkan deskripsi seluruh card yang ada di board
-        Board CurrentBoard = this.board;
-        for(int i = 0; i < 5; i++){
-            Character currentCard = CurrentBoard.getCharacter(i);
-            currentCard.displayDesc();
-            
-        }
-    }
-
-    public void moveCardToBoard (Character CharacterName, int ChooseSlot){
-        this.board.putCardInSlot(ChooseSlot, CharacterName);
+    public void moveCardToBoard (SummonedCharacter CharacterName, int ChooseSlot){
+        this.board.putInSlot(ChooseSlot, CharacterName);
     }
 
     public List<Card> draw() {
