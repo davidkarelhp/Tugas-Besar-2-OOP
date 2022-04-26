@@ -149,27 +149,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         dataCardLabel.setText("------------------------------------");
         descCardLabel.setText("------------------------------------");
 
-        FXMLLoader leftGridFXML = new FXMLLoader(getClass().getResource("../leftBoard.fxml"));
-        FXMLLoader rightGridFXML = new FXMLLoader(getClass().getResource("../rightBoard.fxml"));
 
-        leftGridFXML.setControllerFactory(c -> new BoardController(this.channel));
-        rightGridFXML.setControllerFactory(c -> new BoardController(this.channel));
-
-        GridPane leftGrid = null;
-        GridPane rightGrid = null;
-
-        try {
-            leftGrid = leftGridFXML.load();
-            rightGrid = rightGridFXML.load();
-
-        } catch (IOException e) {
-        }
-
-        GridPane.setHalignment(leftGrid, HPos.LEFT);
-        GridPane.setHalignment(rightGrid, HPos.RIGHT);
-
-        gridBoard.add(leftGrid, 0, 0);
-        gridBoard.add(rightGrid, 1, 0);
 
     }
 
@@ -189,6 +169,28 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.channel.addSubscriber(this, gameEngine);
         this.channel.addSubscriber(gameEngine, this);
+
+        FXMLLoader leftGridFXML = new FXMLLoader(getClass().getResource("../leftBoard.fxml"));
+        FXMLLoader rightGridFXML = new FXMLLoader(getClass().getResource("../rightBoard.fxml"));
+
+        leftGridFXML.setControllerFactory(c -> new BoardController(this.channel, players[0]));
+        rightGridFXML.setControllerFactory(c -> new BoardController(this.channel, players[1]));
+
+        GridPane leftGrid = null;
+        GridPane rightGrid = null;
+
+        try {
+            leftGrid = leftGridFXML.load();
+            rightGrid = rightGridFXML.load();
+
+        } catch (IOException e) {
+        }
+
+        GridPane.setHalignment(leftGrid, HPos.LEFT);
+        GridPane.setHalignment(rightGrid, HPos.RIGHT);
+
+        gridBoard.add(leftGrid, 0, 0);
+        gridBoard.add(rightGrid, 1, 0);
 
         gameEngine.setupGame();
     }

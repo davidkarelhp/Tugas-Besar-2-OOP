@@ -4,6 +4,7 @@ import com.aetherwars.event.Event;
 import com.aetherwars.event.GameChannel;
 import com.aetherwars.event.Publisher;
 import com.aetherwars.event.Subscriber;
+import com.aetherwars.model.Player;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
@@ -28,9 +29,11 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     StackPane character5;
 
     private GameChannel channel;
+    private Player player;
 
-    public BoardController(GameChannel channel) {
+    public BoardController(GameChannel channel, Player player) {
         this.channel = channel;
+        this.player = player;
     }
 
     @Override
