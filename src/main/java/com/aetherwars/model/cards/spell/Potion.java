@@ -1,20 +1,22 @@
 package com.aetherwars.model.cards.spell;
 
-import com.aetherwars.model.cards.Card;
-import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.characteristics.AttackModifier;
 import com.aetherwars.model.cards.spell.characteristics.EffectRunner;
 import com.aetherwars.model.cards.spell.characteristics.HealthModifier;
-import com.aetherwars.model.cards.spell.characteristics.TemporaryEffect;
+import com.aetherwars.model.cards.spell.characteristics.EffectRemover;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
-public class Potion implements TemporaryEffect, AttackModifier, HealthModifier, EffectRunner {
+import java.util.ArrayList;
+
+public class Potion implements AttackModifier, HealthModifier, EffectRunner {
+    public final SpellType type = SpellType.POTION;
+    public final EffectDurationType effectDurationType = EffectDurationType.TEMPORARY;
+    public static ArrayList<Potion> PotionList = new ArrayList<>();
+
     private double attack;
     private double health;
-    private double healthUsed;
-
     private int duration;
 
     public Potion(){
@@ -23,16 +25,22 @@ public class Potion implements TemporaryEffect, AttackModifier, HealthModifier, 
         this.duration = 0;
     }
 
-    public double getDefaultAttack(){
-        return attack;
+    public Potion(double attack, double health, int duration) {
+        this.attack = attack;
+        this.health = health;
+        this.duration = duration;
     }
 
     public double getHealth(){
-        return health - healthUsed;
+        return health;
     }
 
-    public double getDefaultHealth() {
-        return  health;
+    public double getAttack() {
+        return attack;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public void setAttack(double attack) {
@@ -43,13 +51,12 @@ public class Potion implements TemporaryEffect, AttackModifier, HealthModifier, 
         this.health = health;
     }
 
-    public void setHealthUsed(double healthUsed) {
-        this.healthUsed = healthUsed;
-    }
 
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+
 
     @Override
     public void runEffect(SummonedCharacter character) {
@@ -57,19 +64,15 @@ public class Potion implements TemporaryEffect, AttackModifier, HealthModifier, 
         modifyAttack(character);
     }
 
-    @Override
-    public void removeEffect(SummonedCharacter character) {
-        character.getPotionSpells().remove(this);
-    }
 
     @Override
     public void modifyAttack(SummonedCharacter character) {
-        character.setAttack(character.getAttack() + attack);
+        character.setAttackSent(character.getAttackSent() + attack);
     }
 
     @Override
     public void modifyHealth(SummonedCharacter character) {
-       character.setHealth(character.getHealth() + health);
+       character.setHealthHad(character.getHealthHad() + health);
     }
 
 

@@ -1,5 +1,6 @@
 package com.aetherwars.model;
 
+import com.aetherwars.GameEngine;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.SummonedCharacter;
 
@@ -49,10 +50,16 @@ public class Board {
         int enemy_size = ((enemy.getBoard()).getListCharacter()).size();
         if (slot <5 && slot > -1 && enemy_size == 0){
             //attack with spell
-            this.board.get(slot).processSpell();
+//            this.board.get(slot).processSpell();
+            // WE GOTTA TALK ABOUT THIS
             double enemyHealth = enemy.getHealthPoints();
             enemyHealth = enemyHealth - this.selectedChar(slot).getAttack();
         }   
+    }
+
+    // update information of game round to every summoned character
+    public void incrementRound(){
+        board.forEach((sc) -> sc.incrementRound());
     }
 
 

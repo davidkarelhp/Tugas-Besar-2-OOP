@@ -27,8 +27,7 @@ public class Dealer {
                 int randomSpellCardId = ThreadLocalRandom.current().nextInt(0, Spell.SpellList.size());
                 Spell spellCardData = Spell.SpellList.get(randomSpellCardId);
 
-                listDeck.add(new Spell(spellCardData.getId(), spellCardData.getName(), spellCardData.getDescription(), 
-                spellCardData.getMana(), spellCardData.getImagePath(), spellCardData.getType()));
+                listDeck.add(spellCardData.clone());
             }
         }
 

@@ -7,12 +7,22 @@ import com.aetherwars.model.cards.spell.characteristics.*;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Morph implements PermanentEffect, CharacterChanger, EffectRunner {
+
+    public final SpellType type = SpellType.MORPH;
+    public final EffectDurationType effectDurationType = EffectDurationType.PERMANENT;
+    public static ArrayList<Morph> MorphList = new ArrayList<>();
+
     private int targetId;
     public Morph() {
         targetId = -1;
+    }
+
+    public Morph(int targetId) {
+        this.targetId = targetId;
     }
 
     public int getTargetId() {
