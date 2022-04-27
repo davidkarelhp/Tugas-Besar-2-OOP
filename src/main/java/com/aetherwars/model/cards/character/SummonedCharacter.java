@@ -44,8 +44,8 @@ public class SummonedCharacter implements IsSummoned {
         this.swapDurationLeft = 0;
         this.round = 0;
 
-        this.bindedAttack = new SimpleDoubleProperty(0);
-        this.bindedHealth = new SimpleDoubleProperty(0);
+        this.bindedAttack = new SimpleDoubleProperty(character.getBaseAttack());
+        this.bindedHealth = new SimpleDoubleProperty(character.getBaseHealth());
         this.bindedExp = new SimpleIntegerProperty(0);
         this.bindedLevel = new SimpleIntegerProperty(1);
     }

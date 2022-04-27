@@ -27,19 +27,7 @@ import java.util.Stack;
 
 public class BoardController implements Initializable, Publisher, Subscriber {
     @FXML
-    StackPane character1;
-
-    @FXML
-    StackPane character2;
-
-    @FXML
-    StackPane character3;
-
-    @FXML
-    StackPane character4;
-
-    @FXML
-    StackPane character5;
+    StackPane character1, character2, character3, character4, character5;
 
     private GameChannel channel;
     private Player player;
@@ -56,7 +44,8 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         this.charArr = new StackPane[]{character1, character2, character3, character4, character5};
     }
 
-    public void prepareToMoveToBoardEventHandler() {
+    public void prepareToMoveToBoardEventHandler(Player player) {
+//        refreshBoard(this.player.equals(player));
         for (int i = 0; i < 5; i++) {
             if (this.charArr[i].getChildren().isEmpty()) {
                 int idx = i;
@@ -228,8 +217,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             Pair<Player, Integer> e = (Pair<Player, Integer>) event.getEvent();
             if (this.player.equals(e.getKey())) {
                 this.handIdx = e.getValue();
-                prepareToMoveToBoardEventHandler();
-                System.out.println("here");
+                prepareToMoveToBoardEventHandler(e.getKey());
             }
 
         } else if (event instanceof RefreshBoardEvent) {

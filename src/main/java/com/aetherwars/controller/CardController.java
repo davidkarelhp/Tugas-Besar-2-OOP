@@ -24,13 +24,7 @@ public class CardController implements Initializable {
     ImageView cardImage;
 
     @FXML
-    Label labelName;
-
-    @FXML
-    Label labelMana;
-
-    @FXML
-    Label labelAtkHp;
+    Label labelName, labelMana, labelAtkHp;
 
     @FXML
     StackPane cardStackPane;

@@ -42,63 +42,24 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
-    StackPane backPane, backHandPane;
+    StackPane backPane, backHandPane, drawPhase, planPhase, attackPhase, endPhase;
 
     @FXML
     Button buttonSkip;
 
-    @FXML
-    Label atack_p, draw_p, end_p, plan_p;
-
     Label[] phases_bar;
 
     @FXML
-    Label labelPlayer1;
+    Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p;
 
     @FXML
-    Label labelPlayer2;
+    ProgressBar healthPlayer1, healthPlayer2;
 
     @FXML
-    Label labelRound;
-
-    @FXML
-    ProgressBar healthPlayer1;
-
-    @FXML
-    ProgressBar healthPlayer2;
-
-    @FXML
-    GridPane handGrid;
-
-    @FXML
-    Label labelDeck;
-
-    @FXML
-    Label labelMana;
-
-    @FXML
-    StackPane drawPhase;
-
-    @FXML
-    StackPane attackPhase;
-
-    @FXML
-    StackPane endPhase;
-
-    @FXML
-    StackPane planPhase;
-
-    @FXML
-    Label dataCardLabel, titleCardLabel, descCardLabel;
+    GridPane handGrid, gridBoard;
 
     @FXML
     ImageView imageCardHover;
-
-    @FXML
-    Label labelHand;
-
-    @FXML
-    GridPane gridBoard;
 
     private final int MAX_HEALTH = 80;
     private final Color CURRENT_PHASE_COLOR = Color.AQUAMARINE;
@@ -108,8 +69,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     private List<StackPane> handList;
     private int currentPlayerIdx = -1;
     private Player currentPlayer;
-
-    GameEngine engine;
+    private GameEngine engine;
 
     public MainController(GameChannel channel) {
         this.channel = channel;
