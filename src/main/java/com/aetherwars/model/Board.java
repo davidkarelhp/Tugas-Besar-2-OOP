@@ -6,6 +6,8 @@ import com.aetherwars.model.cards.character.SummonedCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
 
@@ -59,7 +61,12 @@ public class Board {
 
     // update information of game round to every summoned character
     public void incrementRound(){
-        board.forEach((sc) -> sc.incrementRound());
+        for (SummonedCharacter sumChar: this.board) {
+            if (sumChar != null) {
+                sumChar.incrementRound();
+            }
+        }
+
     }
 
 

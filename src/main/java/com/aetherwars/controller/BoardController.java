@@ -6,6 +6,7 @@ import com.aetherwars.event.Publisher;
 import com.aetherwars.event.Subscriber;
 import com.aetherwars.model.Player;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.StackPane;
 
@@ -38,7 +39,8 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
+        sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(0)));
     }
 
     @Override

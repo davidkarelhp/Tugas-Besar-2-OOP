@@ -15,8 +15,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SummonedCharacterController implements Publisher, Subscriber, Initializable {
-
-
     @FXML
     ImageView imageCharacter;
 
@@ -29,20 +27,12 @@ public class SummonedCharacterController implements Publisher, Subscriber, Initi
     @FXML
     Label labelAttack;
 
-    CardController cardController;
-
-    SummonedCharacter summonedChar;
-
     private GameChannel channel;
-    private boolean is_selected;
-    private int pos;
-    private int playerID;
+    private SummonedCharacter character;
 
-    public SummonedCharacterController(GameChannel channel, int pos, int Id){
+    public SummonedCharacterController(GameChannel channel, SummonedCharacter character){
         this.channel = channel;
-        this.is_selected = false;
-        this.pos = pos;
-        this.playerID = Id;
+        this.character = character;
 
     }
 
