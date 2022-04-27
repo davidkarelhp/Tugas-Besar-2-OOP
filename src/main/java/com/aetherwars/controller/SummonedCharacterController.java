@@ -1,11 +1,9 @@
 package com.aetherwars.controller;
 
-import com.aetherwars.event.Event;
-import com.aetherwars.event.GameChannel;
-import com.aetherwars.event.Publisher;
-import com.aetherwars.event.Subscriber;
+import com.aetherwars.event.*;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.SummonedCharacter;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -40,24 +38,27 @@ public class SummonedCharacterController implements Publisher, Subscriber, Initi
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         File file = null;
+
         try {
             file = new File(getClass().getResource("../" + this.character.getCharacter().getImagePath()).toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        System.out.println(this.character.getCharacter().getName());
-        System.out.println(this.character.getHealth());
+
+//        System.out.println(this.character.getCharacter().getName());
+//        System.out.println(this.character.getHealth());
 
         imageCharacter.setImage(new Image(file.toURI().toString(), 65, 65, true, true));
-        labelExp.setText(Integer.toString(this.character.getExp()));
-        labelHealth.setText(Double.toString(this.character.getHealth()));
+
+        labelAttack.textProperty().bind(this.character.bindedAttackProperty().asString());
+
+        labelHealth.textProperty().bind(this.character.bindedHealthProperty().asString());
+
+        labelExp.textProperty().bind(Bindings.concat(this.character.bindedExpProperty(), "/", this.character.bindedLevelProperty().multiply(2).subtract(1), " [", this.character.bindedLevelProperty(), "]"));
     }
-
-
 
     @Override
     public void publish(Event event) {
-
     }
 
     @Override

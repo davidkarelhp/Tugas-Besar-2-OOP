@@ -180,6 +180,11 @@ public class GameEngine implements Publisher, Subscriber {
         publish(new RefreshBoardEvent(this.players[this.currentPlayer]));
     }
 
+    public void addExpEventHandler(int[] arr) {
+        this.players[this.currentPlayer].setMana(this.players[this.currentPlayer].getMana() - arr[0]);
+        this.players[this.currentPlayer].getBoard().getAtSlot(arr[1]).addExp(arr[0]);
+    }
+
     @Override
     public void publish(Event event) {
         this.eventChannel.sendEvent(this, event);
@@ -208,6 +213,9 @@ public class GameEngine implements Publisher, Subscriber {
 
             } else if (event instanceof ThrowOutFromBoardEvent) {
                 throwOutFromBoardEventHandler((int) event.getEvent());
+
+            } else if (event instanceof AddExpEvent) {
+                addExpEventHandler((int[]) event.getEvent());
 
             }
 

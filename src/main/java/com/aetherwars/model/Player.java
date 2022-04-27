@@ -55,6 +55,10 @@ public class Player {
         return mana;
     }
 
+    public void setMana(int mana) {
+        this.mana.set(mana);
+    }
+
     public int getManaLimit() {
         return manaLimit.get();
     }

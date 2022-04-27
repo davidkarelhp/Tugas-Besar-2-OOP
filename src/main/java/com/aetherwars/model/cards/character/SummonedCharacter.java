@@ -2,10 +2,20 @@ package com.aetherwars.model.cards.character;
 
 import com.aetherwars.model.cards.spell.Spell;
 import com.aetherwars.model.cards.spell.enums.SpellType;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.ArrayList;
 
 public class SummonedCharacter implements IsSummoned {
+    // Buat UI ini, abaiin aja
+    private DoubleProperty bindedHealth;
+    private DoubleProperty bindedAttack;
+    private IntegerProperty bindedExp;
+    private IntegerProperty bindedLevel;
+
     private Character character;
     private int level;
     private int exp;
@@ -25,14 +35,19 @@ public class SummonedCharacter implements IsSummoned {
         this.character = character;
         this.level = 1;
         this.exp = 0;
-        this.attack = 0;
-        this.health = 0;
+        this.attack = character.getBaseAttack();
+        this.health = character.getBaseHealth();
         this.potions = new ArrayList<Spell>();
-        this.attackSent = 0;
-        this.healthHad = 0;
+        this.attackSent = character.getBaseAttack();
+        this.healthHad = character.getBaseHealth();
         this.playable = true;
         this.swapDurationLeft = 0;
         this.round = 0;
+
+        this.bindedAttack = new SimpleDoubleProperty(0);
+        this.bindedHealth = new SimpleDoubleProperty(0);
+        this.bindedExp = new SimpleIntegerProperty(0);
+        this.bindedLevel = new SimpleIntegerProperty(1);
     }
 
     public SummonedCharacter(Character character, int round, int level, int exp, double attack, double health, double mana, boolean playable) {
@@ -47,6 +62,43 @@ public class SummonedCharacter implements IsSummoned {
         this.playable = playable;
         this.swapDurationLeft = 0;
         this.round = round;
+
+        this.bindedAttack = new SimpleDoubleProperty(attack);
+        this.bindedHealth = new SimpleDoubleProperty(health);
+        this.bindedExp = new SimpleIntegerProperty(exp);
+        this.bindedLevel = new SimpleIntegerProperty(level);
+    }
+
+    public double getBindedHealth() {
+        return bindedHealth.get();
+    }
+
+    public DoubleProperty bindedHealthProperty() {
+        return bindedHealth;
+    }
+
+    public double getBindedAttack() {
+        return bindedAttack.get();
+    }
+
+    public DoubleProperty bindedAttackProperty() {
+        return bindedAttack;
+    }
+
+    public int getBindedExp() {
+        return bindedExp.get();
+    }
+
+    public IntegerProperty bindedExpProperty() {
+        return bindedExp;
+    }
+
+    public int getBindedLevel() {
+        return bindedLevel.get();
+    }
+
+    public IntegerProperty bindedLevelProperty() {
+        return bindedLevel;
     }
 
     public int getRound() {
@@ -121,6 +173,7 @@ public class SummonedCharacter implements IsSummoned {
 
     public void setLevel(int level) {
         this.level = level;
+        this.bindedLevel.set(level);
     }
 
     public int getExp() {
@@ -129,6 +182,7 @@ public class SummonedCharacter implements IsSummoned {
 
     public void setExp(int exp) {
         this.exp = exp;
+        this.bindedExp.set(exp);
     }
 
     public double getAttack() {
@@ -137,6 +191,7 @@ public class SummonedCharacter implements IsSummoned {
 
     public void setAttack(double attack) {
         this.attack = attack;
+        this.bindedAttack.set(this.attack);
     }
 
     public double getHealth() {
@@ -145,6 +200,7 @@ public class SummonedCharacter implements IsSummoned {
 
     public void setHealth(double health) {
         this.health = health;
+        this.bindedAttack.set(this.health);
     }
 
     public double getAttackSent() {

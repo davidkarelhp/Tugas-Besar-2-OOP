@@ -91,7 +91,6 @@ public class CardController implements Initializable {
         this.controller.onUnHoverCard(this.card);
 
         cardStackPane.setCursor(Cursor.HAND);
-        //publish(new HoverEvent(this.card));
     }
 
 
