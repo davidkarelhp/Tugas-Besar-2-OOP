@@ -15,7 +15,7 @@ public class Player {
     private String playerName;
     private DoubleProperty healthPoints;
     private IntegerProperty mana;
-    private int manaLimit;
+    private IntegerProperty manaLimit;
     private Deck deck;
     private Hand hand;
     private Board board;
@@ -29,8 +29,8 @@ public class Player {
         this.deck = deck;
         this.channel = channel;
         this.healthPoints = new SimpleDoubleProperty(80);
-        this.mana = new SimpleIntegerProperty(1);
-        this.manaLimit = 1;
+        this.mana = new SimpleIntegerProperty(0);
+        this.manaLimit = new SimpleIntegerProperty(0);
         this.hand = new Hand();
         this.board = new Board();
     }
@@ -56,6 +56,10 @@ public class Player {
     }
 
     public int getManaLimit() {
+        return manaLimit.get();
+    }
+
+    public IntegerProperty manaLimitProperty() {
         return manaLimit;
     }
 
@@ -72,11 +76,11 @@ public class Player {
     }
 
     public void increaseManaLimit() {
-        this.manaLimit = this.manaLimit < 10 ? this.manaLimit + 1 : this.manaLimit;
+        this.manaLimit.set(this.getManaLimit() < 10 ? this.getManaLimit() + 1 : this.getManaLimit());
     }
 
     public void resetMana() {
-        this.mana.set(this.manaLimit);
+        this.mana.set(this.getManaLimit());
     }
 
     public Card seeCardinHand(int index){

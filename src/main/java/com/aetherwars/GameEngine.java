@@ -77,6 +77,8 @@ public class GameEngine implements Publisher, Subscriber {
     public void phaseController() {
         if (currentPhase() == Phase.DRAW) {
             // ini draw yang dikembaliin
+            this.players[this.currentPlayer].increaseManaLimit();
+            this.players[this.currentPlayer].resetMana();
             publish(new DrawPhaseEvent(this.players[this.currentPlayer].draw()));
 
         } else if (currentPhase() == Phase.PLAN){
@@ -85,7 +87,7 @@ public class GameEngine implements Publisher, Subscriber {
         } else if (currentPhase() == Phase.ATTACK) {
 
         } else if (currentPhase()  == Phase.END) {
-//            Jalanin prosedur END phase disini, semua kartu currentplayer statusnya dijadiin belum dipakai dan sebagainya
+            // Jalanin prosedur END phase disini, semua kartu currentplayer statusnya dijadiin belum dipakai dan sebagainya
 
             if (this.currentPlayer == 1) {
                 this.currentRound.set(this.getCurrentRound() + 1);
@@ -94,9 +96,6 @@ public class GameEngine implements Publisher, Subscriber {
             }
 
             this.currentPlayer = (this.currentPlayer == 0) ? 1 : 0;
-
-            this.players[this.currentPlayer].increaseManaLimit();
-            this.players[this.currentPlayer].resetMana();
 
             publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
 

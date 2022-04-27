@@ -311,7 +311,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         labelMana.textProperty().unbind();
 
         labelDeck.textProperty().bind(Bindings.concat(player.getDeck().deckFillProperty(), "/", player.getDeck().getDeckSize()));
-        labelMana.textProperty().bind(Bindings.concat(player.manaProperty(), "/" + player.getManaLimit()));
+        labelMana.textProperty().bind(Bindings.concat(player.manaProperty(), "/", player.manaLimitProperty()));
     }
 
     public void phaseColoring(Phase phase) {
