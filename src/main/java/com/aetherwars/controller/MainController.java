@@ -50,11 +50,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
     Label atack_p, draw_p, end_p, plan_p;
 
-    Phase[] phases = new Phase[] { Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END };
-
     Label[] phases_bar;
-
-    int phase_id = 0;
 
     @FXML
     Label labelPlayer1;
@@ -110,6 +106,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
     private GameChannel channel;
     private GridPane drawPane;
     private List<StackPane> handList;
+    private int currentPlayerIdx = -1;
+    private Player currentPlayer;
 
     GameEngine engine;
 
@@ -145,9 +143,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
         titleCardLabel.setText("-------");
         dataCardLabel.setText("------------------------------------");
         descCardLabel.setText("------------------------------------");
-
-
-
     }
 
     public void startGame(GameEngine gameEngine) throws IOException {
@@ -170,8 +165,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
         FXMLLoader leftGridFXML = new FXMLLoader(getClass().getResource("../leftBoard.fxml"));
         FXMLLoader rightGridFXML = new FXMLLoader(getClass().getResource("../rightBoard.fxml"));
 
+
         leftGridFXML.setControllerFactory(c -> new BoardController(this.channel, players[0]));
         rightGridFXML.setControllerFactory(c -> new BoardController(this.channel, players[1]));
+
 
         GridPane leftGrid = null;
         GridPane rightGrid = null;
@@ -182,6 +179,15 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         } catch (IOException e) {
         }
+
+        this.channel.addSubscriber(this, leftGridFXML.getController());
+        this.channel.addSubscriber(this, rightGridFXML.getController());
+
+        this.channel.addSubscriber(this.engine, leftGridFXML.getController());
+        this.channel.addSubscriber(this.engine, rightGridFXML.getController());
+
+        this.channel.addSubscriber(leftGridFXML.getController(), this.engine);
+        this.channel.addSubscriber(rightGridFXML.getController(), this.engine);
 
         GridPane.setHalignment(leftGrid, HPos.LEFT);
         GridPane.setHalignment(rightGrid, HPos.RIGHT);
@@ -324,6 +330,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
         optionPane.getChildren().add(discard);
         optionPane.getChildren().add(cancel);
 
+        board.setOnAction(e -> publish(new PrepareToMoveToBoardEvent(this.currentPlayer, idx)));
+
         cancel.setOnAction(e -> {
             cardPane.getChildren().remove(optionPane);
             cardPane.setOnMouseClicked(ev -> showCardOptions(cardPane, idx));
@@ -388,6 +396,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         try {
 
             if (event instanceof ChangePlayerEvent) {
+                this.currentPlayer = (Player) event.getEvent();
                 this.refreshHand((Player) event.getEvent());
                 this.rebindDeckAndMana((Player) event.getEvent());
 

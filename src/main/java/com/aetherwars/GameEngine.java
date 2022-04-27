@@ -161,10 +161,15 @@ public class GameEngine implements Publisher, Subscriber {
             } else if (event instanceof DrawnCardClicked) {
                 Pair<List<Card>, Integer> pair =  (Pair<List<Card>, Integer>) event.getEvent();
                 drawnCardClicked(pair.getKey(), pair.getValue());
+
             } else if (event instanceof DiscardToDrawEvent) {
                 discardAndDraw((int)event.getEvent());
+
             } else if (event instanceof DiscardEvent) {
                 discard((int) event.getEvent());
+
+            } else if (event instanceof MoveToBoardEvent) {
+                System.out.println("catched");
             }
 
         } catch (Exception e) {

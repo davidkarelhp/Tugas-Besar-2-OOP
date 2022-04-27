@@ -1,9 +1,6 @@
 package com.aetherwars.controller;
 
-import com.aetherwars.event.Event;
-import com.aetherwars.event.GameChannel;
-import com.aetherwars.event.Publisher;
-import com.aetherwars.event.Subscriber;
+import com.aetherwars.event.*;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.character.SummonedCharacter;
 import javafx.beans.binding.Binding;
@@ -16,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,6 +38,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     private GameChannel channel;
     private Player player;
     private StackPane[] charArr;
+    private int handIdx;
 
     public BoardController(GameChannel channel, Player player) {
         this.channel = channel;
@@ -69,13 +68,30 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 //        x.textProperty().bind(Bindings.when(ch.isNull()).then("lol").otherwise("lal"));
     }
 
+    public void prepareToMoveToBoardEventHandler() {
+        for (int i = 0; i < 5; i++) {
+            int idx = i;
+            this.charArr[i].setOnMouseClicked(e -> publish(new MoveToBoardEvent(this.handIdx, idx)));
+        }
+    }
+
     @Override
     public void publish(Event event) {
-
+        this.channel.sendEvent(this, event);
     }
 
     @Override
     public void onEvent(Event event) {
 
+        if (event instanceof PrepareToMoveToBoardEvent) {
+
+            Pair<Player, Integer> e = (Pair<Player, Integer>) event.getEvent();
+            if (this.player.equals(e.getKey())) {
+                this.handIdx = e.getValue();
+                prepareToMoveToBoardEventHandler();
+                System.out.println("here");
+            }
+
+        }
     }
 }
