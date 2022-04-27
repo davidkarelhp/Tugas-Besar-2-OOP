@@ -19,16 +19,21 @@ public class Dealer {
                 int randomCharCardId = ThreadLocalRandom.current().nextInt(0, Character.characterList.size());
                 Character charCardData = Character.characterList.get(randomCharCardId);
 
-                listDeck.add(new Character(charCardData.getId(), charCardData.getName(), charCardData.getDescription(), 
-                charCardData.getMana(), charCardData.getImagePath(), charCardData.getCharacterType(), charCardData.getBaseAttack(), 
+                listDeck.add(new Character(charCardData.getId(), charCardData.getName(), charCardData.getDescription(),
+                charCardData.getMana(), charCardData.getImagePath(), charCardData.getCharacterType(), charCardData.getBaseAttack(),
                 charCardData.getBaseHealth(), charCardData.getAttackUp(), charCardData.getHealthUp()));
-            } 
+            }
             else if (cardType == 1) {   // spell card
                 int randomSpellCardId = ThreadLocalRandom.current().nextInt(0, Spell.SpellList.size());
                 Spell spellCardData = Spell.SpellList.get(randomSpellCardId);
 
                 listDeck.add(spellCardData.clone());
             }
+
+//            int randomSpellCardId = ThreadLocalRandom.current().nextInt(0, Spell.SpellList.size());
+//            Spell spellCardData = Spell.SpellList.get(randomSpellCardId);
+//
+//            listDeck.add(spellCardData.clone());
         }
 
         return new Deck(listDeck);

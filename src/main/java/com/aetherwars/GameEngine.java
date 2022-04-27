@@ -4,6 +4,8 @@ import com.aetherwars.event.*;
 import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.Card;
+import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.spell.Spell;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Pair;
@@ -146,6 +148,31 @@ public class GameEngine implements Publisher, Subscriber {
         publish(new RefreshHandEvent(this.players[this.currentPlayer]));
     }
 
+    public void moveToBoardEventHandler(int idxHand, int idxBoard) {
+        if (this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand) instanceof  Character) {
+            Character c = (Character) this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand);
+            this.players[this.currentPlayer].getHand().discardAtIndex(idxHand);
+            this.players[this.currentPlayer].getBoard().putInSlot(idxBoard, c);
+
+            publish(new RefreshHandEvent(this.players[this.currentPlayer]));
+            publish(new RefreshBoardEvent(this.players[this.currentPlayer]));
+
+        } else if (this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand) instanceof Spell) {
+            if (this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard) != null) {
+                Spell s = (Spell) this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand);
+                this.players[this.currentPlayer].getHand().discardAtIndex(idxHand);
+
+                this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard).addSpell(s);
+
+                publish(new RefreshHandEvent(this.players[this.currentPlayer]));
+
+            } else {
+                System.out.println("Slot kosong!");
+            }
+        }
+
+    }
+
     @Override
     public void publish(Event event) {
         this.eventChannel.sendEvent(this, event);
@@ -169,6 +196,8 @@ public class GameEngine implements Publisher, Subscriber {
                 discard((int) event.getEvent());
 
             } else if (event instanceof MoveToBoardEvent) {
+                Pair<Integer, Integer> e = (Pair<Integer, Integer>) event.getEvent();
+                moveToBoardEventHandler(e.getKey(), e.getValue());
                 System.out.println("catched");
             }
 

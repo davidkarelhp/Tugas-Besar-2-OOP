@@ -79,6 +79,10 @@ public class SummonedCharacter implements IsSummoned {
         });
     }
 
+    public Character getCharacter() {
+        return character;
+    }
+
     public ArrayList<Spell> getPotions() {
         return potions;
     }

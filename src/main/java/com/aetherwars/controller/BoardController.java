@@ -10,9 +10,10 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -48,21 +49,21 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.charArr = new StackPane[]{character1, character2, character3, character4, character5};
-        for (int i = 0; i < 5; i++) {
-            FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
-            int idx = i;
-            sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
-
-            AnchorPane sumCharPane = null;
-
-            try {
-                sumCharPane = sumCharFXML.load();
-                this.charArr[i].getChildren().add(sumCharPane);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
+//        for (int i = 0; i < 5; i++) {
+//            FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
+//            int idx = i;
+//            sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
+//
+//            AnchorPane sumCharPane = null;
+//
+//            try {
+//                sumCharPane = sumCharFXML.load();
+//                this.charArr[i].getChildren().add(sumCharPane);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
 //        Label x = new Label("");
 //        ListProperty<SummonedCharacter> ch = new SimpleListProperty<>();
 //        x.textProperty().bind(Bindings.when(ch.isNull()).then("lol").otherwise("lal"));
@@ -72,6 +73,32 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         for (int i = 0; i < 5; i++) {
             int idx = i;
             this.charArr[i].setOnMouseClicked(e -> publish(new MoveToBoardEvent(this.handIdx, idx)));
+        }
+    }
+
+    public void refreshBoard() {
+        for (int i = 0; i < 5; i++) {
+            if (this.player.getBoard().getAtSlot(i) != null) {
+                this.charArr[i].getChildren().clear();
+                FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
+                int idx = i;
+                sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
+
+                AnchorPane sumCharPane = null;
+
+                try {
+                    sumCharPane = sumCharFXML.load();
+                    this.charArr[i].getChildren().add(sumCharPane);
+
+                    AnchorPane temp = sumCharPane;
+                    sumCharPane.setOnMouseEntered(e -> temp.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY))));
+                    sumCharPane.setOnMouseExited(e -> temp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
         }
     }
 
@@ -91,6 +118,9 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                 prepareToMoveToBoardEventHandler();
                 System.out.println("here");
             }
+
+        } else if (event instanceof RefreshBoardEvent) {
+            refreshBoard();
 
         }
     }

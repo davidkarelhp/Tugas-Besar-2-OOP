@@ -2,6 +2,7 @@ package com.aetherwars.model;
 
 import com.aetherwars.GameEngine;
 import com.aetherwars.model.cards.Card;
+import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.character.SummonedCharacter;
 
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ public class Board {
 
     public void putInSlot(int slot, SummonedCharacter c) {
         this.board.set(slot, c);
+    }
+
+    public void putInSlot(int slot, Character c) {
+        this.board.set(slot, new SummonedCharacter(c));
     }
 
     public SummonedCharacter getAtSlot(int idx) {
