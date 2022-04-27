@@ -151,8 +151,20 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         Player[] players = gameEngine.getPlayers();
 
-        this.labelPlayer1.setText(players[0].getPlayerName());
-        this.labelPlayer2.setText(players[1].getPlayerName());
+//        this.labelPlayer1.setText(players[0].getPlayerName());
+//        this.labelPlayer2.setText(players[1].getPlayerName());
+
+        this.labelPlayer1.textProperty().bind(Bindings.when(
+                gameEngine.currentPlayerProperty().isEqualTo(0))
+                .then("Current Player: " + players[0].getPlayerName())
+                .otherwise(players[0].getPlayerName())
+        );
+
+        this.labelPlayer2.textProperty().bind(Bindings.when(
+                        gameEngine.currentPlayerProperty().isEqualTo(1))
+                .then("Current Player: " + players[1].getPlayerName())
+                .otherwise(players[1].getPlayerName())
+        );
 
         this.labelRound.textProperty().bind(Bindings.concat("Round ", gameEngine.currentRoundProperty()));
 

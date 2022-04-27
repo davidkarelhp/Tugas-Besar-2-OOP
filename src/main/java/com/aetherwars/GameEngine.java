@@ -16,7 +16,8 @@ import java.util.List;
 public class GameEngine implements Publisher, Subscriber {
     private GameChannel eventChannel;
     private Player[] players;
-    private int currentPlayer;
+    private IntegerProperty currentPlayer;
+//    private int currentPlayer;
     private IntegerProperty currentRound;
     private int currentPhase;
     private static Phase[] phases = {Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END};
@@ -28,7 +29,7 @@ public class GameEngine implements Publisher, Subscriber {
         this.players[0] = p1;
         this.players[1] = p2;
         this.eventChannel = eventChannel;
-        this.currentPlayer = 0;
+        this.currentPlayer = new SimpleIntegerProperty(0);
         this.currentRound = new SimpleIntegerProperty(1);
         this.currentPhase = 0;
     }
@@ -37,8 +38,16 @@ public class GameEngine implements Publisher, Subscriber {
         return currentRound.get();
     }
 
-    public int getCurrentPlayer(){
-        return this.currentPlayer;
+    public int getCurrentPlayer() {
+        return currentPlayer.get();
+    }
+
+    public IntegerProperty currentPlayerProperty() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer.set(currentPlayer);
     }
 
     public IntegerProperty currentRoundProperty() {
@@ -51,7 +60,7 @@ public class GameEngine implements Publisher, Subscriber {
 
     public void setupGame() {
         this.drawBoth();
-        publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+        publish(new ChangePlayerEvent(this.players[this.getCurrentPlayer()]));
         publish(new CurrentPhaseEvent(currentPhase()));
         phaseController();
     }
@@ -79,9 +88,9 @@ public class GameEngine implements Publisher, Subscriber {
     public void phaseController() {
         if (currentPhase() == Phase.DRAW) {
             // ini draw yang dikembaliin
-            this.players[this.currentPlayer].increaseManaLimit();
-            this.players[this.currentPlayer].resetMana();
-            publish(new DrawPhaseEvent(this.players[this.currentPlayer].draw()));
+            this.players[this.getCurrentPlayer()].increaseManaLimit();
+            this.players[this.getCurrentPlayer()].resetMana();
+            publish(new DrawPhaseEvent(this.players[this.getCurrentPlayer()].draw()));
 
         } else if (currentPhase() == Phase.PLAN){
 
@@ -91,15 +100,15 @@ public class GameEngine implements Publisher, Subscriber {
         } else if (currentPhase()  == Phase.END) {
             // Jalanin prosedur END phase disini, semua kartu currentplayer statusnya dijadiin belum dipakai dan sebagainya
 
-            if (this.currentPlayer == 1) {
+            if (this.getCurrentPlayer() == 1) {
                 this.currentRound.set(this.getCurrentRound() + 1);
                 this.players[0].getBoard().incrementRound();
                 this.players[1].getBoard().incrementRound();
             }
 
-            this.currentPlayer = (this.currentPlayer == 0) ? 1 : 0;
+            this.setCurrentPlayer((this.getCurrentPlayer() == 0) ? 1 : 0);
 
-            publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+            publish(new ChangePlayerEvent(this.players[this.getCurrentPlayer()]));
 
             // Langsung draw phase lagi setelah end
             this.nextPhaseProcess();
@@ -123,10 +132,10 @@ public class GameEngine implements Publisher, Subscriber {
 
         cards.clear();
 
-        if (this.players[this.currentPlayer].getHand().getHand().size() < 5) {
-            this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
-            this.players[this.currentPlayer].addToHand(toHand);
-            publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+        if (this.players[this.getCurrentPlayer()].getHand().getHand().size() < 5) {
+            this.players[this.getCurrentPlayer()].putCardToDeckAndShuffle(backToDeck);
+            this.players[this.getCurrentPlayer()].addToHand(toHand);
+            publish(new ChangePlayerEvent(this.players[this.getCurrentPlayer()]));
             nextPhaseProcess();
 
         } else {
@@ -136,35 +145,35 @@ public class GameEngine implements Publisher, Subscriber {
     }
 
     public void discardAndDraw(int idxDiscarded) {
-        this.players[this.currentPlayer].getHand().discardAtIndex(idxDiscarded);
-        this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
-        this.players[this.currentPlayer].addToHand(toHand);
-        publish(new RefreshHandEvent(this.players[this.currentPlayer]));
+        this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxDiscarded);
+        this.players[this.getCurrentPlayer()].putCardToDeckAndShuffle(backToDeck);
+        this.players[this.getCurrentPlayer()].addToHand(toHand);
+        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
         nextPhaseProcess();
     }
 
     public void discard(int idxDiscarded) {
-        this.players[this.currentPlayer].getHand().discardAtIndex(idxDiscarded);
-        publish(new RefreshHandEvent(this.players[this.currentPlayer]));
+        this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxDiscarded);
+        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
     }
 
     public void moveToBoardEventHandler(int idxHand, int idxBoard) {
-        if (this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand) instanceof  Character) {
-            Character c = (Character) this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand);
-            this.players[this.currentPlayer].getHand().discardAtIndex(idxHand);
-            this.players[this.currentPlayer].getBoard().putInSlot(idxBoard, c);
+        if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof  Character) {
+            Character c = (Character) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
+            this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
+            this.players[this.getCurrentPlayer()].getBoard().putInSlot(idxBoard, c);
 
-            publish(new RefreshHandEvent(this.players[this.currentPlayer]));
-            publish(new RefreshBoardEvent(this.players[this.currentPlayer]));
+            publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+            publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
 
-        } else if (this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand) instanceof Spell) {
-            if (this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard) != null) {
-                Spell s = (Spell) this.players[this.currentPlayer].getHand().getCardAtIndex(idxHand);
-                this.players[this.currentPlayer].getHand().discardAtIndex(idxHand);
+        } else if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof Spell) {
+            if (this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard) != null) {
+                Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
+                this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
 
-                this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard).addSpell(s);
+                this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard).addSpell(s);
 
-                publish(new RefreshHandEvent(this.players[this.currentPlayer]));
+                publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
 
             } else {
                 System.out.println("Slot kosong!");
@@ -174,15 +183,15 @@ public class GameEngine implements Publisher, Subscriber {
 
     public void throwOutFromBoardEventHandler(int idxBoard) {
         System.out.println("idb = " + idxBoard);
-        System.out.println(this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard));
-        this.players[this.currentPlayer].getBoard().removeCardAtSlot(idxBoard);
-        System.out.println(this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard));
-        publish(new RefreshBoardEvent(this.players[this.currentPlayer]));
+        System.out.println(this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard));
+        this.players[this.getCurrentPlayer()].getBoard().removeCardAtSlot(idxBoard);
+        System.out.println(this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard));
+        publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
     }
 
     public void addExpEventHandler(int[] arr) {
-        this.players[this.currentPlayer].setMana(this.players[this.currentPlayer].getMana() - arr[0]);
-        this.players[this.currentPlayer].getBoard().getAtSlot(arr[1]).addExp(arr[0]);
+        this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - arr[0]);
+        this.players[this.getCurrentPlayer()].getBoard().getAtSlot(arr[1]).addExp(arr[0]);
     }
 
     @Override
