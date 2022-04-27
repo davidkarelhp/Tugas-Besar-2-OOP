@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -19,13 +20,13 @@ import java.util.ResourceBundle;
 
 public class SummonedCharacterController implements Publisher, Subscriber, Initializable {
     @FXML
+    AnchorPane characterPane;
+
+    @FXML
     ImageView imageCharacter;
 
     @FXML
-    Label labelExp;
-
-    @FXML
-    Label labelAttack, labelHealth;
+    Label labelExp, labelAttack, labelHealth;;
 
     private GameChannel channel;
     private SummonedCharacter character;
@@ -51,6 +52,8 @@ public class SummonedCharacterController implements Publisher, Subscriber, Initi
         labelExp.setText(Integer.toString(this.character.getExp()));
         labelHealth.setText(Double.toString(this.character.getHealth()));
     }
+
+
 
     @Override
     public void publish(Event event) {

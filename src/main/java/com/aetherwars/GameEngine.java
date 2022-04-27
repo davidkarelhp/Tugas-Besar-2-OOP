@@ -170,7 +170,14 @@ public class GameEngine implements Publisher, Subscriber {
                 System.out.println("Slot kosong!");
             }
         }
+    }
 
+    public void throwOutFromBoardEventHandler(int idxBoard) {
+        System.out.println("idb = " + idxBoard);
+        System.out.println(this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard));
+        this.players[this.currentPlayer].getBoard().removeCardAtSlot(idxBoard);
+        System.out.println(this.players[this.currentPlayer].getBoard().getAtSlot(idxBoard));
+        publish(new RefreshBoardEvent(this.players[this.currentPlayer]));
     }
 
     @Override
@@ -198,8 +205,12 @@ public class GameEngine implements Publisher, Subscriber {
             } else if (event instanceof MoveToBoardEvent) {
                 Pair<Integer, Integer> e = (Pair<Integer, Integer>) event.getEvent();
                 moveToBoardEventHandler(e.getKey(), e.getValue());
-                System.out.println("catched");
+
+            } else if (event instanceof ThrowOutFromBoardEvent) {
+                throwOutFromBoardEventHandler((int) event.getEvent());
+
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();

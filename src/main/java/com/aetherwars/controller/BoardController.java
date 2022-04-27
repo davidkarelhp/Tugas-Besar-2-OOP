@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -78,17 +80,19 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
     public void refreshBoard() {
         for (int i = 0; i < 5; i++) {
+            this.charArr[i].getChildren().clear();
+
             if (this.player.getBoard().getAtSlot(i) != null) {
-                this.charArr[i].getChildren().clear();
                 FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
                 int idx = i;
-                sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
 
+                sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
                 AnchorPane sumCharPane = null;
 
                 try {
                     sumCharPane = sumCharFXML.load();
                     this.charArr[i].getChildren().add(sumCharPane);
+                    sumCharPane.setOnMouseClicked(e -> showCharacterOptions(this.charArr[idx], idx));
 
                     AnchorPane temp = sumCharPane;
                     sumCharPane.setOnMouseEntered(e -> temp.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY))));
@@ -100,6 +104,32 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             }
 
         }
+    }
+
+    public void showCharacterOptions(StackPane characterPane, int idx) {
+        StackPane optionPane = new StackPane();
+        optionPane.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
+        characterPane.getChildren().add(optionPane);
+
+        Button throwOut = new Button("Throw Out");
+        Button cancel = new Button("Cancel");
+
+        StackPane.setMargin(throwOut, new Insets(10, 10, 10, 10));
+        StackPane.setMargin(cancel, new Insets(10, 10, 10, 10));
+
+        StackPane.setAlignment(throwOut, Pos.TOP_CENTER);
+        StackPane.setAlignment(cancel, Pos.BOTTOM_CENTER);
+
+        optionPane.getChildren().add(throwOut);
+        optionPane.getChildren().add(cancel);
+
+        throwOut.setOnAction(e -> publish(new ThrowOutFromBoardEvent(idx)));
+
+        cancel.setOnAction(e -> {
+            characterPane.getChildren().remove(optionPane);
+            characterPane.setOnMouseClicked(ev -> showCharacterOptions(characterPane, idx));
+        });
+        characterPane.setOnMouseClicked(null);
     }
 
     @Override
