@@ -1,19 +1,25 @@
 package com.aetherwars.model.cards.spell;
 
-import com.aetherwars.model.cards.Card;
-import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.characteristics.EffectRunner;
 import com.aetherwars.model.cards.spell.characteristics.Swapper;
-import com.aetherwars.model.cards.spell.characteristics.TemporaryEffect;
 import com.aetherwars.model.cards.spell.enums.EffectDurationType;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 
-public class Swap implements TemporaryEffect, Swapper, EffectRunner {
+import java.util.ArrayList;
+
+public class Swap implements Swapper, EffectRunner {
+    public final SpellType type = SpellType.SWAP;
+    public final EffectDurationType effectDurationType = EffectDurationType.TEMPORARY;
+    public static ArrayList<Swap> SwapList = new ArrayList<>();
 
     private int duration;
     public Swap(){
         duration = 0;
+    }
+
+    public Swap(int duration) {
+        this.duration = duration;
     }
 
     @Override
@@ -21,10 +27,6 @@ public class Swap implements TemporaryEffect, Swapper, EffectRunner {
         swap(character);
     }
 
-    @Override
-    public void removeEffect(SummonedCharacter character) {
-        character.getSwapSpells().remove(this);
-    }
 
     public int getDuration() {
         return duration;
@@ -36,9 +38,8 @@ public class Swap implements TemporaryEffect, Swapper, EffectRunner {
 
     @Override
     public void swap(SummonedCharacter character) {
-        double tmp = character.getHealth();
-        character.setHealth(character.getAttack());
-        character.setAttack(tmp);
-        // LOGIC FOR STACKING RULES AFTER CREATION OF TEMPORARY CARD LIST CLASS
+        double tmp = character.getHealthHad();
+        character.setHealthHad(character.getAttackSent());
+        character.setAttackSent(tmp);
     }
 }

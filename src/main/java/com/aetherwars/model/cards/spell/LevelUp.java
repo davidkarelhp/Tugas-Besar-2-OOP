@@ -5,8 +5,16 @@ import com.aetherwars.model.cards.spell.characteristics.EffectRunner;
 import com.aetherwars.model.cards.spell.characteristics.ExperienceEater;
 import com.aetherwars.model.cards.spell.characteristics.LevelModifier;
 import com.aetherwars.model.cards.spell.characteristics.PermanentEffect;
+import com.aetherwars.model.cards.spell.enums.EffectDurationType;
+import com.aetherwars.model.cards.spell.enums.SpellType;
+
+import java.util.ArrayList;
 
 public class LevelUp implements PermanentEffect, LevelModifier, ExperienceEater, EffectRunner {
+    public final SpellType type = SpellType.LEVELUP;
+    public final EffectDurationType effectDurationType = EffectDurationType.PERMANENT;
+    public static ArrayList<LevelUp> LevelUpList = new ArrayList<>();
+
     public LevelUp() {
     }
 

@@ -64,9 +64,10 @@ public class FileLoader {
             int targetId = Integer.parseInt(row[4]);
             int mana = Integer.parseInt(row[5]);
 
-            Spell s = new Spell(id, name, description, mana, imagePath, SpellType.MORPH);
-            ((Morph)s.getSpellWorker()).setTargetId(targetId);
+            Morph m = new Morph(targetId);
+            Morph.MorphList.add(m);
 
+            Spell s = new Spell(id, name, description, mana, imagePath, m);
             Spell.SpellList.add(s);
         }
     }
@@ -86,12 +87,10 @@ public class FileLoader {
             int mana = Integer.parseInt(row[6]);
             int duration = Integer.parseInt(row[7]);
 
-            Spell s = new Spell(id, name, description, mana, imagePath, SpellType.POTION);
-            Potion sw = ((Potion) s.getSpellWorker());
-            sw.setDuration(duration);
-            sw.setAttack(attack);
-            sw.setHealth(hp);
+            Potion p = new Potion(attack, hp, duration);
+            Potion.PotionList.add(p);
 
+            Spell s = new Spell(id, name, description, mana, imagePath, p);
             Spell.SpellList.add(s);
         }
     }
@@ -109,11 +108,11 @@ public class FileLoader {
             int duration = Integer.parseInt(row[4]);
             int mana = Integer.parseInt(row[5]);
 
-            Spell s = new Spell(id, name, description, mana, imagePath, SpellType.SWAP);
-            Swap sw = ((Swap) s.getSpellWorker());
-            sw.setDuration(duration);
+            Swap s = new Swap(duration);
+            Swap.SwapList.add(s);
 
-            Spell.SpellList.add(s);
+            Spell sp = new Spell(id, name, description, mana, imagePath, s);
+            Spell.SpellList.add(sp);
         }
     }
 }

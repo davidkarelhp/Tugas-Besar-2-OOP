@@ -1,7 +1,7 @@
 package com.aetherwars.model.cards.character;
 
-import com.aetherwars.model.cards.spell.Potion;
 import com.aetherwars.model.cards.spell.Spell;
+import com.aetherwars.model.cards.spell.enums.SpellType;
 
 import java.util.ArrayList;
 
@@ -11,36 +11,80 @@ public class SummonedCharacter implements IsSummoned {
     private int exp;
     private double attack;
     private double health;
-    private ArrayList<Spell> potionSpells;
-    private ArrayList<Spell> swapSpells;
+
+    // potions akan hilang untuk dua kondisi
+    // jika durasi = 0
+    // jika health = 0, dimana hanya berlaku untuk health yang positif saja
+    private ArrayList<Spell> potions;
     private double attackSent;
     private double healthHad;
     private boolean playable;
-
+    private int round;
+    private int swapDurationLeft;
     public SummonedCharacter(Character character) {
         this.character = character;
         this.level = 1;
         this.exp = 0;
         this.attack = 0;
         this.health = 0;
-        this.potionSpells = new ArrayList<Spell>();
-        this.swapSpells = new ArrayList<Spell>();
+        this.potions = new ArrayList<Spell>();
         this.attackSent = 0;
         this.healthHad = 0;
         this.playable = true;
+        this.swapDurationLeft = 0;
+        this.round = 0;
     }
 
-    public SummonedCharacter(Character character, int level, int exp, double attack, double health, double mana, ArrayList<Spell> potionSpells, ArrayList<Spell> swapSpells, boolean playable) {
+    public SummonedCharacter(Character character, int round, int level, int exp, double attack, double health, double mana, boolean playable) {
         this.character = character;
         this.level = level;
         this.exp = exp;
         this.attack = attack;
         this.health = health;
-        this.potionSpells = potionSpells;
-        this.swapSpells = swapSpells;
-        this.attackSent = 0;
-        this.healthHad = 0;
+        this.potions = new ArrayList<>();
+        this.attackSent = attack;
+        this.healthHad = health;
         this.playable = playable;
+        this.swapDurationLeft = 0;
+        this.round = round;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void incrementRound() {
+        round++;
+        potions.forEach((ts) -> ts.setDuration(ts.getDuration() - 1));
+        swapDurationLeft--;
+
+        // proses potions yang harus hilang karena durasi
+        // duration = 0
+        potions.removeIf((ts) -> ts.getDuration()  == 0);
+
+        // normalisasi attackSent dan healthHad
+        this.attackSent = this.attack;
+        this.healthHad = this.health;
+
+        // proses spell yang tersisa
+        if (swapDurationLeft > 0) {
+            double tmp = getHealthHad();
+            setHealthHad(getAttackSent());
+            setAttackSent(tmp);
+        }
+
+        potions.forEach((ts) -> {
+            healthHad += ts.getHealth();
+            attackSent += ts.getAttack();
+        });
+    }
+
+    public ArrayList<Spell> getPotions() {
+        return potions;
+    }
+
+    public void setPotions(ArrayList<Spell> potions) {
+        this.potions = potions;
     }
 
     public CharacterType getType() {
@@ -99,22 +143,6 @@ public class SummonedCharacter implements IsSummoned {
         this.health = health;
     }
 
-    public ArrayList<Spell> getPotionSpells() {
-        return potionSpells;
-    }
-
-    public void setPotionSpells(ArrayList<Spell> potionSpells) {
-        this.potionSpells = potionSpells;
-    }
-
-    public ArrayList<Spell> getSwapSpells() {
-        return swapSpells;
-    }
-
-    public void setSwapSpells(ArrayList<Spell> swapSpells) {
-        this.swapSpells = swapSpells;
-    }
-
     public double getAttackSent() {
         return attackSent;
     }
@@ -139,62 +167,67 @@ public class SummonedCharacter implements IsSummoned {
         this.playable = playable;
     }
 
+    public int getSwapDurationLeft() {
+        return swapDurationLeft;
+    }
+
+    public void setSwapDurationLeft(int swapDurationLeft) {
+        this.swapDurationLeft = swapDurationLeft;
+    }
+
     public boolean isStronger(SummonedCharacter enemy) {
         return ((getType() == CharacterType.OVERWORLD && enemy.getType() == CharacterType.END) || (getType() == CharacterType.END && enemy.getType() == CharacterType.NETHER) || (getType() == CharacterType.NETHER && enemy.getType() == CharacterType.OVERWORLD));
     }
 
-    // SKEMA
-    // Skema attack
-    // 1. Panggil processSpell
-    // 2. Panggil enemy.attacked(attacker)
-    // 3.
-
-    public void processSpell() {
-
-    }
-
     public void attacked(SummonedCharacter attacker) {
-        processSpell();
-        Double damage = 0.0;
+        double damage = 0.0;
         if (isStronger(attacker)) {
-            damage = new Double(0.5 * attacker.getAttackSent());
+            damage = 0.5 * attacker.getAttackSent();
             // add condition if attacker dies
         }
         else if (attacker.isStronger(this)) {
-            damage = new Double(2 * attacker.getAttackSent());
+            damage = 2 * attacker.getAttackSent();
             // add condition if attacker dies
         }
         else if (getType() == attacker.getType()) {
-            damage = new Double(attacker.getAttackSent());
+            damage = attacker.getAttackSent();
             // add condition if attacker dies
         }
-        setHealth(getHealthHad() - damage);
+
+        double damageLeft = damage;
+
+        int i = potions.size() - 1;
+        while (damageLeft > 0 || i >= 0){
+            Spell p = potions.get(i);
+            if (p.getHealth() > 0) {
+                damageLeft = Math.max(0, damageLeft - p.getHealth());
+                p.setHealth(Math.max(p.getHealth() - damageLeft, 0));
+            }
+            i--;
+        }
+
+        setHealth(getHealth() - damageLeft);
     }
     
     public void attackEnemy(SummonedCharacter enemy) {
-        processSpell();
         enemy.attacked(this);
     }
 
-    public void useSpell(Spell spell) {
-       spell.runEffect(this);
+    public void addSpell(Spell spell) {
+        if (spell.getType() == SpellType.POTION) {
+            potions.add(spell);
+        }
+
+        if (spell.getType() == SpellType.SWAP) {
+            swapDurationLeft += spell.getDuration();
+        }
+
+        spell.runEffect(this);
+        // saat potion punya health minus yang ngabisin dia sampe mati, itu harus diapain?
     }
 
-    public void addPotionSpells(Spell spell) {
-        this.potionSpells.add(spell);
-    }
- 
-    public void processPotionSpellsList() {
-       potionSpells.forEach((spell -> spell.runEffect(this)));
-    }
 
-    public void addSwapSpells(Spell spell) {
-        this.swapSpells.add(spell);
-    }
 
-    public void processSwapSpellsList() {
-       swapSpells.forEach((spell -> spell.runEffect(this)));
-    }
 
     public void levelUp() {
         setAttack(getAttack() + getAttackUp());

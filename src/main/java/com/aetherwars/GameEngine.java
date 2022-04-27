@@ -89,6 +89,8 @@ public class GameEngine implements Publisher, Subscriber {
 
             if (this.currentPlayer == 1) {
                 this.currentRound.set(this.getCurrentRound() + 1);
+                this.players[0].getBoard().incrementRound();
+                this.players[1].getBoard().incrementRound();
             }
 
             this.currentPlayer = (this.currentPlayer == 0) ? 1 : 0;
