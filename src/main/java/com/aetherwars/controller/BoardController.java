@@ -8,8 +8,10 @@ import com.aetherwars.model.Player;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -31,6 +33,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
     private GameChannel channel;
     private Player player;
+    private StackPane[] charArr;
 
     public BoardController(GameChannel channel, Player player) {
         this.channel = channel;
@@ -39,8 +42,23 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
-        sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(0)));
+        this.charArr = new StackPane[]{character1, character2, character3, character4, character5};
+        for (int i = 0; i < 5; i++) {
+            FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
+            int idx = i;
+            sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
+
+            AnchorPane sumCharPane = null;
+
+            try {
+                sumCharPane = sumCharFXML.load();
+//                this.character1.getChildren().add(sumCharPane);
+                this.charArr[i].getChildren().add(sumCharPane);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override
