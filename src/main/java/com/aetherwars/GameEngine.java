@@ -137,8 +137,13 @@ public class GameEngine implements Publisher, Subscriber {
         this.players[this.currentPlayer].getHand().discardAtIndex(idxDiscarded);
         this.players[this.currentPlayer].putCardToDeckAndShuffle(backToDeck);
         this.players[this.currentPlayer].addToHand(toHand);
-        publish(new ChangePlayerEvent(this.players[this.currentPlayer]));
+        publish(new RefreshHandEvent(this.players[this.currentPlayer]));
         nextPhaseProcess();
+    }
+
+    public void discard(int idxDiscarded) {
+        this.players[this.currentPlayer].getHand().discardAtIndex(idxDiscarded);
+        publish(new RefreshHandEvent(this.players[this.currentPlayer]));
     }
 
     @Override
@@ -158,6 +163,8 @@ public class GameEngine implements Publisher, Subscriber {
                 drawnCardClicked(pair.getKey(), pair.getValue());
             } else if (event instanceof DiscardToDrawEvent) {
                 discardAndDraw((int)event.getEvent());
+            } else if (event instanceof DiscardEvent) {
+                discard((int) event.getEvent());
             }
 
         } catch (Exception e) {

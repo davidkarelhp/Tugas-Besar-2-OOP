@@ -1,14 +1,11 @@
 package com.aetherwars.controller;
 
 
-import com.aetherwars.event.*;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.spell.Spell;
 import com.aetherwars.model.cards.spell.enums.SpellType;
-import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -16,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -37,7 +33,7 @@ public class CardController implements Initializable {
     Label labelAtkHp;
 
     @FXML
-    StackPane stackpane;
+    StackPane cardStackPane;
 
     private Card card;
     private MainController controller;
@@ -83,18 +79,18 @@ public class CardController implements Initializable {
 
     public void onMouseEnter(MouseEvent mouseEvent) {
 
-        stackpane.setStyle("-fx-background-color: gold;" + "-fx-border-color: seagreen;" + "-fx-border-width: 4;");
+        cardStackPane.setStyle("-fx-background-color: gold;" + "-fx-border-color: seagreen;" + "-fx-border-width: 4;");
 
-        stackpane.setCursor(Cursor.HAND);
+        cardStackPane.setCursor(Cursor.HAND);
         this.controller.onHoverCard(this.card);
     }
 
 
     public void onMouseExit(MouseEvent mouseEvent) {
-        stackpane.setStyle("-fx-background-color: gold;" + "-fx-border-color: brown;" + "-fx-border-width: 4;");
+        cardStackPane.setStyle("-fx-background-color: gold;" + "-fx-border-color: brown;" + "-fx-border-width: 4;");
         this.controller.onUnHoverCard(this.card);
 
-        stackpane.setCursor(Cursor.HAND);
+        cardStackPane.setCursor(Cursor.HAND);
         //publish(new HoverEvent(this.card));
     }
 

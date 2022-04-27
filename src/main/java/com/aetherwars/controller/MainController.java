@@ -22,11 +22,8 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -45,7 +42,7 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable, Publisher, Subscriber {
     @FXML
-    StackPane backPane;
+    StackPane backPane, backHandPane;
 
     @FXML
     Button buttonSkip;
@@ -235,7 +232,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
     }
 
     public void onDrawnCardClicked(List<Card> cards, int i) {
-        // Method kalau salah satu kartu yang di-draw diklik, untuk sekarang kembali ke main panel aja
         backPane.getChildren().remove(drawPane);
 
         publish(new DrawnCardClicked(cards, i));
@@ -298,12 +294,44 @@ public class MainController implements Initializable, Publisher, Subscriber {
             FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
             cardFXML.setControllerFactory(c -> new CardController(card, this));
             StackPane cardPane = cardFXML.load();
+            int idx = i;
+            cardPane.setOnMouseClicked(e -> showCardOptions(cardPane, idx));
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
             handList.add(cardPane);
             this.handGrid.add(cardPane, i, 0);
             i++;
         }
+    }
+
+    public void showCardOptions(StackPane cardPane, int idx) {
+        StackPane optionPane = new StackPane();
+        optionPane.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
+        cardPane.getChildren().add(optionPane);
+
+        Button board = new Button("Board");
+        Button discard = new Button("Discard");
+        Button cancel = new Button("Cancel");
+
+        StackPane.setMargin(board, new Insets(10, 0, 0, 0));
+        StackPane.setMargin(cancel, new Insets(0, 0, 10, 0));
+
+        StackPane.setAlignment(board, Pos.TOP_CENTER);
+        StackPane.setAlignment(discard, Pos.CENTER);
+        StackPane.setAlignment(cancel, Pos.BOTTOM_CENTER);
+
+        optionPane.getChildren().add(board);
+        optionPane.getChildren().add(discard);
+        optionPane.getChildren().add(cancel);
+
+        cancel.setOnAction(e -> {
+            cardPane.getChildren().remove(optionPane);
+            cardPane.setOnMouseClicked(ev -> showCardOptions(cardPane, idx));
+        });
+        cardPane.setOnMouseClicked(null);
+
+        discard.setOnAction(e -> publish(new DiscardEvent(idx)));
+
     }
 
     public void rebindDeckAndMana(Player player) throws IOException {
@@ -371,6 +399,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof HandFullEvent) {
                 this.discardToDraw();
+
+            } else if (event instanceof RefreshHandEvent) {
+                this.refreshHand((Player) event.getEvent());
             }
 
         } catch (IOException e) {

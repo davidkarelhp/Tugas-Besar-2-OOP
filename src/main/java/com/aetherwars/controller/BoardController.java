@@ -5,9 +5,15 @@ import com.aetherwars.event.GameChannel;
 import com.aetherwars.event.Publisher;
 import com.aetherwars.event.Subscriber;
 import com.aetherwars.model.Player;
+import com.aetherwars.model.cards.character.SummonedCharacter;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
@@ -52,13 +58,15 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
             try {
                 sumCharPane = sumCharFXML.load();
-//                this.character1.getChildren().add(sumCharPane);
                 this.charArr[i].getChildren().add(sumCharPane);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
+//        Label x = new Label("");
+//        ListProperty<SummonedCharacter> ch = new SimpleListProperty<>();
+//        x.textProperty().bind(Bindings.when(ch.isNull()).then("lol").otherwise("lal"));
     }
 
     @Override
