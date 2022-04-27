@@ -108,7 +108,7 @@
                         <Label fx:id="atack_p" alignment="CENTER" prefHeight="15.0" prefWidth="219.0" text="ATTACK" />
                      </children>
                   </StackPane>
-                  <Button fx:id="buttonSkip" minWidth="150.0" mnemonicParsing="false" onAction="#currentPhase" prefWidth="150.0" style="-fx-background-color: &quot;black&quot;;" text="&gt;&gt;" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                  <Button fx:id="buttonSkip" minWidth="150.0" mnemonicParsing="false" prefWidth="150.0" style="-fx-background-color: &quot;black&quot;;" text="&gt;&gt;" textFill="WHITE" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <font>
                         <Font name="Arial Bold" size="12.0" />
                      </font>
