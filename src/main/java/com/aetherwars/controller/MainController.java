@@ -26,7 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,8 +42,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     @FXML
     Button buttonSkip;
-
-    Label[] phases_bar;
 
     @FXML
     Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p;
@@ -73,8 +71,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        this.phases_bar = new Label[]{draw_p, plan_p, atack_p, end_p};
 
         this.buttonSkip.setOnAction(e -> {
             publish(new NextPhaseEvent());
@@ -219,12 +215,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     public void onDrawnCardClicked(List<Card> cards, int i) {
         backPane.getChildren().remove(drawPane);
-
         publish(new DrawnCardClicked(cards, i));
     }
 
     public void onHoverCard(Card card){
-
         File file = null;
         try {
             file = new File(getClass().getResource("../" + card.getImagePath()).toURI());
@@ -331,11 +325,12 @@ public class MainController implements Initializable, Publisher, Subscriber {
             cardPane.setOnMouseClicked(e -> {
 
                 showCardOptions(cardPane, idx);
-                try {
-                    refreshHandClicked(player, idx);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+//                try {
+//                    refreshHandClicked(player, idx);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+                publish(new ClickEvent("hand", idx));
             });
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
@@ -361,11 +356,12 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 cardPane.setOnMouseClicked(e -> {
 
                     showCardOptions(cardPane, idx);
-                    try {
-                        refreshHandClicked(player, idx);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+//                    try {
+//                        refreshHandClicked(player, idx);
+//                    } catch (Exception ex) {
+//                        ex.printStackTrace();
+//                    }
+                    publish(new ClickEvent("hand", idx));
 
                 });
 
@@ -404,6 +400,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
         });
 
         cancel.setOnAction(e -> {
+            System.out.println("cancel hand clicked");
+            publish(new CancelEvent());
             cardPane.getChildren().remove(optionPane);
             cardPane.setOnMouseClicked(ev -> showCardOptions(cardPane, idx));
         });
@@ -476,7 +474,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
                 if ((Phase) event.getEvent() == Phase.ATTACK) {
                     for (Node node: handGrid.getChildren()) {
-                        node.setOnMouseClicked(null);
+                        if (node != null) {
+                            node.setOnMouseClicked(null);
+                        }
                     }
                 }
 
@@ -487,7 +487,18 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 this.discardToDraw();
 
             } else if (event instanceof RefreshHandEvent) {
-                this.refreshHand((Player) event.getEvent());
+                Pair<Player, Phase> e = (Pair<Player, Phase>) event.getEvent();
+                if (e.getValue() != Phase.ATTACK) {
+//                    this.refreshHand((Player) event.getEvent());
+                    this.refreshHand(e.getKey());
+
+                } else {
+                    for (Node node: handGrid.getChildren()) {
+                        if (node != null) {
+                            node.setOnMouseClicked(null);
+                        }
+                    }
+                }
 
             } else if (event instanceof MessageEvent) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -500,6 +511,11 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof SummonedCharacterUnhoverEvent) {
                 onUnhover();
+
+            } else if (event instanceof RefreshHandClickedEvent) {
+                Pair<Player, Integer> e = (Pair<Player, Integer>) event.getEvent();
+                refreshHandClicked(e.getKey(), e.getValue());
+
             }
 
         } catch (Exception e) {

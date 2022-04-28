@@ -149,13 +149,13 @@ public class GameEngine implements Publisher, Subscriber {
         this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxDiscarded);
         this.players[this.getCurrentPlayer()].putCardToDeckAndShuffle(backToDeck);
         this.players[this.getCurrentPlayer()].addToHand(toHand);
-        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()], currentPhase()));
         nextPhaseProcess();
     }
 
     public void discard(int idxDiscarded) {
         this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxDiscarded);
-        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()], currentPhase()));
     }
 
     public void moveToBoardEventHandler(int[] idxHandBoard, Player player) {
@@ -197,7 +197,7 @@ public class GameEngine implements Publisher, Subscriber {
         }
 
         publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
-        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()], currentPhase()));
     }
 
     public void throwOutFromBoardEventHandler(int idxBoard) {
@@ -276,9 +276,27 @@ public class GameEngine implements Publisher, Subscriber {
             } else if (event instanceof AttackCharacterEvent) {
                 int[] idxAttackerDefender = (int[]) event.getEvent();
                 attackCharacterEventHandler(idxAttackerDefender[0], idxAttackerDefender[1]);
+
+            } else if (event instanceof ClickEvent) {
+                Pair<String, Integer> e = (Pair<String, Integer>) event.getEvent();
+
+                if (e.getKey().equals("hand")) {
+                    publish(new RefreshHandClickedEvent(this.players[this.getCurrentPlayer()], e.getValue()));
+                    publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+
+                } else if (e.getKey().equals("board")) {
+                    System.out.println("board clicked");
+                    publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+                    publish(new RefreshBoardClickedEvent(this.players[this.getCurrentPlayer()], currentPhase(), e.getValue()));
+
+                }
+
+            } else if (event instanceof CancelEvent) {
+                System.out.println("cancel event");
+                publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+                publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

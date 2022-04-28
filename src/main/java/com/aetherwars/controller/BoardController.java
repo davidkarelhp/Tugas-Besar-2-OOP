@@ -21,10 +21,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Stack;
 
 public class BoardController implements Initializable, Publisher, Subscriber {
     @FXML
@@ -83,18 +81,18 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
             if (this.player.getBoard().getAtSlot(i) != null) {
 //                if (currentTurn) {
-                    this.charArr[i].setOnMouseEntered(e -> {
-                        if (this.player.getBoard().getAtSlot(idx).isPlayable() && currentTurn) {
-                            this.charArr[idx].getScene().setCursor(Cursor.HAND);
-                        }
+                this.charArr[i].setOnMouseEntered(e -> {
+                    if (this.player.getBoard().getAtSlot(idx).isPlayable() && currentTurn) {
+                        this.charArr[idx].getScene().setCursor(Cursor.HAND);
+                    }
 
-                        this.charArr[idx].setStyle("-fx-border-color: gold;");
-                    });
+                    this.charArr[idx].setStyle("-fx-border-color: gold;");
+                });
 
-                    this.charArr[i].setOnMouseExited(e -> {
-                        this.charArr[idx].getScene().setCursor(Cursor.DEFAULT);
-                        this.charArr[idx].setStyle("-fx-border-color: black;");
-                    });
+                this.charArr[i].setOnMouseExited(e -> {
+                    this.charArr[idx].getScene().setCursor(Cursor.DEFAULT);
+                    this.charArr[idx].setStyle("-fx-border-color: black;");
+                });
 
 //                }
 
@@ -113,10 +111,16 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 //                        System.out.println("phase: " + phase.toString());
                         if (phase == Phase.PLAN) {
                             System.out.println("plan");
-                            sumCharPane.setOnMouseClicked(e -> showCharacterOptions(this.charArr[idx], idx));
+                            sumCharPane.setOnMouseClicked(e -> {
+                                showCharacterOptions(this.charArr[idx], idx);
+                                publish(new ClickEvent("board", idx));
+                            });
 
                         } else if (phase == Phase.ATTACK && this.player.getBoard().getAtSlot(idx).isPlayable()) {
-                            sumCharPane.setOnMouseClicked(e -> showCharacterAttackOptions(this.charArr[idx], idx));
+                            sumCharPane.setOnMouseClicked(e -> {
+                                showCharacterAttackOptions(this.charArr[idx], idx);
+                                publish(new ClickEvent("board", idx));
+                            });
                             System.out.println("draw");
 
                         }
@@ -149,7 +153,99 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                 this.charArr[i].getScene().setCursor(Cursor.DEFAULT);
                 this.charArr[i].setStyle("-fx-border-color: black;");
             }
+        }
+    }
 
+    public void refreshBoardClicked(boolean currentTurn, Phase phase, int idxClicked) {
+        System.out.println("refrboardClicked");
+
+        for (int i = 0; i < 5; i++) {
+            if (i != idxClicked) {
+                sumCharArr[i] = null;
+
+            }
+        }
+        for (int i = 0; i < 5; i++) {
+            int idx = i;
+
+            if (i != idxClicked) {
+                this.charArr[i].getChildren().clear();
+            }
+
+            if (this.player.getBoard().getAtSlot(i) != null && i != idxClicked) {
+//                if (currentTurn) {
+                this.charArr[i].setOnMouseEntered(e -> {
+                    if (this.player.getBoard().getAtSlot(idx).isPlayable() && currentTurn) {
+                        this.charArr[idx].getScene().setCursor(Cursor.HAND);
+                    }
+
+                    this.charArr[idx].setStyle("-fx-border-color: gold;");
+                });
+
+                this.charArr[i].setOnMouseExited(e -> {
+                    this.charArr[idx].getScene().setCursor(Cursor.DEFAULT);
+                    this.charArr[idx].setStyle("-fx-border-color: black;");
+                });
+
+//                }
+
+                FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
+
+                sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
+                AnchorPane sumCharPane = null;
+
+                System.out.println("before try");
+                try {
+                    sumCharPane = sumCharFXML.load();
+                    sumCharArr[i] = sumCharPane;
+                    this.charArr[i].getChildren().add(sumCharPane);
+
+                    if (currentTurn) {
+//                        System.out.println("phase: " + phase.toString());
+                        if (phase == Phase.PLAN) {
+                            System.out.println("plan");
+                            sumCharPane.setOnMouseClicked(e -> {
+                                showCharacterOptions(this.charArr[idx], idx);
+                                publish(new ClickEvent("board", idx));
+                            });
+
+                        } else if (phase == Phase.ATTACK && this.player.getBoard().getAtSlot(idx).isPlayable()) {
+                            sumCharPane.setOnMouseClicked(e -> {
+                                showCharacterAttackOptions(this.charArr[idx], idx);
+                                publish(new ClickEvent("board", idx));
+                            });
+                            System.out.println("draw");
+
+                        }
+                    }
+                    System.out.println("after phase");
+
+                    AnchorPane temp = sumCharPane;
+
+                    sumCharPane.setOnMouseEntered(e -> {
+                        temp.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
+                        publish(new SummonedCharacterHoverEvent(this.player.getBoard().getAtSlot(idx)));
+                        System.out.println("Summonedcharacter hover");
+                    });
+
+                    sumCharPane.setOnMouseExited(e -> {
+                        temp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                        publish(new SummonedCharacterUnhoverEvent());
+                    });
+
+                    System.out.println("success try");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("fail try");
+                }
+
+            } else {
+                sumCharArr[i] = null;
+                this.charArr[i].setOnMouseEntered(null);
+                this.charArr[i].setOnMouseExited(null);
+                this.charArr[i].getScene().setCursor(Cursor.DEFAULT);
+                this.charArr[i].setStyle("-fx-border-color: black;");
+            }
         }
     }
 
@@ -217,12 +313,14 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         cancelExp.setOnAction(e -> {
             characterPane.getChildren().remove(expPane);
             characterPane.getChildren().add(optionPane);
+            publish(new CancelEvent());
 
         });
 
         cancel.setOnAction(e -> {
             characterPane.getChildren().remove(optionPane);
             characterPane.setOnMouseClicked(ev -> showCharacterOptions(characterPane, idx));
+            publish(new CancelEvent());
         });
         characterPane.setOnMouseClicked(null);
     }
@@ -245,7 +343,10 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             for (int i = 0; i < 5; i++) {
                 if (this.player.getBoard().getAtSlot(i) != null) {
                     int idx = i;
-                    this.sumCharArr[i].setOnMouseClicked(e -> showCharacterAttackOptions(this.charArr[idx], idx));
+                    this.sumCharArr[i].setOnMouseClicked(e -> {
+                        showCharacterAttackOptions(this.charArr[idx], idx);
+                        publish(new ClickEvent("board", idx));
+                    });
 
                 }
             }
@@ -277,6 +378,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         cancel.setOnAction(e -> {
             characterPane.getChildren().remove(optionPane);
 //            characterPane.setOnMouseClicked(ev -> showCharacterOptions(characterPane, idx));
+            publish(new CancelEvent());
         });
         characterPane.setOnMouseClicked(null);
     }
@@ -341,6 +443,10 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             Pair<Player, Integer>e = (Pair<Player, Integer>) event.getEvent();
             prepareToAttackCharacterEventHandler(e.getKey(), e.getValue());
 
+        } else if (event instanceof RefreshBoardClickedEvent) {
+            Pair<Integer, Pair<Player, Phase>> e = (Pair<Integer, Pair<Player, Phase>>) event.getEvent();
+            Pair<Player, Phase> e2 = e.getValue();
+            refreshBoardClicked(e2.getKey().equals(this.player), e2.getValue(), e.getKey());
         }
     }
 }
