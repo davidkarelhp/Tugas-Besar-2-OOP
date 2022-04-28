@@ -33,7 +33,6 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     private Player player;
     private StackPane[] charArr;
     private AnchorPane[] sumCharArr;
-    private int handIdx;
 
     public BoardController(GameChannel channel, Player player) {
         this.channel = channel;
@@ -45,33 +44,29 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         this.charArr = new StackPane[]{character1, character2, character3, character4, character5};
     }
 
-    public void prepareToMoveToBoardEventHandler(Player player) {
+    public void prepareToMoveToBoardEventHandler(int idxHand) {
 //        refreshBoard(this.player.equals(player));
         for (int i = 0; i < 5; i++) {
-//            if (this.charArr[i].getChildren().isEmpty()) {
-                int idx = i;
+            int idx = i;
 
-                this.charArr[i].setOnMouseClicked(e -> publish(new MoveToBoardEvent(this.handIdx, idx)));
+            int[] idxHandBoard = new int[]{idxHand, idx};
+            this.charArr[i].setOnMouseClicked(e -> publish(new MoveToBoardEvent(idxHandBoard, this.player)));
 
-                this.charArr[i].setOnMouseEntered(e -> {
-                    this.charArr[idx].getScene().setCursor(Cursor.HAND);
-                    this.charArr[idx].setStyle("-fx-border-color: gold;");
-                });
+            this.charArr[i].setOnMouseEntered(e -> {
+                this.charArr[idx].getScene().setCursor(Cursor.HAND);
+                this.charArr[idx].setStyle("-fx-border-color: gold;");
+            });
 
-                this.charArr[i].setOnMouseExited(e -> {
-                    this.charArr[idx].getScene().setCursor(Cursor.DEFAULT);
-                    this.charArr[idx].setStyle("-fx-border-color: black;");
-                });
+            this.charArr[i].setOnMouseExited(e -> {
+                this.charArr[idx].getScene().setCursor(Cursor.DEFAULT);
+                this.charArr[idx].setStyle("-fx-border-color: black;");
+            });
 
-                if (this.sumCharArr[i] != null) {
-                    this.sumCharArr[i].setOnMouseClicked(null);
+            if (this.sumCharArr[i] != null) {
+                this.sumCharArr[i].setOnMouseClicked(null);
 
-                }
+            }
 
-//            } else {
-//                this.charArr[i].setOnMouseEntered(null);
-//                this.charArr[i].setOnMouseExited(null);
-//            }
         }
     }
 
@@ -225,11 +220,8 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
         if (event instanceof PrepareToMoveToBoardEvent) {
 
-            Pair<Player, Integer> e = (Pair<Player, Integer>) event.getEvent();
-            if (this.player.equals(e.getKey())) {
-                this.handIdx = e.getValue();
-                prepareToMoveToBoardEventHandler(e.getKey());
-            }
+            int e = (int) event.getEvent();
+            prepareToMoveToBoardEventHandler(e);
 
         } else if (event instanceof RefreshBoardEvent) {
             Player player = (Player) event.getEvent();

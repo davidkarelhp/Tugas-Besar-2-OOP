@@ -153,35 +153,45 @@ public class GameEngine implements Publisher, Subscriber {
         publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
     }
 
-    public void moveToBoardEventHandler(int idxHand, int idxBoard) {
-        if (this.players[this.getCurrentPlayer()].getMana() < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
-            publish(new MessageEvent("Mana tidak mencukupi."));
+    public void moveToBoardEventHandler(int[] idxHandBoard, Player player) {
+        int idxHand = idxHandBoard[0];
+        int idxBoard = idxHandBoard[1];
+
+        if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof  Character && !player.equals(this.players[this.getCurrentPlayer()])) {
+            publish(new MessageEvent("Tidak bisa memasukkan karakter ke board lawan."));
+
         } else {
-            if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof  Character) {
-                Character c = (Character) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
-                this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
-                this.players[this.getCurrentPlayer()].getBoard().putInSlot(idxBoard, c);
 
-                this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
-//                publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
-                publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
+            if (this.players[this.getCurrentPlayer()].getMana() < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
+                publish(new MessageEvent("Mana tidak mencukupi."));
 
-            } else if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof Spell) {
-                if (this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard) != null) {
-                    Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
-                    this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
+            } else {
+                if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof  Character) {
+                    Character c = (Character) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
+                    player.getBoard().putInSlot(idxBoard, c);
 
-                    this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard).addSpell(s);
                     this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
+                    this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
+                    publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
 
-//                    publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+                } else if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof Spell) {
+                    if (player.getBoard().getAtSlot(idxBoard) != null) {
+                        Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
 
-                } else {
-                    System.out.println("Slot kosong!");
-                    publish(new MessageEvent("Tidak ada karakter pada slot ini!"));
+                        this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
+
+                        player.getBoard().getAtSlot(idxBoard).addSpell(s);
+                        this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
+
+                    } else {
+                        System.out.println("Slot kosong!");
+                        publish(new MessageEvent("Tidak ada karakter pada slot ini!"));
+                    }
                 }
             }
+
         }
+
         publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
     }
 
@@ -221,7 +231,7 @@ public class GameEngine implements Publisher, Subscriber {
                 discard((int) event.getEvent());
 
             } else if (event instanceof MoveToBoardEvent) {
-                Pair<Integer, Integer> e = (Pair<Integer, Integer>) event.getEvent();
+                Pair<int[], Player> e = (Pair<int[], Player>) event.getEvent();
                 moveToBoardEventHandler(e.getKey(), e.getValue());
 
             } else if (event instanceof ThrowOutFromBoardEvent) {

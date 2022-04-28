@@ -118,7 +118,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         );
 
         this.labelPlayer2.textProperty().bind(Bindings.when(
-                        gameEngine.currentPlayerProperty().isEqualTo(1))
+                gameEngine.currentPlayerProperty().isEqualTo(1))
                 .then("Current Player: " + players[1].getPlayerName())
                 .otherwise(players[1].getPlayerName())
         );
@@ -267,11 +267,49 @@ public class MainController implements Initializable, Publisher, Subscriber {
             cardFXML.setControllerFactory(c -> new CardController(card, this));
             StackPane cardPane = cardFXML.load();
             int idx = i;
-            cardPane.setOnMouseClicked(e -> showCardOptions(cardPane, idx));
+            cardPane.setOnMouseClicked(e -> {
+
+                showCardOptions(cardPane, idx);
+                try {
+                    refreshHandClicked(player, idx);
+                } catch (IOException ex) {}
+            });
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
             handList.add(cardPane);
             this.handGrid.add(cardPane, i, 0);
+            i++;
+        }
+    }
+
+    public void refreshHandClicked(Player player, int idxClicked) throws IOException {
+        labelHand.setText("");
+        buttonSkip.setDisable(false);
+        handList = new ArrayList<>();
+        handGrid.getChildren().removeIf(node -> GridPane.getColumnIndex(node) != idxClicked);
+        List<Card> hand = player.getHand().getHand();
+        int i = 0;
+        for (Card card: hand) {
+            if (i != idxClicked) {
+                FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
+                cardFXML.setControllerFactory(c -> new CardController(card, this));
+                StackPane cardPane = cardFXML.load();
+                int idx = i;
+                cardPane.setOnMouseClicked(e -> {
+
+                    showCardOptions(cardPane, idx);
+                    try {
+                        refreshHandClicked(player, idx);
+                    } catch (IOException ex) {
+                    }
+
+                });
+
+                StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
+                handList.add(cardPane);
+                this.handGrid.add(cardPane, i, 0);
+
+            }
             i++;
         }
     }
@@ -296,7 +334,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         optionPane.getChildren().add(discard);
         optionPane.getChildren().add(cancel);
 
-        board.setOnAction(e -> publish(new PrepareToMoveToBoardEvent(this.currentPlayer, idx)));
+        board.setOnAction(e -> publish(new PrepareToMoveToBoardEvent(idx)));
 
         cancel.setOnAction(e -> {
             cardPane.getChildren().remove(optionPane);
