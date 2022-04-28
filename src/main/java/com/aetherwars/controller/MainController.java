@@ -20,12 +20,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.io.File;
@@ -156,6 +159,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.channel.addSubscriber(this, leftGridFXML.getController());
         this.channel.addSubscriber(this, rightGridFXML.getController());
+//        rightGridFXML.getRoot()
 
         this.channel.addSubscriber(leftGridFXML.getController(), this);
         this.channel.addSubscriber(rightGridFXML.getController(), this);
@@ -515,6 +519,16 @@ public class MainController implements Initializable, Publisher, Subscriber {
             } else if (event instanceof RefreshHandClickedEvent) {
                 Pair<Player, Integer> e = (Pair<Player, Integer>) event.getEvent();
                 refreshHandClicked(e.getKey(), e.getValue());
+
+            } else if (event instanceof WinEvent) {
+                FXMLLoader winFXML = new FXMLLoader(getClass().getResource("../Win.fxml"));
+                winFXML.setControllerFactory(c -> new WinController((Player) event.getEvent()));
+                Parent winPane = (AnchorPane) winFXML.load();
+
+                Scene winScene = new Scene(winPane);
+
+                Stage stage = (Stage) backPane.getScene().getWindow();
+                stage.setScene(winScene);
 
             }
 

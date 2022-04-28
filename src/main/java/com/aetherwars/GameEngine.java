@@ -90,7 +90,14 @@ public class GameEngine implements Publisher, Subscriber {
             // ini draw yang dikembaliin
             this.players[this.getCurrentPlayer()].increaseManaLimit();
             this.players[this.getCurrentPlayer()].resetMana();
-            publish(new DrawPhaseEvent(this.players[this.getCurrentPlayer()].draw()));
+
+            List<Card> drawChoiceCards = this.players[this.getCurrentPlayer()].draw();
+
+            if (this.players[this.getCurrentPlayer()].getDeck().getDeckFill() <= 0) {
+                publish(new WinEvent(this.players[this.getCurrentPlayer() == 1 ? 0 : 1]));
+            } else {
+                publish(new DrawPhaseEvent(this.players[this.getCurrentPlayer()].draw()));
+            }
 
         } else if (currentPhase() == Phase.PLAN) {
             publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
@@ -218,7 +225,13 @@ public class GameEngine implements Publisher, Subscriber {
 
         if (enemy.getBoard().isEmpty()) {
             this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard).attackPlayer(enemy);
-            publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+
+            if (enemy.getHealthPoints() <= 0) {
+                publish(new WinEvent(this.players[this.getCurrentPlayer()]));
+            } else {
+                publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+            }
+
         } else {
             publish(new PrepareToAttackCharacterEvent(this.players[this.getCurrentPlayer()], idxBoard));
         }

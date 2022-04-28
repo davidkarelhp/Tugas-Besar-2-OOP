@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="winPane" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: &quot;brown&quot;;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.aetherwars.controller.WinController">
+   <children>
+      <Label fx:id="labelWinPlayer" alignment="CENTER" layoutX="136.0" layoutY="150.0" prefHeight="419.0" prefWidth="1008.0" style="-fx-background-color: &quot;gold&quot;;" text="Label">
+         <font>
+            <Font size="65.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

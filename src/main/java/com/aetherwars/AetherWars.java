@@ -42,10 +42,10 @@ public class AetherWars extends Application {
       Player player2 = new Player("Alex", Dealer.getRandomDeck(deckSize), channel);
 
       GameEngine gameEngine = new GameEngine(player1, player2, channel);
-//
+
       Rectangle2D screenBounds = Screen.getPrimary().getBounds();
       Scene scene = null;
-//
+
       if (screenBounds.getHeight() > 1280 || screenBounds.getHeight() > 720) {
           scene = new Scene(root, 1280, 720);
       } else {
