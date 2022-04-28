@@ -1,19 +1,16 @@
 package com.aetherwars.controller;
 
 import com.aetherwars.GameEngine;
-import com.aetherwars.event.EventChannel;
 import com.aetherwars.event.GameChannel;
 import com.aetherwars.model.Phase;
 import com.aetherwars.event.*;
-import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.Spell;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
-import javafx.event.EventType;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,12 +26,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -166,6 +161,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
         this.channel.addSubscriber(this, leftGridFXML.getController());
         this.channel.addSubscriber(this, rightGridFXML.getController());
 
+        this.channel.addSubscriber(leftGridFXML.getController(), this);
+        this.channel.addSubscriber(rightGridFXML.getController(), this);
+
         this.channel.addSubscriber(this.engine, leftGridFXML.getController());
         this.channel.addSubscriber(this.engine, rightGridFXML.getController());
 
@@ -259,16 +257,63 @@ public class MainController implements Initializable, Publisher, Subscriber {
         }
         descCardLabel.setText("\"" +  card.getDescription() + "\"");
 
-        imageCardHover.setImage(new Image(file.toURI().toString(), 60, 80, true, true));
+        try {
+            imageCardHover.setImage(new Image(file.toURI().toString(), 60, 80, true, true));
+
+        } catch (Exception e) {
+            imageCardHover.setImage(null);
+        }
 
     }
 
-    public void onUnHoverCard(Card card){
+    public void onUnhover(){
         titleCardLabel.setStyle("-fx-text-fill: white;");
         dataCardLabel.setStyle("-fx-text-fill: white;");
         descCardLabel.setStyle("-fx-text-fill: white;");
 
         imageCardHover.setImage(null);
+    }
+
+    public void onHoverSummonedCharacter(SummonedCharacter summonedCharacter) {
+        Card card = summonedCharacter.getCharacter();
+        File file = null;
+        try {
+            file = new File(getClass().getResource("../" + card.getImagePath()).toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        titleCardLabel.setStyle("-fx-text-fill: black;");
+        dataCardLabel.setStyle("-fx-text-fill: black;");
+        descCardLabel.setStyle("-fx-text-fill: black; -fx-font-style: italic;");
+
+        titleCardLabel.setText(card.getName());
+        if (card instanceof Character) {
+            Character character = (Character) card;
+            dataCardLabel.setText("ATK: " +  character.getBaseAttack() + "\nHP: " + character.getBaseHealth() + "\nLevel: " + character.getLevel() + "\nType: " + character.getCharacterType());
+
+        } else if (card instanceof Spell) {
+            Spell spell = (Spell) card;
+            if (spell.getType() == SpellType.POTION) {
+                dataCardLabel.setText("SPELL PTN");
+            } else if (spell.getType() == SpellType.LEVELUP) {
+                dataCardLabel.setText("SPELL LEVEL UP");
+            } else if (spell.getType() == SpellType.LEVELDOWN) {
+                dataCardLabel.setText("SPELL LEVEL DOWN");
+            } else if (spell.getType() == SpellType.SWAP) {
+                dataCardLabel.setText("SPELL SWAP");
+            } else if (spell.getType() == SpellType.MORPH) {
+                dataCardLabel.setText("SPELL MORPH");
+            }
+        }
+        descCardLabel.setText("\"" +  card.getDescription() + "\"");
+
+        try {
+            imageCardHover.setImage(new Image(file.toURI().toString(), 60, 80, true, true));
+
+        } catch (Exception e) {
+            imageCardHover.setImage(null);
+        }
     }
 
     public void refreshHand(Player player) throws IOException {
@@ -450,6 +495,11 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 alert.setContentText((String) event.getEvent());
                 alert.show();
 
+            } else if (event instanceof SummonedCharacterHoverEvent) {
+                onHoverSummonedCharacter((SummonedCharacter) event.getEvent());
+
+            } else if (event instanceof SummonedCharacterUnhoverEvent) {
+                onUnhover();
             }
 
         } catch (Exception e) {

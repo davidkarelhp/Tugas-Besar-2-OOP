@@ -82,9 +82,9 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             this.charArr[i].getChildren().clear();
 
             if (this.player.getBoard().getAtSlot(i) != null) {
-                if (currentTurn) {
+//                if (currentTurn) {
                     this.charArr[i].setOnMouseEntered(e -> {
-                        if (this.player.getBoard().getAtSlot(idx).isPlayable()) {
+                        if (this.player.getBoard().getAtSlot(idx).isPlayable() && currentTurn) {
                             this.charArr[idx].getScene().setCursor(Cursor.HAND);
                         }
 
@@ -96,7 +96,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                         this.charArr[idx].setStyle("-fx-border-color: black;");
                     });
 
-                }
+//                }
 
                 FXMLLoader sumCharFXML = new FXMLLoader(getClass().getResource("../SummonedCharacter.fxml"));
 
@@ -120,13 +120,22 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                             System.out.println("draw");
 
                         }
+                    }
                         System.out.println("after phase");
 
                         AnchorPane temp = sumCharPane;
-                        sumCharPane.setOnMouseEntered(e -> temp.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY))));
-                        sumCharPane.setOnMouseExited(e -> temp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))));
 
-                    }
+                        sumCharPane.setOnMouseEntered(e -> {
+                            temp.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
+                            publish(new SummonedCharacterHoverEvent(this.player.getBoard().getAtSlot(idx)));
+                            System.out.println("Summonedcharacter hover");
+                        });
+
+                        sumCharPane.setOnMouseExited(e -> {
+                            temp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                            publish(new SummonedCharacterUnhoverEvent());
+                        });
+
                     System.out.println("success try");
                 } catch (Exception e) {
                     e.printStackTrace();

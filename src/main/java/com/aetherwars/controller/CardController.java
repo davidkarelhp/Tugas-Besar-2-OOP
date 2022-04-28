@@ -15,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -87,7 +86,7 @@ public class CardController implements Initializable {
 
     public void onMouseExit(MouseEvent mouseEvent) {
         cardStackPane.setStyle("-fx-background-color: gold;" + "-fx-border-color: brown;" + "-fx-border-width: 4;");
-        this.controller.onUnHoverCard(this.card);
+        this.controller.onUnhover();
 
         cardStackPane.setCursor(Cursor.HAND);
     }

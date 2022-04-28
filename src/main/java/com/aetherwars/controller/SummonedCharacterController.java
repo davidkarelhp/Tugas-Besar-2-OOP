@@ -48,7 +48,13 @@ public class SummonedCharacterController implements Publisher, Subscriber, Initi
 //        System.out.println(this.character.getCharacter().getName());
 //        System.out.println(this.character.getHealth());
 
-        imageCharacter.setImage(new Image(file.toURI().toString(), 55, 55, true, true));
+        try {
+            imageCharacter.setImage(new Image(file.toURI().toString(), 55, 55, true, true));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            imageCharacter.setImage(null);
+        }
 
         labelAttack.textProperty().bind(this.character.bindedAttackProperty().asString());
 
