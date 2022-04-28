@@ -172,7 +172,6 @@ public class GameEngine implements Publisher, Subscriber {
 
                     this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
                     this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
-                    publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
 
                 } else if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof Spell) {
                     if (player.getBoard().getAtSlot(idxBoard) != null) {
@@ -192,6 +191,7 @@ public class GameEngine implements Publisher, Subscriber {
 
         }
 
+        publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
         publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
     }
 
