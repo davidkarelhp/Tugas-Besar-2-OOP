@@ -7,8 +7,8 @@
 
 <AnchorPane fx:id="characterPane" prefHeight="100.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.aetherwars.controller.SummonedCharacterController">
    <children>
-      <Label fx:id="labelExp" alignment="CENTER" layoutX="23.0" layoutY="77.0" prefHeight="17.0" prefWidth="56.0" AnchorPane.bottomAnchor="5.666666666666671" />
-      <ImageView fx:id="imageCharacter" fitHeight="65.0" fitWidth="65.0" layoutX="18.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="labelExp" alignment="CENTER" layoutX="22.0" layoutY="77.0" prefHeight="17.0" prefWidth="56.0" AnchorPane.bottomAnchor="5.666666666666671" />
+      <ImageView fx:id="imageCharacter" fitHeight="55.0" fitWidth="55.0" layoutX="22.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="10.0" fitWidth="10.0" layoutX="2.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@card/image/sword.png" />
@@ -19,7 +19,7 @@
             <Image url="@card/image/health.png" />
          </image>
       </ImageView>
-      <Label fx:id="labelAttack" layoutX="3.0" layoutY="10.0" prefHeight="17.0" prefWidth="17.0" text="0" />
-      <Label fx:id="labelHealth" layoutX="82.0" layoutY="10.0" prefHeight="17.0" prefWidth="17.0" text="0" />
+      <Label fx:id="labelAttack" layoutX="3.0" layoutY="10.0" prefHeight="17.0" prefWidth="25.0" text="55.5" />
+      <Label fx:id="labelHealth" alignment="CENTER_RIGHT" layoutX="74.0" layoutY="10.0" prefHeight="17.0" prefWidth="25.0" text="55.5" />
    </children>
 </AnchorPane>
