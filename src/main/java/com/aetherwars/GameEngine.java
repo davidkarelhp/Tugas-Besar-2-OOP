@@ -93,6 +93,8 @@ public class GameEngine implements Publisher, Subscriber {
 
         } else if (currentPhase() == Phase.PLAN) {
         } else if (currentPhase() == Phase.ATTACK) {
+            publish(new AttackPhaseEvent(this.players[this.getCurrentPlayer()]));
+
         } else if (currentPhase()  == Phase.END) {
             // Jalanin prosedur END phase disini, semua kartu currentplayer statusnya dijadiin belum dipakai dan sebagainya
 
@@ -161,7 +163,7 @@ public class GameEngine implements Publisher, Subscriber {
             publish(new MessageEvent("Tidak bisa memasukkan karakter ke board lawan."));
 
         } else {
-
+            System.out.println(idxHand);
             if (this.players[this.getCurrentPlayer()].getMana() < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
                 publish(new MessageEvent("Mana tidak mencukupi."));
 
@@ -191,7 +193,7 @@ public class GameEngine implements Publisher, Subscriber {
 
         }
 
-        publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
+        publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
         publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
     }
 
@@ -200,12 +202,24 @@ public class GameEngine implements Publisher, Subscriber {
         System.out.println(this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard));
         this.players[this.getCurrentPlayer()].getBoard().removeCardAtSlot(idxBoard);
         System.out.println(this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard));
-        publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
+        publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
     }
 
     public void addExpEventHandler(int[] arr) {
         this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - arr[0]);
         this.players[this.getCurrentPlayer()].getBoard().getAtSlot(arr[1]).addExp(arr[0]);
+    }
+
+    public void tryToAttackPlayerEventHandler(int idxBoard) {
+        Player enemy = (this.getCurrentPlayer() == 0) ? this.players[1] : this.players[0];
+
+        if (enemy.getBoard().isEmpty()) {
+            this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard).attackPlayer(enemy);
+            publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+        } else {
+            publish(new PrepareToAttackCharacterEvent(this.players[this.getCurrentPlayer()], idxBoard));
+        }
+
     }
 
     @Override
@@ -239,6 +253,9 @@ public class GameEngine implements Publisher, Subscriber {
 
             } else if (event instanceof AddExpEvent) {
                 addExpEventHandler((int[]) event.getEvent());
+
+            } else if (event instanceof TryToAttackPlayerEvent) {
+                tryToAttackPlayerEventHandler((int) event.getEvent());
 
             }
 

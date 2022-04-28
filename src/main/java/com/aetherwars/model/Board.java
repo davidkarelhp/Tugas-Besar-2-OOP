@@ -74,6 +74,17 @@ public class Board {
 
     }
 
+    public boolean isEmpty() {
+        boolean ret = true;
+        for (SummonedCharacter character: this.board) {
+            if (character != null) {
+                ret = false;
+                break;
+            }
+        }
+        return ret;
+    }
+
 
 
 }

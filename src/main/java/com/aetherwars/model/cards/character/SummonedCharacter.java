@@ -1,5 +1,6 @@
 package com.aetherwars.model.cards.character;
 
+import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.spell.Spell;
 import com.aetherwars.model.cards.spell.enums.SpellType;
 import javafx.beans.property.DoubleProperty;
@@ -129,6 +130,8 @@ public class SummonedCharacter implements IsSummoned {
             healthHad += ts.getHealth();
             attackSent += ts.getAttack();
         });
+
+        this.setPlayable(true);
     }
 
     public Character getCharacter() {
@@ -271,6 +274,12 @@ public class SummonedCharacter implements IsSummoned {
     
     public void attackEnemy(SummonedCharacter enemy) {
         enemy.attacked(this);
+        this.setPlayable(false);
+    }
+
+    public void attackPlayer(Player p) {
+        p.setHealthPoints((p.getHealthPoints() - this.attack < 0) ? 0 : p.getHealthPoints() - this.attack);
+        this.setPlayable(false);
     }
 
     public void addSpell(Spell spell) {

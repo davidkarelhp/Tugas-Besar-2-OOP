@@ -79,6 +79,10 @@ public class Player {
         return board;
     }
 
+    public void setHealthPoints(double healthPoints) {
+        this.healthPoints.set(healthPoints);
+    }
+
     public void increaseManaLimit() {
         this.manaLimit.set(this.getManaLimit() < 10 ? this.getManaLimit() + 1 : this.getManaLimit());
     }

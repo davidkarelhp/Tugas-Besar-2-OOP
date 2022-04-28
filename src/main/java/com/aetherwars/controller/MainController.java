@@ -22,6 +22,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -79,8 +80,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
     public void initialize(URL location, ResourceBundle resources) {
 
         this.phases_bar = new Label[]{draw_p, plan_p, atack_p, end_p};
-        this.healthPlayer1.setStyle("-fx-accent: green;");
-        this.healthPlayer2.setStyle("-fx-accent: green;");
 
         this.buttonSkip.setOnAction(e -> {
             publish(new NextPhaseEvent());
@@ -127,6 +126,22 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.healthPlayer1.progressProperty().bind(players[0].healthPointsProperty().divide(this.MAX_HEALTH));
         this.healthPlayer2.progressProperty().bind(players[1].healthPointsProperty().divide(this.MAX_HEALTH));
+
+        this.healthPlayer1.styleProperty().bind(Bindings
+                .when(players[0].healthPointsProperty().greaterThan(50))
+                .then("-fx-accent: green;")
+                .otherwise(Bindings.when(players[0].healthPointsProperty().greaterThan(20))
+                        .then("-fx-accent: yellow;")
+                        .otherwise("-fx-accent: red;"))
+        );
+
+        this.healthPlayer2.styleProperty().bind(Bindings
+                .when(players[1].healthPointsProperty().greaterThan(50))
+                .then("-fx-accent: green;")
+                .otherwise(Bindings.when(players[1].healthPointsProperty().greaterThan(20))
+                        .then("-fx-accent: yellow;")
+                        .otherwise("-fx-accent: red;"))
+        );
 
         this.channel.addSubscriber(this, gameEngine);
         this.channel.addSubscriber(gameEngine, this);
@@ -334,7 +349,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
         optionPane.getChildren().add(discard);
         optionPane.getChildren().add(cancel);
 
-        board.setOnAction(e -> publish(new PrepareToMoveToBoardEvent(idx)));
+        board.setOnAction(e -> {
+            publish(new PrepareToMoveToBoardEvent(idx));
+            System.out.println("prepare");
+        });
 
         cancel.setOnAction(e -> {
             cardPane.getChildren().remove(optionPane);
@@ -406,6 +424,12 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof CurrentPhaseEvent) {
                 this.phaseColoring((Phase) event.getEvent());
+
+                if ((Phase) event.getEvent() == Phase.ATTACK) {
+                    for (Node node: handGrid.getChildren()) {
+                        node.setOnMouseClicked(null);
+                    }
+                }
 
             } else if (event instanceof DrawPhaseEvent) {
                 this.displayDraw((List<Card>) event.getEvent());

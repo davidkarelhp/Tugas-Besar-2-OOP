@@ -1,6 +1,7 @@
 package com.aetherwars.controller;
 
 import com.aetherwars.event.*;
+import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.character.SummonedCharacter;
 import javafx.beans.binding.Binding;
@@ -50,7 +51,10 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             int idx = i;
 
             int[] idxHandBoard = new int[]{idxHand, idx};
-            this.charArr[i].setOnMouseClicked(e -> publish(new MoveToBoardEvent(idxHandBoard, this.player)));
+            this.charArr[i].setOnMouseClicked(e -> {
+                publish(new MoveToBoardEvent(idxHandBoard, this.player));
+                System.out.println("move");
+            });
 
             this.charArr[i].setOnMouseEntered(e -> {
                 this.charArr[idx].getScene().setCursor(Cursor.HAND);
@@ -70,7 +74,8 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         }
     }
 
-    public void refreshBoard(boolean currentTurn) {
+    public void refreshBoard(boolean currentTurn, Phase phase) {
+        System.out.println("refrboard");
         sumCharArr = new AnchorPane[5];
         for (int i = 0; i < 5; i++) {
             int idx = i;
@@ -79,7 +84,10 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             if (this.player.getBoard().getAtSlot(i) != null) {
                 if (currentTurn) {
                     this.charArr[i].setOnMouseEntered(e -> {
-                        this.charArr[idx].getScene().setCursor(Cursor.HAND);
+                        if (this.player.getBoard().getAtSlot(idx).isPlayable()) {
+                            this.charArr[idx].getScene().setCursor(Cursor.HAND);
+                        }
+
                         this.charArr[idx].setStyle("-fx-border-color: gold;");
                     });
 
@@ -95,21 +103,34 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                 sumCharFXML.setControllerFactory(c -> new SummonedCharacterController(this.channel, this.player.getBoard().selectedChar(idx)));
                 AnchorPane sumCharPane = null;
 
+                System.out.println("before try");
                 try {
                     sumCharPane = sumCharFXML.load();
                     sumCharArr[i] = sumCharPane;
                     this.charArr[i].getChildren().add(sumCharPane);
 
                     if (currentTurn) {
-                        sumCharPane.setOnMouseClicked(e -> showCharacterOptions(this.charArr[idx], idx));
+                        System.out.println("phase: " + phase.toString());
+                        if (phase == Phase.PLAN) {
+                            System.out.println("plan");
+                            sumCharPane.setOnMouseClicked(e -> showCharacterOptions(this.charArr[idx], idx));
+
+                        } else if (phase == Phase.ATTACK && this.player.getBoard().getAtSlot(idx).isPlayable()) {
+                            sumCharPane.setOnMouseClicked(e -> showCharacterAttackOptions(this.charArr[idx], idx));
+                            System.out.println("draw");
+
+                        }
+                        System.out.println("after phase");
 
                         AnchorPane temp = sumCharPane;
                         sumCharPane.setOnMouseEntered(e -> temp.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY))));
                         sumCharPane.setOnMouseExited(e -> temp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY))));
 
                     }
+                    System.out.println("success try");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    System.out.println("fail try");
                 }
 
             } else {
@@ -207,7 +228,48 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             }
         }
 
-        refreshBoard(this.player.equals(player));
+        refreshBoard(this.player.equals(player), null);
+    }
+
+    public void attackPhaseEventHandler(Player p) {
+        if (p.equals(this.player)) {
+            for (int i = 0; i < 5; i++) {
+                if (this.player.getBoard().getAtSlot(i) != null) {
+                    int idx = i;
+                    this.sumCharArr[i].setOnMouseClicked(e -> showCharacterAttackOptions(this.charArr[idx], idx));
+
+                }
+            }
+        }
+    }
+
+    public void showCharacterAttackOptions(StackPane characterPane, int idx) {
+        StackPane optionPane = new StackPane();
+        optionPane.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
+        characterPane.getChildren().add(optionPane);
+
+        Button attack = new Button("Attack");
+        Button cancel = new Button("Cancel");
+
+        StackPane.setMargin(attack, new Insets(10, 10, 10, 10));
+        StackPane.setMargin(cancel, new Insets(10, 10, 10, 10));
+
+        StackPane.setAlignment(attack, Pos.TOP_CENTER);
+        StackPane.setAlignment(cancel, Pos.BOTTOM_CENTER);
+
+        optionPane.getChildren().add(attack);
+        optionPane.getChildren().add(cancel);
+
+        attack.setOnAction( e -> {
+            System.out.println(idx);
+            publish(new TryToAttackPlayerEvent(idx));
+        });
+
+        cancel.setOnAction(e -> {
+            characterPane.getChildren().remove(optionPane);
+//            characterPane.setOnMouseClicked(ev -> showCharacterOptions(characterPane, idx));
+        });
+        characterPane.setOnMouseClicked(null);
     }
 
     @Override
@@ -224,12 +286,17 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             prepareToMoveToBoardEventHandler(e);
 
         } else if (event instanceof RefreshBoardEvent) {
-            Player player = (Player) event.getEvent();
-            refreshBoard(this.player.equals(player));
+            Pair<Player, Phase> e = (Pair<Player, Phase>) event.getEvent();
+            Player player = e.getKey();
+            refreshBoard(this.player.equals(player), e.getValue());
 
         } else if (event instanceof ChangePlayerEvent) {
             changePlayerEventHandler((Player) event.getEvent());
 
+        } else if (event instanceof AttackPhaseEvent) {
+            System.out.println("attack");
+            Player p = (Player) event.getEvent();
+            attackPhaseEventHandler(p);
         }
     }
 }

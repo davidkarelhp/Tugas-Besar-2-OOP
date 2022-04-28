@@ -10,20 +10,10 @@ import java.util.*;
 
 
 public class AttackPhaseEvent implements Event {
-    private Hand hand;
-    private Card card;
-    private Board board;
-    private Character character;
     private Player player;
-    private Player opponent;
 
-    public AttackPhaseEvent(Hand hand, Card card, Board board, Character character, Player player, Player opponent) {
-        this.hand = hand;
-        this.card = card;
-        this.board = board;
-        this.character = character;
+    public AttackPhaseEvent(Player player) {
         this.player = player;
-        this.opponent = opponent;
     }
 
     //public 
