@@ -237,7 +237,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         titleCardLabel.setText(card.getName());
         if (card instanceof Character) {
             Character character = (Character) card;
-            dataCardLabel.setText("ATK: " +  character.getBaseAttack() + "\nHP: " + character.getBaseHealth() + "\nLevel: " + character.getLevel() + "\nType: " + character.getCharacterType());
+            dataCardLabel.setText("ATK: " +  character.getBaseAttack() + "\nHP: " + character.getBaseHealth() + "\nLevel: " + character.getLevel() + "\nType: " + character.getCharacterType() + "\nAttack Up: " + character.getAttackUp() + "\nHealth Up: " + character.getHealthUp());
 
         } else if (card instanceof Spell) {
             Spell spell = (Spell) card;
@@ -288,7 +288,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         titleCardLabel.setText(card.getName());
         if (card instanceof Character) {
             Character character = (Character) card;
-            dataCardLabel.setText("ATK: " +  character.getBaseAttack() + "\nHP: " + character.getBaseHealth() + "\nLevel: " + character.getLevel() + "\nType: " + character.getCharacterType());
+            dataCardLabel.setText("ATK: " +  summonedCharacter.getAttack() + "\nHP: " + summonedCharacter.getHealth() + "\nLevel: " + summonedCharacter.getLevel() + "\nEXP: " + summonedCharacter.getExp() + "/" + (2 * summonedCharacter.getLevel() - 1) + "\nType: " + character.getCharacterType() + "\nAttack Up: " + summonedCharacter.getAttackUp() + "\nHealth Up: " + summonedCharacter.getHealthUp());
 
         } else if (card instanceof Spell) {
             Spell spell = (Spell) card;
@@ -329,11 +329,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
             cardPane.setOnMouseClicked(e -> {
 
                 showCardOptions(cardPane, idx);
-//                try {
-//                    refreshHandClicked(player, idx);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
                 publish(new ClickEvent("hand", idx));
             });
 
@@ -360,11 +355,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 cardPane.setOnMouseClicked(e -> {
 
                     showCardOptions(cardPane, idx);
-//                    try {
-//                        refreshHandClicked(player, idx);
-//                    } catch (Exception ex) {
-//                        ex.printStackTrace();
-//                    }
                     publish(new ClickEvent("hand", idx));
 
                 });
@@ -476,7 +466,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             } else if (event instanceof CurrentPhaseEvent) {
                 this.phaseColoring((Phase) event.getEvent());
 
-                if ((Phase) event.getEvent() == Phase.ATTACK) {
+                if (event.getEvent() == Phase.ATTACK) {
                     for (Node node: handGrid.getChildren()) {
                         if (node != null) {
                             node.setOnMouseClicked(null);
@@ -492,10 +482,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof RefreshHandEvent) {
                 Pair<Player, Phase> e = (Pair<Player, Phase>) event.getEvent();
-                if (e.getValue() != Phase.ATTACK) {
-//                    this.refreshHand((Player) event.getEvent());
-                    this.refreshHand(e.getKey());
 
+                if (e.getValue() != Phase.ATTACK) {
+                    this.refreshHand(e.getKey());
                 } else {
                     for (Node node: handGrid.getChildren()) {
                         if (node != null) {
