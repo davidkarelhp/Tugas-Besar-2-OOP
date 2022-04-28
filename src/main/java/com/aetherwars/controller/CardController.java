@@ -67,7 +67,12 @@ public class CardController implements Initializable {
                 labelAtkHp.setText("SPELL MORPH");
             }
         }
-        cardImage.setImage(new Image(file.toURI().toString(), 90, 120, true, true));
+        try {
+            cardImage.setImage(new Image(file.toURI().toString(), 90, 120, true, true));
+
+        } catch (Exception e) {
+            cardImage.setImage(null);
+        }
 
     }
 
