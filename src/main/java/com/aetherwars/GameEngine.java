@@ -5,6 +5,7 @@ import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.character.SummonedCharacter;
 import com.aetherwars.model.cards.spell.Spell;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -92,6 +93,7 @@ public class GameEngine implements Publisher, Subscriber {
             publish(new DrawPhaseEvent(this.players[this.getCurrentPlayer()].draw()));
 
         } else if (currentPhase() == Phase.PLAN) {
+            publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
         } else if (currentPhase() == Phase.ATTACK) {
             publish(new AttackPhaseEvent(this.players[this.getCurrentPlayer()]));
 
@@ -107,6 +109,7 @@ public class GameEngine implements Publisher, Subscriber {
             this.setCurrentPlayer((this.getCurrentPlayer() == 0) ? 1 : 0);
 
             publish(new ChangePlayerEvent(this.players[this.getCurrentPlayer()]));
+            publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], null));
 
             // Langsung draw phase lagi setelah end
             this.nextPhaseProcess();
@@ -222,6 +225,19 @@ public class GameEngine implements Publisher, Subscriber {
 
     }
 
+    public void attackCharacterEventHandler(int idxAttacker, int idxDefender) {
+        SummonedCharacter attacker = this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxAttacker);
+        SummonedCharacter defender = this.players[this.getCurrentPlayer() == 0 ? 1 : 0].getBoard().getAtSlot(idxDefender);
+
+        attacker.attackEnemy(defender);
+
+        if (defender.getHealth() <= 0) {
+            this.players[this.getCurrentPlayer() == 0 ? 1 : 0].getBoard().removeCardAtSlot(idxDefender);
+        }
+
+        publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+    }
+
     @Override
     public void publish(Event event) {
         this.eventChannel.sendEvent(this, event);
@@ -257,6 +273,9 @@ public class GameEngine implements Publisher, Subscriber {
             } else if (event instanceof TryToAttackPlayerEvent) {
                 tryToAttackPlayerEventHandler((int) event.getEvent());
 
+            } else if (event instanceof AttackCharacterEvent) {
+                int[] idxAttackerDefender = (int[]) event.getEvent();
+                attackCharacterEventHandler(idxAttackerDefender[0], idxAttackerDefender[1]);
             }
 
 

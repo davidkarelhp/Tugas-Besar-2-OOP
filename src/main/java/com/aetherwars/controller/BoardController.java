@@ -110,7 +110,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                     this.charArr[i].getChildren().add(sumCharPane);
 
                     if (currentTurn) {
-                        System.out.println("phase: " + phase.toString());
+//                        System.out.println("phase: " + phase.toString());
                         if (phase == Phase.PLAN) {
                             System.out.println("plan");
                             sumCharPane.setOnMouseClicked(e -> showCharacterOptions(this.charArr[idx], idx));
@@ -128,7 +128,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
                     }
                     System.out.println("success try");
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("fail try");
                 }
@@ -272,6 +272,36 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         characterPane.setOnMouseClicked(null);
     }
 
+    public void prepareToAttackCharacterEventHandler(Player p, int idxAttacker) {
+        if (!this.player.equals(p)) {
+            for (int i = 0; i < 5; i++) {
+                int idxDefender = i;
+
+                this.charArr[i].setOnMouseClicked(e -> {
+                    publish(new AttackCharacterEvent(idxAttacker, idxDefender));
+                    System.out.println("move");
+                });
+
+                this.charArr[i].setOnMouseEntered(e -> {
+                    this.charArr[idxDefender].getScene().setCursor(Cursor.HAND);
+                    this.charArr[idxDefender].setStyle("-fx-border-color: gold;");
+                });
+
+                this.charArr[i].setOnMouseExited(e -> {
+                    this.charArr[idxDefender].getScene().setCursor(Cursor.DEFAULT);
+                    this.charArr[idxDefender].setStyle("-fx-border-color: black;");
+                });
+
+                if (this.sumCharArr[i] != null) {
+                    this.sumCharArr[i].setOnMouseClicked(null);
+
+                }
+
+            }
+
+        }
+    }
+
     @Override
     public void publish(Event event) {
         this.channel.sendEvent(this, event);
@@ -297,6 +327,11 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             System.out.println("attack");
             Player p = (Player) event.getEvent();
             attackPhaseEventHandler(p);
+
+        } else if (event instanceof PrepareToAttackCharacterEvent) {
+            Pair<Player, Integer>e = (Pair<Player, Integer>) event.getEvent();
+            prepareToAttackCharacterEventHandler(e.getKey(), e.getValue());
+
         }
     }
 }

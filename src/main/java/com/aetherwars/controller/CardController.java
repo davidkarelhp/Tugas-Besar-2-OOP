@@ -42,7 +42,7 @@ public class CardController implements Initializable {
         File file = null;
         try {
             file = new File(getClass().getResource("../" + card.getImagePath()).toURI());
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

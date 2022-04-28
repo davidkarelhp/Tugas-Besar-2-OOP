@@ -13,6 +13,8 @@ public class Deck {
 
     public Deck() {
         this.deck = new Stack<>();
+        this.deckFill = new SimpleIntegerProperty(0);
+        this.deckSize = 0;
         // Harus dipikirin cara membentuk deck-nya pas awal-awal
         
         // ganti sama daftar card yg ada int[] initCard = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0};

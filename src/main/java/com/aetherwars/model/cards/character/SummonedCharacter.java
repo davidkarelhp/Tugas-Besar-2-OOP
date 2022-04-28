@@ -203,7 +203,7 @@ public class SummonedCharacter implements IsSummoned {
 
     public void setHealth(double health) {
         this.health = health;
-        this.bindedAttack.set(this.health);
+        this.bindedHealth.set(this.health);
     }
 
     public double getAttackSent() {
@@ -260,7 +260,7 @@ public class SummonedCharacter implements IsSummoned {
         double damageLeft = damage;
 
         int i = potions.size() - 1;
-        while (damageLeft > 0 || i >= 0){
+        while (damageLeft > 0 && i >= 0){
             Spell p = potions.get(i);
             if (p.getHealth() > 0) {
                 damageLeft = Math.max(0, damageLeft - p.getHealth());

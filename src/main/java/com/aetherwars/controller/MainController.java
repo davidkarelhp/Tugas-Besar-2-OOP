@@ -159,7 +159,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
             leftGrid = leftGridFXML.load();
             rightGrid = rightGridFXML.load();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         this.channel.addSubscriber(this, leftGridFXML.getController());
@@ -229,7 +230,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         File file = null;
         try {
             file = new File(getClass().getResource("../" + card.getImagePath()).toURI());
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -287,7 +288,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 showCardOptions(cardPane, idx);
                 try {
                     refreshHandClicked(player, idx);
-                } catch (IOException ex) {}
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             });
 
             StackPane.setMargin(cardPane, new Insets(10, 10, 10, 10));
@@ -315,7 +318,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
                     showCardOptions(cardPane, idx);
                     try {
                         refreshHandClicked(player, idx);
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
 
                 });
@@ -448,7 +452,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -41,7 +41,7 @@ public class SummonedCharacterController implements Publisher, Subscriber, Initi
 
         try {
             file = new File(getClass().getResource("../" + this.character.getCharacter().getImagePath()).toURI());
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
