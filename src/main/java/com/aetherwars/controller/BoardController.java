@@ -32,6 +32,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     private GameChannel channel;
     private Player player;
     private StackPane[] charArr;
+    private AnchorPane[] sumCharArr;
     private int handIdx;
 
     public BoardController(GameChannel channel, Player player) {
@@ -47,7 +48,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     public void prepareToMoveToBoardEventHandler(Player player) {
 //        refreshBoard(this.player.equals(player));
         for (int i = 0; i < 5; i++) {
-            if (this.charArr[i].getChildren().isEmpty()) {
+//            if (this.charArr[i].getChildren().isEmpty()) {
                 int idx = i;
 
                 this.charArr[i].setOnMouseClicked(e -> publish(new MoveToBoardEvent(this.handIdx, idx)));
@@ -62,14 +63,20 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                     this.charArr[idx].setStyle("-fx-border-color: black;");
                 });
 
-            } else {
-                this.charArr[i].setOnMouseEntered(null);
-                this.charArr[i].setOnMouseExited(null);
-            }
+                if (this.sumCharArr[i] != null) {
+                    this.sumCharArr[i].setOnMouseClicked(null);
+
+                }
+
+//            } else {
+//                this.charArr[i].setOnMouseEntered(null);
+//                this.charArr[i].setOnMouseExited(null);
+//            }
         }
     }
 
     public void refreshBoard(boolean currentTurn) {
+        sumCharArr = new AnchorPane[5];
         for (int i = 0; i < 5; i++) {
             int idx = i;
             this.charArr[i].getChildren().clear();
@@ -95,6 +102,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
                 try {
                     sumCharPane = sumCharFXML.load();
+                    sumCharArr[i] = sumCharPane;
                     this.charArr[i].getChildren().add(sumCharPane);
 
                     if (currentTurn) {
@@ -110,8 +118,11 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                 }
 
             } else {
+                sumCharArr[i] = null;
                 this.charArr[i].setOnMouseEntered(null);
                 this.charArr[i].setOnMouseExited(null);
+                this.charArr[i].getScene().setCursor(Cursor.DEFAULT);
+                this.charArr[i].setStyle("-fx-border-color: black;");
             }
 
         }

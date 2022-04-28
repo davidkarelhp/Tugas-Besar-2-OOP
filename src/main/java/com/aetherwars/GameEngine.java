@@ -17,7 +17,6 @@ public class GameEngine implements Publisher, Subscriber {
     private GameChannel eventChannel;
     private Player[] players;
     private IntegerProperty currentPlayer;
-//    private int currentPlayer;
     private IntegerProperty currentRound;
     private int currentPhase;
     private static Phase[] phases = {Phase.DRAW, Phase.PLAN, Phase.ATTACK, Phase.END};
@@ -92,11 +91,8 @@ public class GameEngine implements Publisher, Subscriber {
             this.players[this.getCurrentPlayer()].resetMana();
             publish(new DrawPhaseEvent(this.players[this.getCurrentPlayer()].draw()));
 
-        } else if (currentPhase() == Phase.PLAN){
-
-
+        } else if (currentPhase() == Phase.PLAN) {
         } else if (currentPhase() == Phase.ATTACK) {
-
         } else if (currentPhase()  == Phase.END) {
             // Jalanin prosedur END phase disini, semua kartu currentplayer statusnya dijadiin belum dipakai dan sebagainya
 
@@ -158,27 +154,35 @@ public class GameEngine implements Publisher, Subscriber {
     }
 
     public void moveToBoardEventHandler(int idxHand, int idxBoard) {
-        if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof  Character) {
-            Character c = (Character) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
-            this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
-            this.players[this.getCurrentPlayer()].getBoard().putInSlot(idxBoard, c);
-
-            publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
-            publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
-
-        } else if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof Spell) {
-            if (this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard) != null) {
-                Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
+        if (this.players[this.getCurrentPlayer()].getMana() < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
+            publish(new MessageEvent("Mana tidak mencukupi."));
+        } else {
+            if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof  Character) {
+                Character c = (Character) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
                 this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
+                this.players[this.getCurrentPlayer()].getBoard().putInSlot(idxBoard, c);
 
-                this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard).addSpell(s);
+                this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
+//                publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+                publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()]));
 
-                publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+            } else if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof Spell) {
+                if (this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard) != null) {
+                    Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
+                    this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
 
-            } else {
-                System.out.println("Slot kosong!");
+                    this.players[this.getCurrentPlayer()].getBoard().getAtSlot(idxBoard).addSpell(s);
+                    this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
+
+//                    publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
+
+                } else {
+                    System.out.println("Slot kosong!");
+                    publish(new MessageEvent("Tidak ada karakter pada slot ini!"));
+                }
             }
         }
+        publish(new RefreshHandEvent(this.players[this.getCurrentPlayer()]));
     }
 
     public void throwOutFromBoardEventHandler(int idxBoard) {

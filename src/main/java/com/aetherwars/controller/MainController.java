@@ -111,9 +111,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         Player[] players = gameEngine.getPlayers();
 
-//        this.labelPlayer1.setText(players[0].getPlayerName());
-//        this.labelPlayer2.setText(players[1].getPlayerName());
-
         this.labelPlayer1.textProperty().bind(Bindings.when(
                 gameEngine.currentPlayerProperty().isEqualTo(0))
                 .then("Current Player: " + players[0].getPlayerName())
@@ -137,10 +134,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
         FXMLLoader leftGridFXML = new FXMLLoader(getClass().getResource("../leftBoard.fxml"));
         FXMLLoader rightGridFXML = new FXMLLoader(getClass().getResource("../rightBoard.fxml"));
 
-
         leftGridFXML.setControllerFactory(c -> new BoardController(this.channel, players[0]));
         rightGridFXML.setControllerFactory(c -> new BoardController(this.channel, players[1]));
-
 
         GridPane leftGrid = null;
         GridPane rightGrid = null;
@@ -203,7 +198,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
             int idxCard = i;
             cardPane.setOnMouseClicked(e -> this.onDrawnCardClicked(cards, idxCard));
             i++;
-
         }
         drawPane.setBackground(new Background(new BackgroundFill(new Color(0.6, 0.6, 0.6, 0.5), CornerRadii.EMPTY, Insets.EMPTY)));
         backPane.getChildren().add(drawPane);
@@ -383,6 +377,13 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
             } else if (event instanceof RefreshHandEvent) {
                 this.refreshHand((Player) event.getEvent());
+
+            } else if (event instanceof MessageEvent) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Message Here!");
+                alert.setContentText((String) event.getEvent());
+                alert.show();
+
             }
 
         } catch (IOException e) {
