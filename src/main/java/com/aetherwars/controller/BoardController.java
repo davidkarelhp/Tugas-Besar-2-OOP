@@ -169,7 +169,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                 this.charArr[i].getChildren().clear();
             }
 
-            if (this.player.getBoard().getAtSlot(i) != null && i != idxClicked) {
+            if (this.player.getBoard().getAtSlot(i) != null && (i != idxClicked || !currentTurn)) {
 //                if (currentTurn) {
                 this.charArr[i].setOnMouseEntered(e -> {
                     if (this.player.getBoard().getAtSlot(idx).isPlayable() && currentTurn) {
