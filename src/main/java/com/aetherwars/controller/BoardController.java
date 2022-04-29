@@ -354,18 +354,6 @@ public class BoardController implements Initializable, Publisher, Subscriber {
 
     public void attackPhaseEventHandler(Player p) {
         refreshBoard(p.equals(this.player), Phase.ATTACK);
-//        if (p.equals(this.player)) {
-//            for (int i = 0; i < 5; i++) {
-//                if (this.player.getBoard().getAtSlot(i) != null) {
-//                    int idx = i;
-//                    this.sumCharArr[i].setOnMouseClicked(e -> {
-//                        showCharacterAttackOptions(this.charArr[idx], idx);
-//                        publish(new ClickEvent("board", idx));
-//                    });
-//
-//                }
-//            }
-//        }
     }
 
     public void showCharacterAttackOptions(StackPane characterPane, int idx) {

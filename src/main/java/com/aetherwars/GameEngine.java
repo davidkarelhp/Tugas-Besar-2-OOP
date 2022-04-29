@@ -173,7 +173,9 @@ public class GameEngine implements Publisher, Subscriber {
             publish(new MessageEvent("Tidak bisa memasukkan karakter ke board lawan."));
 
         } else {
-            System.out.println(idxHand);
+            System.out.println("idxHand " + idxHand);
+            System.out.println("curPlayerMana: " + this.players[this.getCurrentPlayer()].getMana());
+            System.out.println("cardMana: " + this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
 
             // handle kartu spell level
             if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana() == -1) {
