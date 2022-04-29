@@ -265,12 +265,14 @@ public class SummonedCharacter implements IsSummoned {
         while (damageLeft > 0 && i >= 0){
             Spell p = potions.get(i);
             if (p.getHealth() > 0) {
-                damageLeft = Math.max(0, damageLeft - p.getHealth());
+                setHealthHad(getHealthHad() - Math.min(p.getHealth(), damageLeft));
                 p.setHealth(Math.max(p.getHealth() - damageLeft, 0));
+                damageLeft = Math.max(0, damageLeft - p.getHealth());
             }
             i--;
         }
 
+        setHealthHad(getHealthHad() - damageLeft);
         setHealth(getHealth() - damageLeft);
     }
     
