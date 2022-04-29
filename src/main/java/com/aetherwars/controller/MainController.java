@@ -264,6 +264,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 dataCardLabel.setText("Morph any character to " + ((Morph)spell.getWorker()).getTargetCharacter().getName()
                         + " with:\n" + "Base attack: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseAttack() + "\n" + "Base health: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseHealth()
                         + "\n" + "Attack increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getAttackUp()+ "\n" + "Health increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getHealthUp());
+            } else if (spell.getType() == SpellType.HEAL) {
+                dataCardLabel.setText("Heal character permanently");
             }
         }
         descCardLabel.setText("\"" +  card.getDescription() + "\"");
@@ -321,6 +323,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 dataCardLabel.setText("Morph any character to " + ((Morph)spell.getWorker()).getTargetCharacter().getName()
                 + " with:\n" + "Base attack: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseAttack() + "\n" + "Base health: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseHealth()
                 + "\n" + "Attack increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getAttackUp()+ "\n" + "Health increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getHealthUp());
+            } else if (spell.getType() == SpellType.HEAL) {
+                dataCardLabel.setText("Heal character permanently");
             }
         }
         descCardLabel.setText("\"" +  card.getDescription() + "\"");

@@ -17,6 +17,7 @@ public class LevelDown implements PermanentEffect, LevelModifier, ExperienceEate
     public LevelDown() {
     }
 
+
     @Override
     public void runEffect(SummonedCharacter character) {
         modifyLevel(character);

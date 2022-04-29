@@ -37,6 +37,8 @@ public class Spell extends Card implements EffectRunner, EffectRemover {
             this.type = SpellType.SWAP;
         } else if (worker instanceof Morph) {
             this.type = SpellType.MORPH;
+        } else if (worker instanceof Heal) {
+            this.type = SpellType.HEAL;
         }
 
         // set the power

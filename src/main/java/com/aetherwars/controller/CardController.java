@@ -75,6 +75,8 @@ public class CardController implements Initializable {
                 labelAtkHp.setText("SPELL SWAP");
             } else if (spell.getType() == SpellType.MORPH) {
                 labelAtkHp.setText("SPELL MORPH");
+            } else if (spell.getType() == SpellType.HEAL) {
+                labelAtkHp.setText("SPELL HEAL");
             }
         }
         try {
