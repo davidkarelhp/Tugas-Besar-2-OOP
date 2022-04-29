@@ -308,17 +308,17 @@ public class MainController implements Initializable, Publisher, Subscriber {
             if (spell.getType() == SpellType.POTION) {
                 String text = "Health effect: " + ((Potion) spell.getWorker()).getHealth() + "\n"
                         + "Attack effect: " + ((Potion) spell.getWorker()).getAttack() + "\n"
-                        + "effect lasts " + ((Potion) spell.getWorker()).getDuration() + "rounds";
+                        + "Effect lasts " + ((Potion) spell.getWorker()).getDuration() + " rounds";
                 dataCardLabel.setText(text);
             } else if (spell.getType() == SpellType.LEVELUP) {
                 dataCardLabel.setText("Level up the character. Mana required is ceil rounding of target character level divided by two");
             } else if (spell.getType() == SpellType.LEVELDOWN) {
-                dataCardLabel.setText("Level down the character. Mana required is ceil rounding of target character level divided by two");
+                dataCardLabel.setText("Level down the character. Mana required is ceil rounding of target character level divided by two.");
             } else if (spell.getType() == SpellType.SWAP) {
-                dataCardLabel.setText("Swap attack and health for " + ((Swap) spell.getWorker()).getDuration() + " rounds");
+                dataCardLabel.setText("Swap attack and health for " + ((Swap) spell.getWorker()).getDuration() + " rounds.").
             } else if (spell.getType() == SpellType.MORPH) {
                 dataCardLabel.setText("Morph any character to " + ((Morph)spell.getWorker()).getTargetCharacter().getName()
-                + "with:\n" + "Base attack: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseAttack() + "\n" + "Base health: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseHealth()
+                + " with:\n" + "Base attack: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseAttack() + "\n" + "Base health: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseHealth()
                 + "\n" + "Attack increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getAttackUp()+ "\n" + "Health increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getHealthUp());
             }
         }
