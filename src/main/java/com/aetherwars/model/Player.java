@@ -29,8 +29,8 @@ public class Player {
         this.deck = deck;
         this.channel = channel;
         this.healthPoints = new SimpleDoubleProperty(80);
-        this.mana = new SimpleIntegerProperty(0);
-        this.manaLimit = new SimpleIntegerProperty(0);
+        this.mana = new SimpleIntegerProperty(10);
+        this.manaLimit = new SimpleIntegerProperty(10);
         this.hand = new Hand();
         this.board = new Board();
     }

@@ -353,18 +353,19 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     }
 
     public void attackPhaseEventHandler(Player p) {
-        if (p.equals(this.player)) {
-            for (int i = 0; i < 5; i++) {
-                if (this.player.getBoard().getAtSlot(i) != null) {
-                    int idx = i;
-                    this.sumCharArr[i].setOnMouseClicked(e -> {
-                        showCharacterAttackOptions(this.charArr[idx], idx);
-                        publish(new ClickEvent("board", idx));
-                    });
-
-                }
-            }
-        }
+        refreshBoard(p.equals(this.player), Phase.ATTACK);
+//        if (p.equals(this.player)) {
+//            for (int i = 0; i < 5; i++) {
+//                if (this.player.getBoard().getAtSlot(i) != null) {
+//                    int idx = i;
+//                    this.sumCharArr[i].setOnMouseClicked(e -> {
+//                        showCharacterAttackOptions(this.charArr[idx], idx);
+//                        publish(new ClickEvent("board", idx));
+//                    });
+//
+//                }
+//            }
+//        }
     }
 
     public void showCharacterAttackOptions(StackPane characterPane, int idx) {
@@ -463,6 +464,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             Pair<Integer, Pair<Player, Phase>> e = (Pair<Integer, Pair<Player, Phase>>) event.getEvent();
             Pair<Player, Phase> e2 = e.getValue();
             refreshBoardClicked(e2.getKey().equals(this.player), e2.getValue(), e.getKey());
+
         }
     }
 }
