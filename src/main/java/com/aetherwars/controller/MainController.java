@@ -315,7 +315,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             } else if (spell.getType() == SpellType.LEVELDOWN) {
                 dataCardLabel.setText("Level down the character. Mana required is ceil rounding of target character level divided by two.");
             } else if (spell.getType() == SpellType.SWAP) {
-                dataCardLabel.setText("Swap attack and health for " + ((Swap) spell.getWorker()).getDuration() + " rounds.").
+                dataCardLabel.setText("Swap attack and health for " + ((Swap) spell.getWorker()).getDuration() + " rounds.");
             } else if (spell.getType() == SpellType.MORPH) {
                 dataCardLabel.setText("Morph any character to " + ((Morph)spell.getWorker()).getTargetCharacter().getName()
                 + " with:\n" + "Base attack: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseAttack() + "\n" + "Base health: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseHealth()
