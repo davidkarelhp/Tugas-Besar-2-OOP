@@ -51,7 +51,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     Button buttonSkip;
 
     @FXML
-    Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p, labelInfo;
+    Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p, labelInfo, labelHealth1, labelHealth2;
 
     @FXML
     ProgressBar healthPlayer1, healthPlayer2;
@@ -125,6 +125,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         this.healthPlayer1.progressProperty().bind(players[0].healthPointsProperty().divide(this.MAX_HEALTH));
         this.healthPlayer2.progressProperty().bind(players[1].healthPointsProperty().divide(this.MAX_HEALTH));
+
+        this.labelHealth1.textProperty().bind(Bindings.concat(players[0].healthPointsProperty(), "/80"));
+        this.labelHealth2.textProperty().bind(Bindings.concat(players[1].healthPointsProperty(), "/80"));
 
         this.healthPlayer1.styleProperty().bind(Bindings
                 .when(players[0].healthPointsProperty().greaterThan(50))
