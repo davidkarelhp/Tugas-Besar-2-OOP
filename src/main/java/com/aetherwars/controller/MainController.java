@@ -301,7 +301,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         titleCardLabel.setText(card.getName());
         if (card instanceof Character) {
             Character character = (Character) card;
-            dataCardLabel.setText("ATK: " +  summonedCharacter.getAttack() + "\nHP: " + summonedCharacter.getHealth() + "\nLevel: " + summonedCharacter.getLevel() + "\nEXP: " + summonedCharacter.getExp() + "/" + (2 * summonedCharacter.getLevel() - 1) + "\nType: " + character.getCharacterType() + "\nAttack Up: " + summonedCharacter.getAttackUp() + "\nHealth Up: " + summonedCharacter.getHealthUp());
+            dataCardLabel.setText("ATK: " +  summonedCharacter.getAttackSent() + "\nHP: " + summonedCharacter.getHealthHad() + "\nLevel: " + summonedCharacter.getLevel() + "\nEXP: " + summonedCharacter.getExp() + "/" + (2 * summonedCharacter.getLevel() - 1) + "\nType: " + character.getCharacterType() + "\nAttack Up: " + summonedCharacter.getAttackUp() + "\nHealth Up: " + summonedCharacter.getHealthUp());
 
         } else if (card instanceof Spell) {
             Spell spell = (Spell) card;

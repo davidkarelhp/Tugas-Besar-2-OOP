@@ -178,7 +178,7 @@ public class GameEngine implements Publisher, Subscriber {
             System.out.println("cardMana: " + this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
 
             // handle kartu spell level
-            if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana() == -1) {
+            if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof Spell && this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana() == -1) {
                 if (player.getBoard().getAtSlot(idxBoard) != null) {
                     SummonedCharacter target = player.getBoard().getAtSlot(idxBoard);
                     int manaNeed = (int) Math.ceil((double)target.getLevel()/2);

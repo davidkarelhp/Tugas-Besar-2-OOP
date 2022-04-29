@@ -56,10 +56,10 @@ public class Morph implements PermanentEffect, CharacterChanger, EffectRunner {
             return;
         }
         character.setCharacter(targetCharacter);
-        character.setAttack(targetCharacter.getBaseAttack());
-        character.setHealth(targetCharacter.getBaseHealth());
         character.setAttackSent(character.getAttackSent() - character.getAttack() + targetCharacter.getBaseAttack());
         character.setHealthHad(character.getHealthHad() - character.getHealth() + targetCharacter.getBaseHealth());
+        character.setAttack(targetCharacter.getBaseAttack());
+        character.setHealth(targetCharacter.getBaseHealth());
         character.setExp(0);
         character.setLevel(1);
     }

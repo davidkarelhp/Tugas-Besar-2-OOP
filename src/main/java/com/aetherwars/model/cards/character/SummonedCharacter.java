@@ -109,7 +109,9 @@ public class SummonedCharacter implements IsSummoned {
     public void incrementRound() {
         round++;
         potions.forEach((ts) -> ts.setDuration(ts.getDuration() - 1));
-        swapDurationLeft--;
+        if (swapDurationLeft > 0){
+            swapDurationLeft--;
+        }
 
         // proses potions yang harus hilang karena durasi
         // duration = 0
@@ -193,7 +195,6 @@ public class SummonedCharacter implements IsSummoned {
     }
 
     public void setAttack(double attack) {
-        this.bindedAttack.set(Math.max(this.attackSent - this.attack + attack,0));
         this.attack = attack;
     }
 
@@ -202,7 +203,6 @@ public class SummonedCharacter implements IsSummoned {
     }
 
     public void setHealth(double health) {
-        this.bindedHealth.set(Math.max(this.healthHad - this.health + health, 0));
         this.health = health;
     }
 
@@ -308,13 +308,17 @@ public class SummonedCharacter implements IsSummoned {
 
 
     public void levelUp() {
+        setAttackSent(getAttackSent() + getAttackUp());
         setAttack(getAttack() + getAttackUp());
+        setHealthHad(getHealthHad() + getHealthUp());
         setHealth(getHealth() + getHealthUp());
         setLevel(getLevel() + 1);
     }
 
     public void levelDown() {
+        setAttackSent(getAttackSent() - getAttackUp());
         setAttack(getAttack() - getAttackUp());
+        setHealthHad(getHealthHad() - getHealthUp());
         setHealth(getHealth() - getHealthUp());
         setLevel(getLevel() - 1);
     }
