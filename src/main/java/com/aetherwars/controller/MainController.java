@@ -466,12 +466,17 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     public void discardToDraw() {
         buttonSkip.setDisable(true);
-        labelHand.setText("Discard salah satu kartu!");
+//        labelHand.setText("Discard salah satu kartu!");
+        labelInfo.setText("Choose one card to discard.");
+        moveInfoDown();
 
         int i = 0;
         for (StackPane cardPane: handList) {
             int idxDiscard = i;
-            cardPane.setOnMouseClicked(e -> publish(new DiscardToDrawEvent(idxDiscard)));
+            cardPane.setOnMouseClicked(e -> {
+                publish(new DiscardToDrawEvent(idxDiscard));
+                moveInfoUp();
+            });
             i++;
         }
     }

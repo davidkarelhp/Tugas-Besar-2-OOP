@@ -62,7 +62,7 @@ public class Deck {
     public List<Card> draw() {
         List<Card> ret = new ArrayList<>();
         int  i = 0;
-        while (i < 3 && !this.deck.isEmpty()) {
+        while (i < 5 && !this.deck.isEmpty()) {
             ret.add(this.deck.pop());
             i++;
         }
