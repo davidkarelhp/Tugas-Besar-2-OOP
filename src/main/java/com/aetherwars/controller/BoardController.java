@@ -3,11 +3,6 @@ package com.aetherwars.controller;
 import com.aetherwars.event.*;
 import com.aetherwars.model.Phase;
 import com.aetherwars.model.Player;
-import com.aetherwars.model.cards.character.SummonedCharacter;
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -73,6 +68,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     }
 
     public void refreshBoard(boolean currentTurn, Phase phase) {
+        publish(new MoveInfoUpEvent());
         System.out.println("refrboard");
         sumCharArr = new AnchorPane[5];
         for (int i = 0; i < 5; i++) {
@@ -157,6 +153,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     }
 
     public void refreshBoardClicked(boolean currentTurn, Phase phase, int idxClicked) {
+        publish(new MoveInfoUpEvent());
         System.out.println("refrboardClicked");
 
         for (int i = 0; i < 5; i++) {
@@ -342,6 +339,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     }
 
     public void changePlayerEventHandler(Player player) {
+//        publish(new MoveInfoUpEvent());
         if (!this.player.equals(player)) {
             for (int i = 0; i < 5; i++) {
                 this.charArr[i].setOnMouseClicked(null);
@@ -400,6 +398,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
     }
 
     public void prepareToAttackCharacterEventHandler(Player p, int idxAttacker) {
+        publish(new MoveInfoDownEvent("Choose enemy character to attack."));
         if (!this.player.equals(p)) {
             for (int i = 0; i < 5; i++) {
                 int idxDefender = i;
@@ -407,6 +406,7 @@ public class BoardController implements Initializable, Publisher, Subscriber {
                 this.charArr[i].setOnMouseClicked(e -> {
                     publish(new AttackCharacterEvent(idxAttacker, idxDefender));
                     System.out.println("move");
+                    publish(new MoveInfoUpEvent());
                 });
 
                 this.charArr[i].setOnMouseEntered(e -> {

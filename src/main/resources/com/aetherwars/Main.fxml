@@ -74,6 +74,10 @@
                         </VBox>
                      </children>
                   </HBox>
+                  <Label fx:id="labelInfo" alignment="CENTER" layoutY="-10.0" prefHeight="47.0" prefWidth="1014.0" style="-fx-background-color: orange; -fx-border-radius: 20; -fx-border-width: 5; -fx-background-radius: 25; -fx-border-color: yellow; -fx-text-fill: white;" text="Game Started!">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font></Label>
                </children>
             </StackPane>
             <GridPane fx:id="gridBoard" minHeight="240.0">

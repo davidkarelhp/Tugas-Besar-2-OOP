@@ -254,6 +254,7 @@ public class GameEngine implements Publisher, Subscriber {
         }
 
         publish(new RefreshBoardEvent(this.players[this.getCurrentPlayer()], currentPhase()));
+//        publish(new MoveInfoUpEvent());
     }
 
     @Override
