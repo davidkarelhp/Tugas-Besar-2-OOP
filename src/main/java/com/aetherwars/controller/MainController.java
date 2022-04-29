@@ -245,9 +245,9 @@ public class MainController implements Initializable, Publisher, Subscriber {
             if (spell.getType() == SpellType.POTION) {
                 dataCardLabel.setText("ATK: " + spell.getAttack() + "\nHP: " + spell.getHealth() + "\nDuration: " + spell.getDuration());
             } else if (spell.getType() == SpellType.LEVELUP) {
-                dataCardLabel.setText("EXP UP: ");
+                dataCardLabel.setText("Add 1 level from selected character.\nEXP will reset to 0.");
             } else if (spell.getType() == SpellType.LEVELDOWN) {
-                dataCardLabel.setText("EXP DOWN: ");
+                dataCardLabel.setText("Take 1 level from selected character.\nEXP will reset to 0.");
             } else if (spell.getType() == SpellType.SWAP) {
                 dataCardLabel.setText("Duration: " + spell.getDuration());
             } else if (spell.getType() == SpellType.MORPH) {
