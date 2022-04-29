@@ -177,8 +177,8 @@ public class GameEngine implements Publisher, Subscriber {
 
             // handle kartu spell level
             if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana() == -1) {
-                SummonedCharacter target = player.getBoard().getAtSlot(idxBoard);
-                if (target != null) {
+                if (player.getBoard().getAtSlot(idxBoard) != null) {
+                    SummonedCharacter target = player.getBoard().getAtSlot(idxBoard);
                     int manaNeed = (int) Math.ceil((double)target.getLevel()/2);
                     if (manaNeed < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
                         Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
