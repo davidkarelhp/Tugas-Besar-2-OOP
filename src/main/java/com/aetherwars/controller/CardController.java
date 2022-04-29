@@ -85,7 +85,7 @@ public class CardController implements Initializable {
 
 
     public void onMouseExit(MouseEvent mouseEvent) {
-        cardStackPane.setStyle("-fx-background-color: gold;" + "-fx-border-color: brown;" + "-fx-border-width: 4;");
+        cardStackPane.setStyle("-fx-background-color: gold;" + "-fx-border-color: MEDIUMPURPLE;" + "-fx-border-width: 4;");
         this.controller.onUnhover();
 
         cardStackPane.setCursor(Cursor.HAND);

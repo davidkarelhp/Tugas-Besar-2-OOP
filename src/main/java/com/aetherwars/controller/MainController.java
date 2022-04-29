@@ -205,7 +205,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
             constraints.setHgrow(Priority.ALWAYS);
             drawPane.getColumnConstraints().add(constraints);
 
-            cardPane.setMaxSize(150, 300);
+            cardPane.setMaxSize(100, 180);
             GridPane.setHalignment(cardPane, HPos.CENTER);
 
             drawPane.add(cardPane, i, 0);
@@ -321,6 +321,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         handGrid.getChildren().clear();
         List<Card> hand = player.getHand().getHand();
         int i = 0;
+
         for (Card card: hand) {
             FXMLLoader cardFXML = new FXMLLoader(getClass().getResource("../Card.fxml"));
             cardFXML.setControllerFactory(c -> new CardController(card, this));
