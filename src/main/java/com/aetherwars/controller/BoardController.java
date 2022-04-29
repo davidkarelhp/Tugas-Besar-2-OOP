@@ -255,74 +255,21 @@ public class BoardController implements Initializable, Publisher, Subscriber {
         characterPane.getChildren().add(optionPane);
 
         Button throwOut = new Button("Throw Out");
-        Button exp = new Button("Add EXP");
         Button cancel = new Button("Cancel");
 
         throwOut.setPrefWidth(80);
-        exp.setPrefWidth(80);
         cancel.setPrefWidth(80);
 
         StackPane.setMargin(throwOut, new Insets(10, 10, 10, 10));
         StackPane.setMargin(cancel, new Insets(10, 10, 10, 10));
 
         StackPane.setAlignment(throwOut, Pos.TOP_CENTER);
-        StackPane.setAlignment(exp, Pos.CENTER);
         StackPane.setAlignment(cancel, Pos.BOTTOM_CENTER);
 
         optionPane.getChildren().add(throwOut);
-        optionPane.getChildren().add(exp);
         optionPane.getChildren().add(cancel);
 
-        StackPane expPane = new StackPane();
-        expPane.setBackground(new Background(new BackgroundFill(Color.THISTLE, CornerRadii.EMPTY, Insets.EMPTY)));
-
-        Button addExp = new Button("Add EXP");
-        Button cancelExp = new Button("Cancel");
-        Label labelExp = new Label();
-
-        Slider s = new Slider();
-        s.setBlockIncrement(1);
-        s.setMin(0);
-        s.maxProperty().bind(this.player.manaProperty());
-        s.setValue(0);
-
-        s.valueProperty().addListener((obs, oldval, newVal) ->
-                s.setValue(newVal.intValue()));
-
-        labelExp.textProperty().bind(s.valueProperty().asString());
-//        labelExp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-
-        StackPane.setAlignment(s, Pos.TOP_CENTER);
-        StackPane.setAlignment(labelExp, Pos.CENTER);
-        StackPane.setAlignment(addExp, Pos.BOTTOM_CENTER);
-
-        StackPane.setMargin(s, new Insets(10, 0, 0, 0));
-        StackPane.setMargin(addExp, new Insets(0, 0, 10, 0));
-
-        expPane.getChildren().add(s);
-        expPane.getChildren().add(addExp);
-        expPane.getChildren().add(labelExp);
-
         throwOut.setOnAction(e -> publish(new ThrowOutFromBoardEvent(idx)));
-
-        exp.setOnAction(e -> {
-            characterPane.getChildren().remove(optionPane);
-            characterPane.getChildren().add(expPane);
-        });
-
-        addExp.setOnAction(e -> {
-            System.out.println(s.getValue());
-            publish(new AddExpEvent((int) s.getValue(), idx));
-
-            characterPane.getChildren().remove(expPane);
-        });
-
-        cancelExp.setOnAction(e -> {
-            characterPane.getChildren().remove(expPane);
-            characterPane.getChildren().add(optionPane);
-            publish(new CancelEvent());
-
-        });
 
         cancel.setOnAction(e -> {
             characterPane.getChildren().remove(optionPane);
@@ -330,6 +277,68 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             publish(new CancelEvent());
         });
         characterPane.setOnMouseClicked(null);
+
+        if (this.player.getBoard().getAtSlot(idx).getLevel() < 10) {
+
+            Button exp = new Button("Add EXP");
+            exp.setPrefWidth(80);
+            StackPane.setAlignment(exp, Pos.CENTER);
+            optionPane.getChildren().add(exp);
+
+            StackPane expPane = new StackPane();
+            expPane.setBackground(new Background(new BackgroundFill(Color.THISTLE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+            Button addExp = new Button("Add EXP");
+            Button cancelExp = new Button("Cancel");
+            Label labelExp = new Label();
+
+            Slider s = new Slider();
+            s.setBlockIncrement(1);
+            s.setMin(0);
+
+            if (this.player.getBoard().getAtSlot(idx).getLevel() < 9) {
+                s.maxProperty().bind(this.player.manaProperty());
+            } else {
+                s.setMax(Math.min(this.player.getMana(), 17 - this.player.getBoard().getAtSlot(idx).getExp()));
+            }
+            s.setValue(0);
+
+            s.valueProperty().addListener((obs, oldval, newVal) ->
+                    s.setValue(newVal.intValue()));
+
+            labelExp.textProperty().bind(s.valueProperty().asString());
+    //        labelExp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+            StackPane.setAlignment(s, Pos.TOP_CENTER);
+            StackPane.setAlignment(labelExp, Pos.CENTER);
+            StackPane.setAlignment(addExp, Pos.BOTTOM_CENTER);
+
+            StackPane.setMargin(s, new Insets(10, 0, 0, 0));
+            StackPane.setMargin(addExp, new Insets(0, 0, 10, 0));
+
+            expPane.getChildren().add(s);
+            expPane.getChildren().add(addExp);
+            expPane.getChildren().add(labelExp);
+
+            exp.setOnAction(e -> {
+                characterPane.getChildren().remove(optionPane);
+                characterPane.getChildren().add(expPane);
+            });
+
+            addExp.setOnAction(e -> {
+                System.out.println(s.getValue());
+                publish(new AddExpEvent((int) s.getValue(), idx));
+
+                characterPane.getChildren().remove(expPane);
+            });
+
+            cancelExp.setOnAction(e -> {
+                characterPane.getChildren().remove(expPane);
+                characterPane.getChildren().add(optionPane);
+                publish(new CancelEvent());
+            });
+        }
+
     }
 
     public void changePlayerEventHandler(Player player) {
