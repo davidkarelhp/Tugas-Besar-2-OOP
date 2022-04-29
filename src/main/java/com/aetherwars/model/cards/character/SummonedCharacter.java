@@ -276,20 +276,16 @@ public class SummonedCharacter implements IsSummoned {
     
     public void attackEnemy(SummonedCharacter enemy) {
         enemy.attacked(this);
+        if (enemy.getHealth() <= 0) {
+            if (this.getLevel() < 10) {
+                this.addExp(enemy.getLevel());
+            }
+        }
         this.setPlayable(false);
     }
 
     public void attackPlayer(Player p) {
         p.setHealthPoints((p.getHealthPoints() - this.attack < 0) ? 0 : p.getHealthPoints() - this.attack);
-        if (p.getHealthPoints() - this.attack < 0) {
-            p.setHealthPoints(0);
-            if (this.level < 10) {
-                this.addExp(p.getLevel());
-            }
-        }
-        else {
-            p.setHealthPoints(p.getHealthPoints() - this.attack);
-        }
         this.setPlayable(false);
     }
 
