@@ -192,6 +192,11 @@ public class GameEngine implements Publisher, Subscriber {
                         this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana());
 
                         player.getBoard().getAtSlot(idxBoard).addSpell(s);
+
+                        if (player.getBoard().getAtSlot(idxBoard).getHealth() <= 0) {
+                            player.getBoard().removeCardAtSlot(idxBoard);
+                        }
+
                         this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
 
                     } else {
