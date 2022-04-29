@@ -118,8 +118,8 @@ public class SummonedCharacter implements IsSummoned {
         potions.removeIf((ts) -> ts.getDuration()  == 0);
 
         // normalisasi attackSent dan healthHad
-        this.attackSent = this.attack;
-        this.healthHad = this.health;
+        setAttackSent(this.attack);
+        setHealthHad(this.health);
 
         // proses spell yang tersisa
         if (swapDurationLeft > 0) {
@@ -129,8 +129,8 @@ public class SummonedCharacter implements IsSummoned {
         }
 
         potions.forEach((ts) -> {
-            healthHad += ts.getHealth();
-            attackSent += ts.getAttack();
+            setAttackSent(attackSent += ts.getAttack());
+            setHealthHad(healthHad += ts.getHealth());
         });
 
         this.setPlayable(true);
