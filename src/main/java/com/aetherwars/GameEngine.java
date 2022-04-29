@@ -210,7 +210,7 @@ public class GameEngine implements Publisher, Subscriber {
 
                         player.getBoard().getAtSlot(idxBoard).addSpell(s);
 
-                        if (player.getBoard().getAtSlot(idxBoard).getHealth() <= 0) {
+                        if (player.getBoard().getAtSlot(idxBoard).getHealthHad() <= 0) {
                             player.getBoard().removeCardAtSlot(idxBoard);
                         }
 
