@@ -25,6 +25,7 @@ public class Dealer {
             }
             else if (cardType == 1) {   // spell card
                 int randomSpellCardId = ThreadLocalRandom.current().nextInt(0, Spell.SpellList.size());
+//                int randomSpellCardId = 0;
                 Spell spellCardData = Spell.SpellList.get(randomSpellCardId);
 
                 listDeck.add(spellCardData.clone());

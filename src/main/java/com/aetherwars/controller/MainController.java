@@ -205,7 +205,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
             constraints.setHgrow(Priority.ALWAYS);
             drawPane.getColumnConstraints().add(constraints);
 
-            cardPane.setMaxSize(100, 180);
+//            cardPane.setMaxSize(100, 180);
+            cardPane.setPrefSize(100, 180);
             GridPane.setHalignment(cardPane, HPos.CENTER);
 
             drawPane.add(cardPane, i, 0);
@@ -377,6 +378,10 @@ public class MainController implements Initializable, Publisher, Subscriber {
         Button board = new Button("Board");
         Button discard = new Button("Discard");
         Button cancel = new Button("Cancel");
+
+        board.setPrefWidth(80);
+        discard.setPrefWidth(80);
+        cancel.setPrefWidth(80);
 
         StackPane.setMargin(board, new Insets(10, 0, 0, 0));
         StackPane.setMargin(cancel, new Insets(0, 0, 10, 0));
