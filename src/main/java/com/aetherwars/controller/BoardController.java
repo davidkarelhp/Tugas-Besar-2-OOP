@@ -403,23 +403,23 @@ public class BoardController implements Initializable, Publisher, Subscriber {
             for (int i = 0; i < 5; i++) {
                 int idxDefender = i;
 
-                this.charArr[i].setOnMouseClicked(e -> {
-                    publish(new AttackCharacterEvent(idxAttacker, idxDefender));
-                    System.out.println("move");
-                    publish(new MoveInfoUpEvent());
-                });
-
-                this.charArr[i].setOnMouseEntered(e -> {
-                    this.charArr[idxDefender].getScene().setCursor(Cursor.HAND);
-                    this.charArr[idxDefender].setStyle("-fx-border-color: gold;");
-                });
-
-                this.charArr[i].setOnMouseExited(e -> {
-                    this.charArr[idxDefender].getScene().setCursor(Cursor.DEFAULT);
-                    this.charArr[idxDefender].setStyle("-fx-border-color: black;");
-                });
 
                 if (this.sumCharArr[i] != null) {
+                    this.charArr[i].setOnMouseClicked(e -> {
+                        publish(new AttackCharacterEvent(idxAttacker, idxDefender));
+                        System.out.println("move");
+                        publish(new MoveInfoUpEvent());
+                    });
+
+                    this.charArr[i].setOnMouseEntered(e -> {
+                        this.charArr[idxDefender].getScene().setCursor(Cursor.HAND);
+                        this.charArr[idxDefender].setStyle("-fx-border-color: gold;");
+                    });
+
+                    this.charArr[i].setOnMouseExited(e -> {
+                        this.charArr[idxDefender].getScene().setCursor(Cursor.DEFAULT);
+                        this.charArr[idxDefender].setStyle("-fx-border-color: black;");
+                    });
                     this.sumCharArr[i].setOnMouseClicked(null);
 
                 }
