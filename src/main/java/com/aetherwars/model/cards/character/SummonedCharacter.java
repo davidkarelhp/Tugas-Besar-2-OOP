@@ -318,11 +318,18 @@ public class SummonedCharacter implements IsSummoned {
     }
 
     public void addExp(int exp) {
-        while (getExp() + exp >= 2 * getLevel() - 1) {
+        while (getLevel() < 10 && getExp() + exp >= 2 * getLevel() - 1) {
             exp -= (2 * getLevel() - 1);
             levelUp();
         }
-        setExp(getExp() + exp);
+
+        if (getLevel() < 10) {
+            if (getLevel() != 9) {
+                setExp(getExp() + exp);
+            } else {
+                setExp(getExp() + Math.min(17 - getExp(), exp));
+            }
+        }
     }
 
     @Override
