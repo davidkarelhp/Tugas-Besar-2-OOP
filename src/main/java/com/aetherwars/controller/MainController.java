@@ -243,15 +243,15 @@ public class MainController implements Initializable, Publisher, Subscriber {
         } else if (card instanceof Spell) {
             Spell spell = (Spell) card;
             if (spell.getType() == SpellType.POTION) {
-                dataCardLabel.setText("SPELL PTN");
+                dataCardLabel.setText("ATK: " + spell.getAttack() + "\nHP: " + spell.getHealth() + "\nDuration: " + spell.getDuration());
             } else if (spell.getType() == SpellType.LEVELUP) {
-                dataCardLabel.setText("SPELL LEVEL UP");
+                dataCardLabel.setText("EXP UP: ");
             } else if (spell.getType() == SpellType.LEVELDOWN) {
-                dataCardLabel.setText("SPELL LEVEL DOWN");
+                dataCardLabel.setText("EXP DOWN: ");
             } else if (spell.getType() == SpellType.SWAP) {
-                dataCardLabel.setText("SPELL SWAP");
+                dataCardLabel.setText("Duration: " + spell.getDuration());
             } else if (spell.getType() == SpellType.MORPH) {
-                dataCardLabel.setText("SPELL MORPH");
+                dataCardLabel.setText("Morph Selected Character to " + Character.characterList.get(spell.getTargetId() - 1).getName() + "\nAll spells will be reset.\nAll levels and exp will be thrown out.");
             }
         }
         descCardLabel.setText("\"" +  card.getDescription() + "\"");
@@ -291,20 +291,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
             Character character = (Character) card;
             dataCardLabel.setText("ATK: " +  summonedCharacter.getAttack() + "\nHP: " + summonedCharacter.getHealth() + "\nLevel: " + summonedCharacter.getLevel() + "\nEXP: " + summonedCharacter.getExp() + "/" + (2 * summonedCharacter.getLevel() - 1) + "\nType: " + character.getCharacterType() + "\nAttack Up: " + summonedCharacter.getAttackUp() + "\nHealth Up: " + summonedCharacter.getHealthUp());
 
-        } else if (card instanceof Spell) {
-            Spell spell = (Spell) card;
-            if (spell.getType() == SpellType.POTION) {
-                dataCardLabel.setText("SPELL PTN");
-            } else if (spell.getType() == SpellType.LEVELUP) {
-                dataCardLabel.setText("SPELL LEVEL UP");
-            } else if (spell.getType() == SpellType.LEVELDOWN) {
-                dataCardLabel.setText("SPELL LEVEL DOWN");
-            } else if (spell.getType() == SpellType.SWAP) {
-                dataCardLabel.setText("SPELL SWAP");
-            } else if (spell.getType() == SpellType.MORPH) {
-                dataCardLabel.setText("SPELL MORPH");
-            }
         }
+
         descCardLabel.setText("\"" +  card.getDescription() + "\"");
 
         try {
