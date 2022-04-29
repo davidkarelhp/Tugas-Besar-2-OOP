@@ -182,7 +182,7 @@ public class GameEngine implements Publisher, Subscriber {
                 if (player.getBoard().getAtSlot(idxBoard) != null) {
                     SummonedCharacter target = player.getBoard().getAtSlot(idxBoard);
                     int manaNeed = (int) Math.ceil((double)target.getLevel()/2);
-                    if (manaNeed < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
+                    if (manaNeed < this.players[this.getCurrentPlayer()].getMana()) {
                         Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
                         this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - manaNeed);
 
@@ -191,6 +191,8 @@ public class GameEngine implements Publisher, Subscriber {
                     } else {
                         publish(new MessageEvent("Mana tidak mencukupi."));
                     }
+                } else {
+                    publish(new MessageEvent("Tidak ada karakter pada slot ini!"));
                 }
             }
             else if (this.players[this.getCurrentPlayer()].getMana() < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {

@@ -2,6 +2,8 @@ package com.aetherwars.model;
 
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
+import com.aetherwars.model.cards.spell.LevelDown;
+import com.aetherwars.model.cards.spell.LevelUp;
 import com.aetherwars.model.cards.spell.Spell;
 
 import java.util.ArrayList;
@@ -24,9 +26,20 @@ public class Dealer {
                 charCardData.getBaseHealth(), charCardData.getAttackUp(), charCardData.getHealthUp()));
             }
             else if (cardType == 1) {   // spell card
-                int randomSpellCardId = ThreadLocalRandom.current().nextInt(0, Spell.SpellList.size());
-//                int randomSpellCardId = 0;
-                Spell spellCardData = Spell.SpellList.get(randomSpellCardId);
+                Spell spellCardData = null;
+                int spellType = ThreadLocalRandom.current().nextInt(0, 4);
+                if (spellType == 1) {
+                    int levelUpOrDown = ThreadLocalRandom.current().nextInt(0, 2);
+                    if (levelUpOrDown == 0) {
+                        spellCardData = new Spell(998, "Level Down", "Level down the character. Mana required is ceil rounding of target character level divided by two", -1, null, new LevelDown());
+                    } else {
+                        spellCardData = new Spell(998, "Level Up", "Level up the character. Mana required is ceil rounding of target character level divided by two", -1, null, new LevelUp());
+                    }
+                } else {
+
+                    int randomSpellCardId = ThreadLocalRandom.current().nextInt(0, Spell.SpellList.size());
+                    spellCardData = Spell.SpellList.get(randomSpellCardId);
+                }
 
                 listDeck.add(spellCardData.clone());
             }

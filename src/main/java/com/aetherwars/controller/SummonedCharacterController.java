@@ -52,7 +52,7 @@ public class SummonedCharacterController implements Publisher, Subscriber, Initi
             imageCharacter.setImage(new Image(file.toURI().toString(), 55, 55, true, true));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("no picture");
             imageCharacter.setImage(null);
         }
 

@@ -273,6 +273,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         } catch (Exception e) {
             imageCardHover.setImage(null);
+            System.out.println("no picture");
         }
 
     }
@@ -329,6 +330,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         } catch (Exception e) {
             imageCardHover.setImage(null);
+            System.out.println("no picture");
         }
     }
 

@@ -42,11 +42,22 @@ public class CardController implements Initializable {
         try {
             file = new File(getClass().getResource("../" + card.getImagePath()).toURI());
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("no picture");
         }
 
         labelName.setText(card.getName());
-        labelMana.setText("MANA " + card.getMana());
+        if (card instanceof Spell) {
+            Spell s = (Spell) card;
+            if (s.getType().equals(SpellType.LEVELUP) || s.getType().equals(SpellType.LEVELDOWN)) {
+                labelMana.setText("");
+            } else {
+                labelMana.setText("MANA " + card.getMana());
+            }
+        } else {
+            labelMana.setText("MANA " + card.getMana());
+
+        }
 
         if (this.card instanceof Character) {
             Character character = (Character) this.card;
@@ -55,7 +66,7 @@ public class CardController implements Initializable {
         } else if (this.card instanceof Spell) {
             Spell spell = (Spell) this.card;
             if (spell.getType() == SpellType.POTION) {
-                labelAtkHp.setText("SPELL PTN");
+                labelAtkHp.setText("SPELL POTION");
             } else if (spell.getType() == SpellType.LEVELUP) {
                 labelAtkHp.setText("SPELL LEVEL UP");
             } else if (spell.getType() == SpellType.LEVELDOWN) {
