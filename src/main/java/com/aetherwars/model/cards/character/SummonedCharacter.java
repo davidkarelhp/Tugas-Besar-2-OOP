@@ -193,8 +193,8 @@ public class SummonedCharacter implements IsSummoned {
     }
 
     public void setAttack(double attack) {
+        this.bindedAttack.set(Math.max(this.attackSent - this.attack + attack,0));
         this.attack = attack;
-        this.bindedAttack.set(this.attack);
     }
 
     public double getHealth() {
@@ -202,8 +202,8 @@ public class SummonedCharacter implements IsSummoned {
     }
 
     public void setHealth(double health) {
+        this.bindedHealth.set(Math.max(this.healthHad - this.health + health, 0));
         this.health = health;
-        this.bindedHealth.set(this.health);
     }
 
     public double getAttackSent() {
@@ -212,6 +212,7 @@ public class SummonedCharacter implements IsSummoned {
 
     public void setAttackSent(double attackSent) {
         this.attackSent = attackSent;
+        this.bindedAttack.set(Math.max(this.attackSent,0));
     }
 
     public double getHealthHad() {
@@ -220,6 +221,7 @@ public class SummonedCharacter implements IsSummoned {
 
     public void setHealthHad(double healthHad) {
         this.healthHad = healthHad;
+        this.bindedHealth.set(Math.max(this.healthHad,0));
     }
 
     public boolean isPlayable() {
@@ -302,6 +304,12 @@ public class SummonedCharacter implements IsSummoned {
         setAttack(getAttack() + getAttackUp());
         setHealth(getHealth() + getHealthUp());
         setLevel(getLevel() + 1);
+    }
+
+    public void levelDown() {
+        setAttack(getAttack() - getAttackUp());
+        setHealth(getHealth() - getHealthUp());
+        setLevel(getLevel() - 1);
     }
 
     public void addExp(int exp) {

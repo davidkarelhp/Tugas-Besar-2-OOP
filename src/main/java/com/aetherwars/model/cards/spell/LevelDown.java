@@ -25,8 +25,8 @@ public class LevelDown implements PermanentEffect, LevelModifier, ExperienceEate
     @Override
     public void modifyLevel(SummonedCharacter character) {
         if (character.getLevel() - 1 >= 1) {
-            character.setLevel(character.getLevel() - 1);
             eatExperience(character);
+            character.levelDown();
             System.out.println("Level modified from " + (character.getLevel() + 1) + " to " + character.getLevel());
         } else {
             System.out.println("Can't modify level, level constraints will be violated");

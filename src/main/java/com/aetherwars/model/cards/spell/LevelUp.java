@@ -25,9 +25,9 @@ public class LevelUp implements PermanentEffect, LevelModifier, ExperienceEater,
 
     @Override
     public void modifyLevel(SummonedCharacter character) {
-        if (character.getLevel() + 1 >= 1) {
-            character.setLevel(character.getLevel() + 1);
+        if (character.getLevel() + 1 <= 10) {
             eatExperience(character);
+            character.levelUp();
             System.out.println("Level modified from " + (character.getLevel() - 1) + " to " + character.getLevel());
         } else {
             System.out.println("Can't modify level, level constraints will be violated");

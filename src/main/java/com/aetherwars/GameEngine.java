@@ -174,10 +174,27 @@ public class GameEngine implements Publisher, Subscriber {
 
         } else {
             System.out.println(idxHand);
-            if (this.players[this.getCurrentPlayer()].getMana() < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
-                publish(new MessageEvent("Mana tidak mencukupi."));
 
-            } else {
+            // handle kartu spell level
+            if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana() == -1) {
+                SummonedCharacter target = player.getBoard().getAtSlot(idxBoard);
+                if (target != null) {
+                    int manaNeed = (int) Math.ceil((double)target.getLevel()/2);
+                    if (manaNeed < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
+                        Spell s = (Spell) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
+                        this.players[this.getCurrentPlayer()].setMana(this.players[this.getCurrentPlayer()].getMana() - manaNeed);
+
+                        player.getBoard().getAtSlot(idxBoard).addSpell(s);
+                        this.players[this.getCurrentPlayer()].getHand().discardAtIndex(idxHand);
+                    } else {
+                        publish(new MessageEvent("Mana tidak mencukupi."));
+                    }
+                }
+            }
+            else if (this.players[this.getCurrentPlayer()].getMana() < this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand).getMana()) {
+                publish(new MessageEvent("Mana tidak mencukupi."));
+            }
+            else {
                 if (this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand) instanceof  Character) {
                     Character c = (Character) this.players[this.getCurrentPlayer()].getHand().getCardAtIndex(idxHand);
                     player.getBoard().putInSlot(idxBoard, c);
@@ -249,7 +266,7 @@ public class GameEngine implements Publisher, Subscriber {
 
         attacker.attackEnemy(defender);
 
-        if (defender.getHealth() <= 0) {
+        if (defender.getHealthHad() <= 0) {
             this.players[this.getCurrentPlayer() == 0 ? 1 : 0].getBoard().removeCardAtSlot(idxDefender);
         }
 

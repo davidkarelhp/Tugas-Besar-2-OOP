@@ -1,7 +1,6 @@
 package com.aetherwars.controller;
 
 import com.aetherwars.GameEngine;
-import com.aetherwars.event.Event;
 import com.aetherwars.event.GameChannel;
 import com.aetherwars.model.Phase;
 import com.aetherwars.event.*;
@@ -9,9 +8,11 @@ import com.aetherwars.model.Player;
 import com.aetherwars.model.cards.Card;
 import com.aetherwars.model.cards.character.Character;
 import com.aetherwars.model.cards.character.SummonedCharacter;
+import com.aetherwars.model.cards.spell.Morph;
+import com.aetherwars.model.cards.spell.Potion;
 import com.aetherwars.model.cards.spell.Spell;
+import com.aetherwars.model.cards.spell.Swap;
 import com.aetherwars.model.cards.spell.enums.SpellType;
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 
 import javafx.fxml.FXML;
@@ -25,17 +26,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -52,7 +50,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     Button buttonSkip;
 
     @FXML
-    Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p, labelInfo;
+    Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p;
 
     @FXML
     ProgressBar healthPlayer1, healthPlayer2;
@@ -72,7 +70,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
     private int currentPlayerIdx = -1;
     private Player currentPlayer;
     private GameEngine engine;
-    private boolean labelInfoUp = false;
 
     public MainController(GameChannel channel) {
         this.channel = channel;
@@ -182,12 +179,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
         gridBoard.add(leftGrid, 0, 0);
         gridBoard.add(rightGrid, 1, 0);
 
-//        labelInfo.setBackground(new Background(new BackgroundFill(new Color(1, 0.8, 0.5, 0.9), new CornerRadii(5), Insets.EMPTY)));
-//        labelInfo.setBorder(new Border(new BorderStroke(null, BorderStrokeStyle.NONE, new CornerRadii(5), new BorderWidths(5), new Insets(0, 0, 0, 0))));
-
         gameEngine.setupGame();
-        labelInfo.setText("Game Started!");
-        moveInfoUp();
     }
 
     public void displayDraw(List<Card> cards) throws IOException {
@@ -254,15 +246,20 @@ public class MainController implements Initializable, Publisher, Subscriber {
         } else if (card instanceof Spell) {
             Spell spell = (Spell) card;
             if (spell.getType() == SpellType.POTION) {
-                dataCardLabel.setText("ATK: " + spell.getAttack() + "\nHP: " + spell.getHealth() + "\nDuration: " + spell.getDuration());
+                String text = "Health effect: " + ((Potion) spell.getWorker()).getHealth() + "\n"
+                        + "Attack effect: " + ((Potion) spell.getWorker()).getAttack() + "\n"
+                        + "effect lasts " + ((Potion) spell.getWorker()).getDuration() + "rounds";
+                dataCardLabel.setText(text);
             } else if (spell.getType() == SpellType.LEVELUP) {
-                dataCardLabel.setText("Add 1 level from selected character.\nEXP will reset to 0.");
+                dataCardLabel.setText("Level up the character. Mana required is ceil rounding of target character level divided by two");
             } else if (spell.getType() == SpellType.LEVELDOWN) {
-                dataCardLabel.setText("Take 1 level from selected character.\nEXP will reset to 0.");
+                dataCardLabel.setText("Level down the character. Mana required is ceil rounding of target character level divided by two");
             } else if (spell.getType() == SpellType.SWAP) {
-                dataCardLabel.setText("Duration: " + spell.getDuration());
+                dataCardLabel.setText("Swap attack and health for " + ((Swap) spell.getWorker()).getDuration() + " rounds");
             } else if (spell.getType() == SpellType.MORPH) {
-                dataCardLabel.setText("Morph Selected Character to " + Character.characterList.get(spell.getTargetId() - 1).getName() + "\nAll spells will be reset.\nAll levels and exp will be thrown out.");
+                dataCardLabel.setText("Morph any character to " + ((Morph)spell.getWorker()).getTargetCharacter().getName()
+                        + "with:\n" + "Base attack: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseAttack() + "\n" + "Base health: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseHealth()
+                        + "\n" + "Attack increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getAttackUp()+ "\n" + "Health increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getHealthUp());
             }
         }
         descCardLabel.setText("\"" +  card.getDescription() + "\"");
@@ -302,8 +299,25 @@ public class MainController implements Initializable, Publisher, Subscriber {
             Character character = (Character) card;
             dataCardLabel.setText("ATK: " +  summonedCharacter.getAttack() + "\nHP: " + summonedCharacter.getHealth() + "\nLevel: " + summonedCharacter.getLevel() + "\nEXP: " + summonedCharacter.getExp() + "/" + (2 * summonedCharacter.getLevel() - 1) + "\nType: " + character.getCharacterType() + "\nAttack Up: " + summonedCharacter.getAttackUp() + "\nHealth Up: " + summonedCharacter.getHealthUp());
 
+        } else if (card instanceof Spell) {
+            Spell spell = (Spell) card;
+            if (spell.getType() == SpellType.POTION) {
+                String text = "Health effect: " + ((Potion) spell.getWorker()).getHealth() + "\n"
+                        + "Attack effect: " + ((Potion) spell.getWorker()).getAttack() + "\n"
+                        + "effect lasts " + ((Potion) spell.getWorker()).getDuration() + "rounds";
+                dataCardLabel.setText(text);
+            } else if (spell.getType() == SpellType.LEVELUP) {
+                dataCardLabel.setText("Level up the character. Mana required is ceil rounding of target character level divided by two");
+            } else if (spell.getType() == SpellType.LEVELDOWN) {
+                dataCardLabel.setText("Level down the character. Mana required is ceil rounding of target character level divided by two");
+            } else if (spell.getType() == SpellType.SWAP) {
+                dataCardLabel.setText("Swap attack and health for " + ((Swap) spell.getWorker()).getDuration() + " rounds");
+            } else if (spell.getType() == SpellType.MORPH) {
+                dataCardLabel.setText("Morph any character to " + ((Morph)spell.getWorker()).getTargetCharacter().getName()
+                + "with:\n" + "Base attack: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseAttack() + "\n" + "Base health: " + ((Morph)spell.getWorker()).getTargetCharacter().getBaseHealth()
+                + "\n" + "Attack increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getAttackUp()+ "\n" + "Health increase on level up: " + ((Morph)spell.getWorker()).getTargetCharacter().getHealthUp());
+            }
         }
-
         descCardLabel.setText("\"" +  card.getDescription() + "\"");
 
         try {
@@ -315,7 +329,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
     }
 
     public void refreshHand(Player player) throws IOException {
-        moveInfoUp();
         labelHand.setText("");
         buttonSkip.setDisable(false);
         handList = new ArrayList<>();
@@ -342,7 +355,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
     }
 
     public void refreshHandClicked(Player player, int idxClicked) throws IOException {
-        moveInfoUp();
         labelHand.setText("");
         buttonSkip.setDisable(false);
         handList = new ArrayList<>();
@@ -397,8 +409,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         board.setOnAction(e -> {
             publish(new PrepareToMoveToBoardEvent(idx));
-            labelInfo.setText("Put the selected card to board.");
-            moveInfoDown();
             System.out.println("prepare");
         });
 
@@ -407,7 +417,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
             publish(new CancelEvent());
             cardPane.getChildren().remove(optionPane);
             cardPane.setOnMouseClicked(ev -> showCardOptions(cardPane, idx));
-//            moveInfoUp();
         });
         cardPane.setOnMouseClicked(null);
 
@@ -457,26 +466,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
             cardPane.setOnMouseClicked(e -> publish(new DiscardToDrawEvent(idxDiscard)));
             i++;
         }
-    }
-
-    public void moveInfoUp() {
-        if (!this.labelInfoUp) {
-            TranslateTransition translate = new TranslateTransition();
-            translate.setNode(labelInfo);
-            translate.setByY(-100);
-            translate.play();
-        }
-        this.labelInfoUp = true;
-    }
-
-    public void moveInfoDown() {
-        if (this.labelInfoUp) {
-            TranslateTransition translate = new TranslateTransition();
-            translate.setNode(labelInfo);
-            translate.setByY(100);
-            translate.play();
-        }
-        this.labelInfoUp = false;
     }
 
     @Override
@@ -549,12 +538,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
                 Stage stage = (Stage) backPane.getScene().getWindow();
                 stage.setScene(winScene);
 
-            } else if (event instanceof MoveInfoDownEvent) {
-                labelInfo.setText((String) event.getEvent());
-                moveInfoDown();
-
-            } else if (event instanceof MoveInfoUpEvent) {
-                moveInfoUp();
             }
 
         } catch (Exception e) {
