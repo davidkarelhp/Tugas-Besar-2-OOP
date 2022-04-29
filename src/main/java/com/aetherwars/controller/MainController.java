@@ -334,7 +334,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     public void refreshHand(Player player) throws IOException {
         moveInfoUp();
-        labelHand.setText("");
         buttonSkip.setDisable(false);
         handList = new ArrayList<>();
         handGrid.getChildren().clear();
@@ -361,7 +360,6 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
     public void refreshHandClicked(Player player, int idxClicked) throws IOException {
         moveInfoUp();
-        labelHand.setText("");
         buttonSkip.setDisable(false);
         handList = new ArrayList<>();
         handGrid.getChildren().removeIf(node -> GridPane.getColumnIndex(node) != idxClicked);
