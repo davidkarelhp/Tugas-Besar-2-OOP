@@ -13,6 +13,7 @@ import com.aetherwars.model.cards.spell.Potion;
 import com.aetherwars.model.cards.spell.Spell;
 import com.aetherwars.model.cards.spell.Swap;
 import com.aetherwars.model.cards.spell.enums.SpellType;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 
 import javafx.fxml.FXML;
@@ -50,7 +51,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     Button buttonSkip;
 
     @FXML
-    Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p;
+    Label labelPlayer1, labelPlayer2, labelRound, labelDeck, labelMana, dataCardLabel, titleCardLabel, descCardLabel, labelHand, atack_p, draw_p, end_p, plan_p, labelInfo;
 
     @FXML
     ProgressBar healthPlayer1, healthPlayer2;
@@ -70,6 +71,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     private int currentPlayerIdx = -1;
     private Player currentPlayer;
     private GameEngine engine;
+    private boolean labelInfoUp = false;
 
     public MainController(GameChannel channel) {
         this.channel = channel;
@@ -178,6 +180,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         gridBoard.add(leftGrid, 0, 0);
         gridBoard.add(rightGrid, 1, 0);
+
+        moveInfoUp();
 
         gameEngine.setupGame();
     }
@@ -329,6 +333,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     }
 
     public void refreshHand(Player player) throws IOException {
+        moveInfoUp();
         labelHand.setText("");
         buttonSkip.setDisable(false);
         handList = new ArrayList<>();
@@ -355,6 +360,7 @@ public class MainController implements Initializable, Publisher, Subscriber {
     }
 
     public void refreshHandClicked(Player player, int idxClicked) throws IOException {
+        moveInfoUp();
         labelHand.setText("");
         buttonSkip.setDisable(false);
         handList = new ArrayList<>();
@@ -409,6 +415,8 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
         board.setOnAction(e -> {
             publish(new PrepareToMoveToBoardEvent(idx));
+            labelInfo.setText("Put the selected card to board.");
+            moveInfoDown();
             System.out.println("prepare");
         });
 
@@ -466,6 +474,26 @@ public class MainController implements Initializable, Publisher, Subscriber {
             cardPane.setOnMouseClicked(e -> publish(new DiscardToDrawEvent(idxDiscard)));
             i++;
         }
+    }
+
+    public void moveInfoUp() {
+        if (!this.labelInfoUp) {
+            TranslateTransition translate = new TranslateTransition();
+            translate.setNode(labelInfo);
+            translate.setByY(-100);
+            translate.play();
+        }
+        this.labelInfoUp = true;
+    }
+
+    public void moveInfoDown() {
+        if (this.labelInfoUp) {
+            TranslateTransition translate = new TranslateTransition();
+            translate.setNode(labelInfo);
+            translate.setByY(100);
+            translate.play();
+        }
+        this.labelInfoUp = false;
     }
 
     @Override
@@ -537,6 +565,13 @@ public class MainController implements Initializable, Publisher, Subscriber {
 
                 Stage stage = (Stage) backPane.getScene().getWindow();
                 stage.setScene(winScene);
+
+            } else if (event instanceof MoveInfoDownEvent) {
+                labelInfo.setText((String) event.getEvent());
+                moveInfoDown();
+
+            } else if (event instanceof MoveInfoUpEvent) {
+                moveInfoUp();
 
             }
 
